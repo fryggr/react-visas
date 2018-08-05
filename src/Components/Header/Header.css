@@ -1,0 +1,10 @@
+.Header{
+}
+
+.Header__title{
+  max-width: 562px;
+  color: #cc091d;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 30px;
+}
