@@ -5,6 +5,7 @@
     align-items: center;
     justify-content: space-between;
     margin: 35px 10px;
+    margin-left: 50px;
 }
 
 .StepsNavigation__item{
