@@ -19,18 +19,18 @@ export const Header = props => {
           />
         </div>
         <div className="col-lg-5">
+          <div className="container">
           <div className="row">
             <div className="text-left">
               <label>Currency</label>
-            <Select
-              className="Select_currency"
-              value={props.currency}
-              onChange={props.changeCurrency}
-              options={props.currencies}
-            />
-          </div>
-
-
+              <Select
+                className="Select_currency"
+                value={props.currency}
+                onChange={props.changeCurrency}
+                options={props.currencies}
+              />
+            </div>
+            </div>
           </div>
         </div>
       </div>
