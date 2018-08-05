@@ -1,3 +1,15 @@
-.Select_currency{
+.Select_currency {
   width: 120px;
+}
+
+.Select_language {
+  display: block !important;
+  font-size: 2rem;
+  height: 38px;
+  border: 1px solid #ccc;
+}
+
+.Select_language .arrow-down, .Select_language .country-label {
+  position: relative;
+  top: 6px;
 }
