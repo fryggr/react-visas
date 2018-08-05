@@ -105,7 +105,7 @@
     background-color: #636363;
 }
 
-@media (max-width: 450px),(max-device-width:450px) {
+@media (max-width: 560px),(max-device-width:560px) {
     .StepsNavigation__item:nth-child(4n + 1) > .StepsNavigation__item-text {
         bottom: auto;
         top: -25px;
