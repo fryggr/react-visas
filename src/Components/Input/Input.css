@@ -1,0 +1,72 @@
+.Input {
+  max-width: 625px;
+  border: 1px solid rgba(0, 0, 0, .31);
+  background-color: #fefefe;
+  border-radius: 3px;
+  position: relative;
+  padding: 11px 0 0 15px;
+}
+
+.Input.correct {
+  border: 1px solid #8ac43f;
+}
+
+
+.Input__label {
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.Input__field {
+  outline: none;
+  padding: 10px 0px 10px 0px;
+  border: none;
+  width: 100%;
+  color: #000;
+  line-height: 20px;
+  transition: .5s;
+  font-size: 16px;
+}
+
+.Input__error {
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  text-align: right;
+  color: #cc091d;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.Input.correct::after {
+  position: absolute;
+  content: "";
+  width: 18px;
+  height: 14px;
+  background: url('img/ok.png') no-repeat center / contain;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.Input.incorrect{
+  background-color: #fbe3e3;
+  border: 1px solid #cc091d;
+}
+
+.Input.incorrect input{
+  background-color: #fbe3e3;
+}
+
+.Input.incorrect::after{
+  position: absolute;
+  content: "!";
+  color: #cc091d;
+  font-family: "Open Sans";
+  font-size: 25px;
+  font-weight: 700;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+}

@@ -8,6 +8,13 @@ import "./../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { Header } from "./Components/Header/Header";
 import { RadioGroup } from "./Components/RadioGroup/RadioGroup";
 import { ToggleTab } from "./Components/ToggleTab/ToggleTab";
+import { Input } from "./Components/Input/Input";
+
+//For Validation
+let Validator = require("validatorjs");
+const plugins = {
+  dvr: Validator
+};
 
 class App extends Component {
     constructor(props) {
@@ -46,14 +53,25 @@ class App extends Component {
             sex: {
                 value: "",
                 error: "Please select one"
+            },
+            //For Input testing
+            email: {
+                value: "",
+                visited: false,
+                error: ""
             }
-            
         };
 
         /******BINDING*****/
         this.changeCurrentStep = this.changeCurrentStep.bind(this);
         this.changeCurrency = this.changeCurrency.bind(this);
         this.handleSexChange = this.handleSexChange.bind(this);
+
+        /**** INPUT BINDING *******/
+        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.updateError = this.updateError.bind(this);
+        this.updateVisited = this.updateVisited.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     // METHODS
@@ -69,6 +87,58 @@ class App extends Component {
 
     handleSexChange(value) {
         this.setState({ sex: value, error: "" });
+    }
+
+    //INPUT METHODS
+    handleFieldChange(fieldName, value) {
+        let updatedField = this.state[fieldName];
+        updatedField.value = value;
+
+        let newState = this.state;
+        newState[fieldName] = updatedField;
+
+        this.setState(newState);
+        this.validate();
+    }
+
+    updateVisited(fieldName) {
+        let updatedField = this.state[fieldName];
+        updatedField.visited = true;
+
+        let newState = this.state;
+        newState[fieldName] = updatedField;
+
+        this.setState(newState);
+    }
+
+    updateError(fieldName, value) {
+        let updatedField = this.state[fieldName];
+        updatedField.error = value;
+
+        let newState = this.state;
+        newState[fieldName] = updatedField;
+
+        this.setState(newState);
+    }
+
+    validate() {
+        let data = {
+            email: this.state.email.value
+        };
+
+        let rules = {
+            email: "required|email"
+        };
+
+        let validation = new Validator(data, rules);
+
+        validation.fails(); // true
+        validation.passes(); // false
+
+        // Error messages
+        if (validation.errors.first("email"))
+            this.updateError("email", validation.errors.first("email"));
+        else this.updateError("email", "");
     }
 
     render() {
@@ -105,6 +175,19 @@ class App extends Component {
                     <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
                     <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
                 </ToggleTab>
+
+                {/*INPUT example*/}
+                <Input
+                    type="email"
+                    updateVisited={this.updateVisited}
+                    handleFieldChange={this.handleFieldChange}
+                    fieldName="email"
+                    value={state.email.value}
+                    visited={state.email.visited}
+                    label="Email"
+                    placeholder="Enter email"
+                    error={state.email.error}
+                />
             </div>
         );
     }
