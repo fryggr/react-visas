@@ -39,7 +39,9 @@ class App extends Component {
 
   // METHODS
     changeCurrentStep(stepIndex){
-      this.setState({currentStep: stepIndex})
+      let updatedSteps = this.state.steps;
+      updatedSteps[stepIndex].visited = true;
+      this.setState({currentStep: stepIndex, steps: updatedSteps})
     }
 
   render() {
