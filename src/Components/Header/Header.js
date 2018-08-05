@@ -2,6 +2,7 @@ import React from "react";
 import "./Header.css";
 
 import { StepsNavigation } from "./../StepsNavigation/StepsNavigation";
+import Select from "react-select";
 
 export const Header = props => {
   return (
@@ -17,7 +18,21 @@ export const Header = props => {
             currentStep={props.currentStep}
           />
         </div>
-        <div className="col-lg-5" />
+        <div className="col-lg-5">
+          <div className="row">
+            <div className="text-left">
+              <label>Currency</label>
+            <Select
+              className="Select_currency"
+              value={props.currency}
+              onChange={props.changeCurrency}
+              options={props.currencies}
+            />
+          </div>
+
+
+          </div>
+        </div>
       </div>
     </div>
   );
