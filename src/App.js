@@ -13,6 +13,7 @@ class App extends Component {
 
     this.state = {
       currentStep: 2,
+      price: 15.40,
       currency:  { value: "gbp", label: "£ - GBP" },
       currencies: [
         { value: "gbp", label: "£ - GBP" },
@@ -60,7 +61,7 @@ class App extends Component {
   render() {
     let state = this.state;
     return (
-      <div className="App">
+      <div className="App text-center text-md-left">
         <Header
           changeCurrentStep={this.changeCurrentStep}
           steps={state.steps}
@@ -68,6 +69,7 @@ class App extends Component {
           currencies={state.currencies}
           currency={state.currency}
           changeCurrency={this.changeCurrency}
+          price={state.price}
         />
       </div>
     );

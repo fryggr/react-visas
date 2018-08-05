@@ -23,7 +23,7 @@ export const Header = props => {
                 <div className="col-lg-5">
                     <div className="container">
                         <div className="row align-items-end">
-                            <div className="mr-1 mr-sm-5">
+                            <div className="mr-1 mr-sm-4">
                                 <label>Currency</label>
                                 <Select
                                     className="Select_currency"
@@ -44,7 +44,19 @@ export const Header = props => {
                                     selectedSize={14}
                                 />
                             </div>
+                        </div>
 
+                        <div className="mt-4">
+                            <div className="Header__price">
+                                Total price{" "}
+                                <span className="Header__price-value ml-1">
+                                    {props.currency.label.slice(0, 1)}
+                                    {props.price.toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="Header__price-note">
+                                Prices are shown in different currencies for your convenience, however payment will be made in British Pounds at the prevailing bank rate.
+                            </div>
                         </div>
                     </div>
                 </div>
