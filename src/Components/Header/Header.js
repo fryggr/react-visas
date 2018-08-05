@@ -23,7 +23,7 @@ export const Header = props => {
                 <div className="col-lg-5">
                     <div className="container">
                         <div className="row align-items-end">
-                            <div className="mr-5">
+                            <div className="mr-1 mr-sm-5">
                                 <label>Currency</label>
                                 <Select
                                     className="Select_currency"
