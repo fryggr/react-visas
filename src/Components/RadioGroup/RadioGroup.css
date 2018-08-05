@@ -1,0 +1,56 @@
+.RadioGroup{
+  max-width: 625px;
+}
+
+.RadioGroup__title{
+    font-size: 14px;
+    padding: 11px 0 0 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.RadioGroup__wrapper{
+  display: flex;
+  align-items: center;
+}
+
+.RadioGroup__item{
+    margin: 0 10px 0 0;
+}
+
+.RadioGroup__item-field{
+  display: none
+}
+
+.RadioGroup__item-label{
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+  font-size: 17px;
+  padding: 10px 40px;
+  border: 1px solid #b0b0b0;
+  transition: 0.4s;
+  border-radius: 3px;
+}
+
+.RadioGroup__item-field:checked + .RadioGroup__item-label{
+  background: #8ac43f;
+  color: #fff;
+}
+
+.RadioGroup__error{
+  text-align: left;
+  color: #cc091d;
+  font-size: 12px;
+  line-height: 20px;
+  margin-bottom: 7px;
+  position: relative;
+  z-index: 1;
+  min-height: 22px;
+}
+
+@media (max-width:380px),(max-device-width:380px) {
+    .RadioGroup__item-label{
+        padding: 10px 20px
+    }
+}
