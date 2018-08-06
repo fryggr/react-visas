@@ -189,6 +189,16 @@ class App extends Component {
                     placeholder="Enter email"
                     error={state.email.error}
                 />
+                <Input
+                    type="select"
+                    updateVisited={this.updateVisited}
+                    handleFieldChange={this.handleFieldChange}
+                    fieldName="email"
+                    value={state.email.value}
+                    visited={state.email.visited}
+                    label="Email"
+                    error={state.email.error}
+                />
 
                 {/*Button example*/}
                 <Button label="next step" className="Button_red-border" text="Save your current progress"/>
