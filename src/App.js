@@ -15,7 +15,7 @@ import { Step } from "./Components/Step/Step";
 //For Validation
 let Validator = require("validatorjs");
 const plugins = {
-  dvr: Validator
+    dvr: Validator
 };
 
 class App extends Component {
@@ -23,14 +23,11 @@ class App extends Component {
         super(props);
 
         this.state = {
-            currentStep: 2,
+            currentStep: 1,
             price: 15.4,
             currency: { value: "gbp", label: "£ - GBP" },
-            currencies: [
-                { value: "gbp", label: "£ - GBP" },
-                { value: "usd", label: "$ - USD" },
-                { value: "eur", label: "€ - EUR" }
-            ],
+            currencies: [{ value: "gbp", label: "£ - GBP" }, { value: "usd", label: "$ - USD" }, { value: "eur", label: "€ - EUR" }],
+            //this data for StepsNavigation Component
             steps: [
                 {
                     stepName: "service details",
@@ -51,16 +48,160 @@ class App extends Component {
                     visited: false
                 }
             ],
-            //For RadioGroup test
-            sex: {
-                value: "",
-                error: "Please select one"
+            /*************USER'S INPUT STEP 1************/
+            groupsize: {
+                value: 1,
+                error: "",
+                visited: false
             },
-            //For Input testing
+            numberOfEntries: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            purpose: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            registration: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            countryApplyIn: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            registration: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            delivery: {
+                value: "",
+                error: "",
+                visited: false
+            },
+
+            /*************USER'S INPUT STEP 2************/
+            visitors: [
+                ("firstName": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("middleName": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("surName": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("sex": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("birthDate": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("citizenship": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("passportNumber": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("passportIssued": {
+                    value: "",
+                    error: "",
+                    visited: false
+                }),
+                ("passportExpired": {
+                    value: "",
+                    error: "",
+                    visited: false
+                })
+            ],
             email: {
                 value: "",
-                visited: false,
-                error: ""
+                error: "",
+                visited: false
+            },
+            phone: {
+                value: "",
+                error: "",
+                visited: false
+            },
+
+            /*************USER'S INPUT STEP 3************/
+
+            arrivalDate1: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            arrivalDate2: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            departureDate1: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            departureDate2: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            locations: [
+                {
+                    city: {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    hotel: {
+                        value: "",
+                        error: "",
+                        visited: false
+                    }
+                }
+            ],
+            userNeedsNewsletter: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userNeedsJoinMailingList: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userReadTerms: {
+                value: "",
+                error: "",
+                visited: false
+            },
+
+            /*************USER'S INPUT STEP 4************/
+
+            userCompleteForm: {
+                value: "",
+                error: "",
+                visited: false
             }
         };
 
@@ -138,8 +279,7 @@ class App extends Component {
         validation.passes(); // false
 
         // Error messages
-        if (validation.errors.first("email"))
-            this.updateError("email", validation.errors.first("email"));
+        if (validation.errors.first("email")) this.updateError("email", validation.errors.first("email"));
         else this.updateError("email", "");
     }
 
@@ -162,46 +302,41 @@ class App extends Component {
                     handleChange={this.handleSexChange}
                     error={this.state.sex.error}
                     title="Gender"
-                    options={[
-                        { value: "Male", text: "Male" },
-                        { value: "Female", text: "Female" }
-                    ]}
+                    options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
                     name="gender"
                 />
 
                 {/*ToggleTab example*/}
                 <ToggleTab label="Вкладка">
-                {/*INPUT example*/}
-                <Input
-                    type="email"
-                    updateVisited={this.updateVisited}
-                    handleFieldChange={this.handleFieldChange}
-                    fieldName="email"
-                    value={state.email.value}
-                    visited={state.email.visited}
-                    label="Email"
-                    placeholder="Enter email"
-                    error={state.email.error}
-                />
-                <Input
-                    type="select"
-                    updateVisited={this.updateVisited}
-                    handleFieldChange={this.handleFieldChange}
-                    fieldName="email"
-                    value={state.email.value}
-                    visited={state.email.visited}
-                    label="Email"
-                    error={state.email.error}
-                />
+                    {/*INPUT example*/}
+                    <Input
+                        type="email"
+                        updateVisited={this.updateVisited}
+                        handleFieldChange={this.handleFieldChange}
+                        fieldName="email"
+                        value={state.email.value}
+                        visited={state.email.visited}
+                        label="Email"
+                        placeholder="Enter email"
+                        error={state.email.error}
+                    />
+                    <Input
+                        type="select"
+                        updateVisited={this.updateVisited}
+                        handleFieldChange={this.handleFieldChange}
+                        fieldName="email"
+                        value={state.email.value}
+                        visited={state.email.visited}
+                        label="Email"
+                        error={state.email.error}
+                    />
                 </ToggleTab>
 
-
-
                 {/*Button example*/}
-                <Button label="next step" className="Button_red-border" text="Save your current progress"/>
+                <Button label="next step" className="Button_red-border" text="Save your current progress" />
 
                 {/*Step Example*/}
-                <Step number={4} hidden={false}/>
+                <Step number={4} hidden={false} />
             </div>
         );
     }
