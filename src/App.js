@@ -246,7 +246,7 @@ class App extends Component {
     validate() {
         let inputFields = {
             groupSize: this.state.groupSize.value.value,
-            numberOfEntries: this.state.groupSize.value.value,
+            numberOfEntries: this.state.numberOfEntries.value.value,
         };
 
         let rules = {
@@ -308,6 +308,7 @@ class App extends Component {
                                 options={state.OptionsGroupSize}
                             />
                             <Input
+                                className="mt-4"
                                 type="select"
                                 updateField={this.updateField}
                                 fieldName="numberOfEntries"

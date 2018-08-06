@@ -38,7 +38,7 @@ export const Input = props => {
     }
     else if (props.type === "select"){
         return (
-            <div className={"Input Select" + className}>
+            <div className={"Input Select " + className}>
                 <label className="Input__label">{props.label}</label>
                 <Select
                     className="Input__field"
