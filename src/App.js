@@ -21,9 +21,8 @@ const plugins = {
 class App extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            currentStep: 1,
+            currentStep: 0,
             price: 15.4,
             currency: { value: "gbp", label: "£ - GBP" },
             currencies: [{ value: "gbp", label: "£ - GBP" }, { value: "usd", label: "$ - USD" }, { value: "eur", label: "€ - EUR" }],
@@ -32,12 +31,11 @@ class App extends Component {
                 {
                     stepName: "service details",
                     visited: true,
-                    correct: false
+                    correct: true
                 },
                 {
                     stepName: "personal details",
-                    visited: false,
-                    correct: true
+                    visited: false
                 },
                 {
                     stepName: "your visit",
@@ -48,7 +46,9 @@ class App extends Component {
                     visited: false
                 }
             ],
+
             /*************USER'S INPUT STEP 1************/
+
             groupsize: {
                 value: 1,
                 error: "",
@@ -87,51 +87,54 @@ class App extends Component {
 
             /*************USER'S INPUT STEP 2************/
             visitors: [
-                ("firstName": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("middleName": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("surName": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("sex": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("birthDate": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("citizenship": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("passportNumber": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("passportIssued": {
-                    value: "",
-                    error: "",
-                    visited: false
-                }),
-                ("passportExpired": {
-                    value: "",
-                    error: "",
-                    visited: false
-                })
+                {
+                    "firstName": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "middleName": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "surName": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "sex": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "birthDate": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "citizenship": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "passportNumber": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "passportIssued": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    },
+                    "passportExpired": {
+                        value: "",
+                        error: "",
+                        visited: false
+                    }
+                }
+
             ],
             email: {
                 value: "",
@@ -215,6 +218,21 @@ class App extends Component {
         this.updateError = this.updateError.bind(this);
         this.updateVisited = this.updateVisited.bind(this);
         this.validate = this.validate.bind(this);
+
+
+        this.updateField = this.updateField.bind(this);
+    }
+
+    //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
+    updateField(path, value){
+        let arr = path.split('.');
+        let code = "";
+        arr.forEach(item => {
+            code += "['" + item + "']"
+        });
+        let state = this.state;
+        eval('state'+ code+'.value=value');
+        this.setState(state);
     }
 
     // METHODS
@@ -298,13 +316,13 @@ class App extends Component {
                 />
 
                 {/*RadioGroup GROUP EXAMPLE*/}
-                <RadioGroup
+                {/*<RadioGroup
                     handleChange={this.handleSexChange}
                     error={this.state.sex.error}
                     title="Gender"
                     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
                     name="gender"
-                />
+                />*/}
 
                 {/*ToggleTab example*/}
                 <ToggleTab label="Вкладка">
