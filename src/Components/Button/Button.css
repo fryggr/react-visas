@@ -1,4 +1,4 @@
-.button{
+.Button{
     cursor: pointer;
     white-space: nowrap;
     border-radius: 3px;
@@ -12,4 +12,26 @@
     border: none;
     background-color: #d89c22;
     text-decoration: none;
+}
+
+.Button__text{
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 6px;
+      max-width: 230px;
+}
+
+.Button:hover{
+    text-decoration: none;
+    color: #fff;
+}
+
+
+.Button_red{
+    background-color: #cc091d;
+    color: #ffffff;
+    font-size: 14px;
+    padding: 12px 41px 11px 39px;
+    text-transform: uppercase;
+    border: none
 }
