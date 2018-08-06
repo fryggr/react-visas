@@ -69,3 +69,9 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
+@media (max-width:767px),(max-device-width:767px) {
+    .Input{
+        width: 90%;
+    }
+}

@@ -321,12 +321,12 @@ class App extends Component {
                     </div>
                 </div>
                 <div className="container mt-4">
-                    <div className="row">
+                    <div className="row" style={{maxWidth: "710px"}}>
                         <div className="col-sm-6">
-                            <Button label="Save progress" />
+                            <Button className="align-self-md-start align-self-center" label="Save progress" />
                         </div>
-                        <div className=" col-sm-6">
-                            <Button className="Button_red" label="Next step >" />
+                        <div className="col-sm-6">
+                            <Button className="Button_red align-self-md-end align-self-center" label="Next step >" />
                         </div>
                     </div>
                 </div>

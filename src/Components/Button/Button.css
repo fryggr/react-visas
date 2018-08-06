@@ -36,15 +36,12 @@
 .Button_red{
     background-color: #cc091d;
     color: #ffffff;
-    font-size: 0.8rem;
-    padding: 0.7rem 2.6rem 0.7rem 2.6rem;
     text-transform: uppercase;
     border: none
 }
 
 .Button_red-label{
     color: #cc091d;
-    font-size: 0.85rem;
     text-transform: uppercase;
     background-color: transparent;
     display: block;
@@ -58,7 +55,6 @@
 
 .Button_red-border{
     color: #cc091d;
-    font-size: 0.85rem;
     text-transform: uppercase;
     background-color: transparent;
     border: 1px solid #cc091d;
