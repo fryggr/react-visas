@@ -15,7 +15,7 @@ export const Header = props => {
                         Russian Tourist Visa Support Application
                     </h2>
                     <StepsNavigation
-                        changeCurrentStep={props.handleFieldChange}
+                        updateField={props.updateField}
                         steps={props.steps}
                         currentStep={props.currentStep}
                     />
@@ -28,7 +28,7 @@ export const Header = props => {
                                 <Select
                                     className="Select_currency"
                                     value={props.currency}
-                                    onChange={(selectedCurrency) => props.handleFieldChange("currency", selectedCurrency)}
+                                    onChange={(selectedCurrency) => props.updateField("currency", selectedCurrency)}
                                     options={props.currencies}
                                 />
                             </div>

@@ -24,9 +24,9 @@ export const Input = props => {
                 <input
                     onBlur={e => {
                         props.updateVisited(props.fieldName);
-                        props.handleFieldChange(props.fieldName, e.target.value);
+                        props.updateField(props.fieldName, e.target.value);
                     }}
-                    onChange={e => props.handleFieldChange(props.fieldName, e.target.value)}
+                    onChange={e => props.updateField(props.fieldName, e.target.value)}
                     value={props.value}
                     className="Input__field"
                     type={props.type}
@@ -43,8 +43,8 @@ export const Input = props => {
                 <Select
                     className="Input__field"
                     value={props.currency}
-                    onChange={(selectedOption) => props.handleFieldChange(props.fieldName+".value",selectedOption)}
-                    onBlur={(e) => props.handleFieldChange(props.fieldName+".visited", true)}
+                    onChange={(selectedOption) => props.updateField(props.fieldName+".value",selectedOption)}
+                    onBlur={(e) => props.updateField(props.fieldName+".visited", true)}
                     options={props.options}
                 />
                 <div className="Input__error">{props.visited ? props.error : ""}</div>

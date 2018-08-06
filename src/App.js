@@ -211,11 +211,13 @@ class App extends Component {
         };
 
         /******BINDING*****/
-        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.updateField = this.updateField.bind(this);
         this.updateError = this.updateError.bind(this);
         this.validate = this.validate.bind(this);
         this.updateField = this.updateField.bind(this);
     }
+
+    // METHODS
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
@@ -230,29 +232,6 @@ class App extends Component {
         this.validate();
     }
 
-    // METHODS
-    changeCurrentStep(stepIndex) {
-        let updatedSteps = this.state.steps;
-        updatedSteps[stepIndex].visited = true;
-        this.setState({ currentStep: stepIndex, steps: updatedSteps });
-    }
-
-
-    handleSexChange(value) {
-        this.setState({ sex: value, error: "" });
-    }
-
-    //INPUT METHODS
-    handleFieldChange(fieldName, value) {
-        let updatedField = this.state[fieldName];
-        updatedField.value = value;
-
-        let newState = this.state;
-        newState[fieldName] = updatedField;
-
-        this.setState(newState);
-        this.validate();
-    }
 
     updateError(fieldName, value) {
         let updatedField = this.state[fieldName];
@@ -289,7 +268,7 @@ class App extends Component {
         return (
             <div className="App text-center text-md-left">
                 <Header
-                    handleFieldChange={this.updateField}
+                    updateField={this.updateField}
                     steps={state.steps}
                     currentStep={state.currentStep}
                     currencies={state.currencies}
@@ -315,7 +294,7 @@ class App extends Component {
                         <Step number={1} hidden={false}>
                             <Input
                                 type="select"
-                                handleFieldChange={this.updateField}
+                                updateField={this.updateField}
                                 fieldName="groupSize"
                                 visited={state.groupSize.visited}
                                 label="Group Size"
@@ -357,7 +336,7 @@ export default App;
 //     <Input
 //         type="date"
 //         updateVisited={this.updateVisited}
-//         handleFieldChange={this.handleFieldChange}
+//         updateField={this.updateField}
 //         fieldName="email"
 //         value={state.email.value}
 //         visited={state.email.visited}
@@ -368,7 +347,7 @@ export default App;
 //     <Input
 //         type="select"
 //         updateVisited={this.updateVisited}
-//         handleFieldChange={this.handleFieldChange}
+//         updateField={this.updateField}
 //         fieldName="email"
 //         value={state.email.value}
 //         visited={state.email.visited}
