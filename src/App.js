@@ -49,8 +49,8 @@ class App extends Component {
 
             /*************USER'S INPUT STEP 1************/
 
-            groupsize: {
-                value: 1,
+            groupSize: {
+                value: "",
                 error: "",
                 visited: false
             },
@@ -204,20 +204,16 @@ class App extends Component {
                 value: "",
                 error: "",
                 visited: false
-            }
+            },
+
+            /*******DATA FROM SERVER**********/
+            OptionsgroupSize: [{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }]
         };
 
         /******BINDING*****/
-        this.changeCurrentStep = this.changeCurrentStep.bind(this);
-        this.changeCurrency = this.changeCurrency.bind(this);
-        this.handleSexChange = this.handleSexChange.bind(this);
-
-        /**** INPUT BINDING *******/
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.updateError = this.updateError.bind(this);
-        this.updateVisited = this.updateVisited.bind(this);
         this.validate = this.validate.bind(this);
-
         this.updateField = this.updateField.bind(this);
     }
 
@@ -229,8 +225,9 @@ class App extends Component {
             code += "['" + item + "']";
         });
         let state = this.state;
-        eval("state" + code + ".value=value");
+        eval("state" + code + "=value");
         this.setState(state);
+        this.validate();
     }
 
     // METHODS
@@ -240,9 +237,6 @@ class App extends Component {
         this.setState({ currentStep: stepIndex, steps: updatedSteps });
     }
 
-    changeCurrency(currency) {
-        this.setState({ currency: currency });
-    }
 
     handleSexChange(value) {
         this.setState({ sex: value, error: "" });
@@ -260,16 +254,6 @@ class App extends Component {
         this.validate();
     }
 
-    updateVisited(fieldName) {
-        let updatedField = this.state[fieldName];
-        updatedField.visited = true;
-
-        let newState = this.state;
-        newState[fieldName] = updatedField;
-
-        this.setState(newState);
-    }
-
     updateError(fieldName, value) {
         let updatedField = this.state[fieldName];
         updatedField.error = value;
@@ -282,11 +266,11 @@ class App extends Component {
 
     validate() {
         let data = {
-            email: this.state.email.value
+            groupSize: this.state.groupSize.value.value
         };
 
         let rules = {
-            email: "required|email"
+            groupSize: "required"
         };
 
         let validation = new Validator(data, rules);
@@ -295,8 +279,9 @@ class App extends Component {
         validation.passes(); // false
 
         // Error messages
-        if (validation.errors.first("email")) this.updateError("email", validation.errors.first("email"));
-        else this.updateError("email", "");
+        // Object.keys()
+        if (validation.errors.first("groupSize")) this.updateError("groupSize", validation.errors.first("groupSize"));
+        else this.updateError("groupSize", "");
     }
 
     render() {
@@ -304,12 +289,11 @@ class App extends Component {
         return (
             <div className="App text-center text-md-left">
                 <Header
-                    changeCurrentStep={this.changeCurrentStep}
+                    handleFieldChange={this.updateField}
                     steps={state.steps}
                     currentStep={state.currentStep}
                     currencies={state.currencies}
                     currency={state.currency}
-                    changeCurrency={this.changeCurrency}
                     price={state.price}
                 />
 
@@ -328,7 +312,17 @@ class App extends Component {
                                 />
                             </div>
                         </div>
-                        <Step number={1} hidden={false} />
+                        <Step number={1} hidden={false}>
+                            <Input
+                                type="select"
+                                handleFieldChange={this.updateField}
+                                fieldName="groupSize"
+                                visited={state.groupSize.visited}
+                                label="Group Size"
+                                error={state.groupSize.error}
+                                options={state.OptionsgroupSize}
+                            />
+                        </Step>
                     </div>
                 </div>
                 <div className="container mt-4">
@@ -337,7 +331,7 @@ class App extends Component {
                             <Button label="Save progress" />
                         </div>
                         <div className=" col-sm-6">
-                            <Button className=" Button_red" label="Next step >" />
+                            <Button className="Button_red" label="Next step >" />
                         </div>
                     </div>
                 </div>

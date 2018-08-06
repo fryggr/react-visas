@@ -14,7 +14,7 @@ import "./../Datepicker/Datepicker.css";
 export const Input = props => {
     let className = typeof props.className !== "undefined" ? props.className : "";
     if (props.visited) {
-        className += props.error !== "" ? " incorrect" : " correct";
+        className += (props.error !== "" ? " incorrect" : " correct");
     }
 
     if (props.type !== "select" && props.type !== "date") {
@@ -32,7 +32,7 @@ export const Input = props => {
                     type={props.type}
                     placeholder={props.placeholder}
                 />
-                <div className="Input__error">{props.error}</div>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
             </div>
         );
     }
@@ -43,10 +43,11 @@ export const Input = props => {
                 <Select
                     className="Input__field"
                     value={props.currency}
-                    onChange={props.changeCurrency}
+                    onChange={(selectedOption) => props.handleFieldChange(props.fieldName+".value",selectedOption)}
+                    onBlur={(e) => props.handleFieldChange(props.fieldName+".visited", true)}
                     options={props.options}
                 />
-                <div className="Input__error">{props.error}</div>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
             </div>
         )
     }
