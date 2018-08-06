@@ -328,7 +328,7 @@ class App extends Component {
                 <ToggleTab label="Вкладка">
                     {/*INPUT example*/}
                     <Input
-                        type="email"
+                        type="date"
                         updateVisited={this.updateVisited}
                         handleFieldChange={this.handleFieldChange}
                         fieldName="email"

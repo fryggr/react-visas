@@ -44,7 +44,7 @@
   content: "";
   width: 18px;
   height: 14px;
-  background: url('img/ok.png') no-repeat center / contain;
+  background: url('./img/ok.png') no-repeat center / contain;
   right: -30px;
   top: 50%;
   transform: translateY(-50%);
@@ -63,7 +63,6 @@
   position: absolute;
   content: "!";
   color: #cc091d;
-  font-family: "Open Sans";
   font-size: 25px;
   font-weight: 700;
   right: -25px;

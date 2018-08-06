@@ -1,9 +1,15 @@
 import React from "react";
-import "./Input.css";
 
+
+/*******IMPORT COMPONENTS********/
 import Select from "react-select";
+import DatePicker from 'react-date-picker';
 import ReactFlagsSelect from "react-flags-select";
+
+/*******IMPORT STYLES********/
+import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";
+import "./../Datepicker/Datepicker.css";
 
 export const Input = props => {
     let className = typeof props.className !== "undefined" ? props.className : "";
@@ -43,5 +49,11 @@ export const Input = props => {
                 <div className="Input__error">{props.error}</div>
             </div>
         )
+    }
+    else if (props.type === "date"){
+        return (
+            <DatePicker locale="en-EN"/>
+        )
+
     }
 };
