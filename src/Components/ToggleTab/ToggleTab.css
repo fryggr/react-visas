@@ -1,7 +1,7 @@
 .ToggleTab__title{
   max-width: 626px;
   background: #cc091d;
-  padding: 10px;
+  padding: .0.65rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,15 +11,15 @@
 .ToggleTab__title-text{
   color: #ffffff;
   font-family: "Open Sans";
-  font-size: 15px;
+  font-size: 1rem;
   text-transform: uppercase;
   font-weight: 700;
 }
 
 .ToggleTab__title-icon{
-  width: 27px;
-  height: 27px;
-  background: #ffffff url('./img/arrow-bottom.png') no-repeat center / 16px 8px;
+  width: 1.8rem;
+  height: 1.8rem;
+  background: #ffffff url('./img/arrow-bottom.png') no-repeat center / 1rem 0.5rem;
   cursor: pointer;
   border-radius: 3px;
 }

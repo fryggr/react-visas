@@ -4,7 +4,7 @@
   background-color: #fefefe;
   border-radius: 3px;
   position: relative;
-  padding: 11px 0 0 15px;
+  padding: 0.7rem 0 0 1rem;
 }
 
 .Input.correct {
@@ -14,7 +14,7 @@
 
 .Input__label {
   color: #000;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 500;
 }
 
@@ -24,9 +24,9 @@
   border: none;
   width: 100%;
   color: #000;
-  line-height: 20px;
+  line-height: 1.3rem;
   transition: .5s;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .Input__error {
@@ -35,8 +35,8 @@
   width: 100%;
   text-align: right;
   color: #cc091d;
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 0.8rem;
+  line-height: 1.3rem;
 }
 
 .Input.correct::after {

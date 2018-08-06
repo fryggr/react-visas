@@ -2,11 +2,11 @@
     cursor: pointer;
     white-space: nowrap;
     border-radius: 3px;
-    font-size: 15px;
+    font-size: 1rem;
     font-weight: 400;
     line-height: 1;
     text-transform: uppercase;
-    padding: 11px 18px 11px 18px;
+    padding: 0.7rem 1.1rem;
     font-weight: 700;
     color: #fff;
     border: none;
@@ -15,8 +15,8 @@
 }
 
 .Button__text{
-      font-size: 12px;
-      line-height: 18px;
+      font-size: 0.7rem;
+      line-height:1.1rem;
       margin-top: 6px;
       max-width: 230px;
 }
@@ -30,15 +30,15 @@
 .Button_red{
     background-color: #cc091d;
     color: #ffffff;
-    font-size: 14px;
-    padding: 12px 41px 11px 39px;
+    font-size: 0.8rem;
+    padding: 0.7rem 2.6rem 0.7rem 2.6rem;
     text-transform: uppercase;
     border: none
 }
 
 .Button_red-label{
     color: #cc091d;
-    font-size: 13px;
+    font-size: 0.85rem;
     text-transform: uppercase;
     background-color: transparent;
     display: block;
@@ -52,7 +52,7 @@
 
 .Button_red-border{
     color: #cc091d;
-    font-size: 13px;
+    font-size: 0.85rem;
     text-transform: uppercase;
     background-color: transparent;
     border: 1px solid #cc091d;
