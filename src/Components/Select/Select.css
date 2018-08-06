@@ -13,3 +13,18 @@
   position: relative;
   top: 6px;
 }
+
+.Input__field > *{
+    border: none !important;
+    background: #fff !important;
+}
+
+.Select .Input__field{
+    padding-bottom: 0px;
+    padding-top: 2px;
+}
+
+
+.Input.Select.incorrect .Input__field > *{
+    background-color: #fbe3e3 !important;
+}
