@@ -207,7 +207,8 @@ class App extends Component {
             },
 
             /*******DATA FROM SERVER**********/
-            OptionsgroupSize: [{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }]
+            OptionsGroupSize: [{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }],
+            OptionsNumberOfEntries: [{ value: "1", label: "Single" }, { value: "2", label: "Double" }]
         };
 
         /******BINDING*****/
@@ -232,7 +233,6 @@ class App extends Component {
         this.validate();
     }
 
-
     updateError(fieldName, value) {
         let updatedField = this.state[fieldName];
         updatedField.error = value;
@@ -244,23 +244,29 @@ class App extends Component {
     }
 
     validate() {
-        let data = {
-            groupSize: this.state.groupSize.value.value
+        let inputFields = {
+            groupSize: this.state.groupSize.value.value,
+            numberOfEntries: this.state.groupSize.value.value,
         };
 
         let rules = {
-            groupSize: "required"
+            groupSize: "required",
+            numberOfEntries: "required"
         };
 
-        let validation = new Validator(data, rules);
+        let validation = new Validator(inputFields, rules);
 
         validation.fails(); // true
         validation.passes(); // false
 
         // Error messages
-        // Object.keys()
-        if (validation.errors.first("groupSize")) this.updateError("groupSize", validation.errors.first("groupSize"));
-        else this.updateError("groupSize", "");
+        Object.keys(inputFields).forEach(inputField => {
+            if (validation.errors.first(inputField)) {
+                this.updateError(inputField, validation.errors.first(inputField));
+            } else {
+                this.updateError(inputField, "");
+            }
+        });
     }
 
     render() {
@@ -299,7 +305,16 @@ class App extends Component {
                                 visited={state.groupSize.visited}
                                 label="Group Size"
                                 error={state.groupSize.error}
-                                options={state.OptionsgroupSize}
+                                options={state.OptionsGroupSize}
+                            />
+                            <Input
+                                type="select"
+                                updateField={this.updateField}
+                                fieldName="numberOfEntries"
+                                visited={state.numberOfEntries.visited}
+                                label="Number of entries"
+                                error={state.numberOfEntries.error}
+                                options={state.OptionsNumberOfEntries}
                             />
                         </Step>
                     </div>
