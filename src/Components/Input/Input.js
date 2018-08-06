@@ -1,9 +1,8 @@
 import React from "react";
 
-
 /*******IMPORT COMPONENTS********/
 import Select from "react-select";
-import DatePicker from 'react-date-picker';
+import DatePicker from "react-date-picker";
 import ReactFlagsSelect from "react-flags-select";
 
 /*******IMPORT STYLES********/
@@ -12,49 +11,88 @@ import "react-flags-select/css/react-flags-select.css";
 import "./../Datepicker/Datepicker.css";
 
 export const Input = props => {
-    let className = typeof props.className !== "undefined" ? props.className : "";
+    let className =
+        typeof props.className !== "undefined" ? props.className : "";
     if (props.visited) {
-        className += (props.error !== "" ? " incorrect" : " correct");
+        className += props.error !== "" ? " incorrect" : " correct";
     }
 
-    if (props.type !== "select" && props.type !== "date") {
+    if (
+        props.type !== "select" &&
+        props.type !== "date" &&
+        props.type !== "country"
+    ) {
         return (
             <div className={"Input " + className}>
                 <label className="Input__label">{props.label}</label>
                 <input
                     onBlur={e => {
-                        props.updateVisited(props.fieldName);
+                        props.updateField(props.fieldName + ".visited", true);
                         props.updateField(props.fieldName, e.target.value);
                     }}
-                    onChange={e => props.updateField(props.fieldName, e.target.value)}
+                    onChange={e =>
+                        props.updateField(props.fieldName, e.target.value)
+                    }
                     value={props.value}
                     className="Input__field"
                     type={props.type}
                     placeholder={props.placeholder}
                 />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
+                <div className="Input__error">
+                    {props.visited ? props.error : ""}
+                </div>
             </div>
         );
-    }
-    else if (props.type === "select"){
+    } else if (props.type === "select") {
         return (
             <div className={"Input Select " + className}>
                 <label className="Input__label">{props.label}</label>
                 <Select
                     className="Input__field"
                     value={props.currency}
-                    onChange={(selectedOption) => props.updateField(props.fieldName+".value",selectedOption)}
-                    onBlur={(e) => props.updateField(props.fieldName+".visited", true)}
+                    onChange={selectedOption => {
+                        props.updateField(props.fieldName + ".visited", true);
+                        props.updateField(
+                            props.fieldName + ".value",
+                            selectedOption
+                        );
+                    }}
+                    onBlur={e =>
+                        props.updateField(props.fieldName + ".visited", true)
+                    }
                     options={props.options}
                 />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
+                <div className="Input__error">
+                    {props.visited ? props.error : ""}
+                </div>
             </div>
-        )
-    }
-    else if (props.type === "date"){
+        );
+    } else if (props.type === "date") {
+        return <DatePicker locale="en-EN" />;
+    } else if (props.type === "country") {
         return (
-            <DatePicker locale="en-EN"/>
-        )
-
+            <div className={"Input Select_country " + className}>
+                <label className="Input__label">{props.label}</label>
+                <ReactFlagsSelect
+                    className=""
+                    defaultCountry="GB"
+                    placeholder="Select Country"
+                    showSelectedLabel={true}
+                    showOptionLabel={true}
+                    selectedSize={14}
+                    searchable={true}
+                    onSelect={selectedOption => {
+                        props.updateField(props.fieldName + ".visited", true);
+                        props.updateField(
+                            props.fieldName + ".value",
+                            selectedOption
+                        );
+                    }}
+                />
+                <div className="Input__error">
+                    {props.visited ? props.error : ""}
+                </div>
+            </div>
+        );
     }
 };

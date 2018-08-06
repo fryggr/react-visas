@@ -36,7 +36,7 @@ As well as the dates you’re arriving and departing, list all the cities and ho
         <div className="Step" hidden={props.hidden}>
             <h3 className="Step__title">{title}</h3>
             <div className="Step__description">
-                <img class="mr-4" src={stepImg} alt="" />
+                <img className="mr-4" src={stepImg} alt="" />
                 <div className="Step__text" dangerouslySetInnerHTML={{ __html: text }} />
             </div>
             {props.children}

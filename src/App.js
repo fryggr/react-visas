@@ -46,7 +46,6 @@ class App extends Component {
                     visited: false
                 }
             ],
-
             /*************USER'S INPUT STEP 1************/
 
             groupSize: {
@@ -208,7 +207,10 @@ class App extends Component {
 
             /*******DATA FROM SERVER**********/
             OptionsGroupSize: [{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }],
-            OptionsNumberOfEntries: [{ value: "1", label: "Single" }, { value: "2", label: "Double" }]
+            OptionsNumberOfEntries: [{ value: "1", label: "Single" }, { value: "2", label: "Double" }],
+            OptionsPurpose: [{ value: "1", label: "Tourist" }, { value: "2", label: "Auto" }],
+            OptionsRegistration: [{ value: "1", label: "No registration services needed" }, { value: "2", label: "Registration in Moscow" }],
+            OptionsDelivery: [{ value: "1", label: "Email" }, { value: "2", label: "Another option" }]
         };
 
         /******BINDING*****/
@@ -247,11 +249,19 @@ class App extends Component {
         let inputFields = {
             groupSize: this.state.groupSize.value.value,
             numberOfEntries: this.state.numberOfEntries.value.value,
+            purpose: this.state.purpose.value.value,
+            registration: this.state.registration.value.value,
+            countryApplyIn: this.state.countryApplyIn.value,
+            delivery: this.state.delivery.value.value
         };
 
         let rules = {
             groupSize: "required",
-            numberOfEntries: "required"
+            numberOfEntries: "required",
+            purpose: "required",
+            registration: "required",
+            countryApplyIn: "required",
+            delivery: "required",
         };
 
         let validation = new Validator(inputFields, rules);
@@ -317,6 +327,46 @@ class App extends Component {
                                 error={state.numberOfEntries.error}
                                 options={state.OptionsNumberOfEntries}
                             />
+                            <Input
+                                className="mt-4"
+                                type="select"
+                                updateField={this.updateField}
+                                fieldName="purpose"
+                                visited={state.purpose.visited}
+                                label="Purpose of visit"
+                                error={state.purpose.error}
+                                options={state.OptionsPurpose}
+                            />
+                            <Input
+                                className="mt-4"
+                                type="select"
+                                updateField={this.updateField}
+                                fieldName="registration"
+                                visited={state.registration.visited}
+                                label="Registration"
+                                error={state.registration.error}
+                                options={state.OptionsRegistration}
+                            />
+                            <Input
+                                className="mt-4"
+                                type="country"
+                                updateField={this.updateField}
+                                fieldName="countryApplyIn"
+                                visited={state.countryApplyIn.visited}
+                                label="Country appling in"
+                                error={state.countryApplyIn.error}
+                            />
+                            <Input
+                                className="mt-4"
+                                type="select"
+                                updateField={this.updateField}
+                                fieldName="delivery"
+                                visited={state.delivery.visited}
+                                label="Delivery option"
+                                error={state.delivery.error}
+                                options={state.OptionsDelivery}
+                            />
+
                         </Step>
                     </div>
                 </div>

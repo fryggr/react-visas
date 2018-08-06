@@ -15,7 +15,7 @@
 .Input__label {
   color: #000;
   font-size: 0.9rem;
-  font-weight: 500;
+  opacity: 0.8;
 }
 
 .Input__field {
