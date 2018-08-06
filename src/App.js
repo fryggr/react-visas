@@ -10,6 +10,7 @@ import { RadioGroup } from "./Components/RadioGroup/RadioGroup";
 import { ToggleTab } from "./Components/ToggleTab/ToggleTab";
 import { Input } from "./Components/Input/Input";
 import { Button } from "./Components/Button/Button";
+import { Step } from "./Components/Step/Step";
 
 //For Validation
 let Validator = require("validatorjs");
@@ -170,13 +171,6 @@ class App extends Component {
 
                 {/*ToggleTab example*/}
                 <ToggleTab label="Вкладка">
-                    <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
-                    <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
-                    <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
-                    <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
-                    <div>ДА ПОШЕЛ ТЫ НАХУЙ</div>
-                </ToggleTab>
-
                 {/*INPUT example*/}
                 <Input
                     type="email"
@@ -199,9 +193,15 @@ class App extends Component {
                     label="Email"
                     error={state.email.error}
                 />
+                </ToggleTab>
+
+
 
                 {/*Button example*/}
                 <Button label="next step" className="Button_red-border" text="Save your current progress"/>
+
+                {/*Step Example*/}
+                <Step number={4} hidden={false}/>
             </div>
         );
     }
