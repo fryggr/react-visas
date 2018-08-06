@@ -285,11 +285,11 @@ class App extends Component {
                 <div className="App__container container">
                     <div className="container px-0 mr-auto ml-0">
                         <div className="row py-3">
-                            <div className="d-flex flex-wrap col-md-6">
+                            <div className="d-flex col-md-6 flex-column flex-md-row">
                                 <Button label="retrieve saved application" className="mr-3" text="CONTINUE a saved existing application" />
                                 <Button label="save progress" text="SAVE your current progress" />
                             </div>
-                            <div className="ml-auto col-md-3">
+                            <div className="ml-auto col-md-4">
                                 <Button
                                     label="I am returning client"
                                     className="Button_red-border"
