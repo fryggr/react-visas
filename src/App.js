@@ -88,53 +88,52 @@ class App extends Component {
             /*************USER'S INPUT STEP 2************/
             visitors: [
                 {
-                    "firstName": {
+                    firstName: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "middleName": {
+                    middleName: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "surName": {
+                    surName: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "sex": {
+                    sex: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "birthDate": {
+                    birthDate: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "citizenship": {
+                    citizenship: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "passportNumber": {
+                    passportNumber: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "passportIssued": {
+                    passportIssued: {
                         value: "",
                         error: "",
                         visited: false
                     },
-                    "passportExpired": {
+                    passportExpired: {
                         value: "",
                         error: "",
                         visited: false
                     }
                 }
-
             ],
             email: {
                 value: "",
@@ -219,19 +218,18 @@ class App extends Component {
         this.updateVisited = this.updateVisited.bind(this);
         this.validate = this.validate.bind(this);
 
-
         this.updateField = this.updateField.bind(this);
     }
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
-    updateField(path, value){
-        let arr = path.split('.');
+    updateField(path, value) {
+        let arr = path.split(".");
         let code = "";
         arr.forEach(item => {
-            code += "['" + item + "']"
+            code += "['" + item + "']";
         });
         let state = this.state;
-        eval('state'+ code+'.value=value');
+        eval("state" + code + ".value=value");
         this.setState(state);
     }
 
@@ -315,49 +313,75 @@ class App extends Component {
                     price={state.price}
                 />
 
-                {/*RadioGroup GROUP EXAMPLE*/}
-                {/*<RadioGroup
-                    handleChange={this.handleSexChange}
-                    error={this.state.sex.error}
-                    title="Gender"
-                    options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
-                    name="gender"
-                />*/}
-
-                {/*ToggleTab example*/}
-                <ToggleTab label="Вкладка">
-                    {/*INPUT example*/}
-                    <Input
-                        type="date"
-                        updateVisited={this.updateVisited}
-                        handleFieldChange={this.handleFieldChange}
-                        fieldName="email"
-                        value={state.email.value}
-                        visited={state.email.visited}
-                        label="Email"
-                        placeholder="Enter email"
-                        error={state.email.error}
-                    />
-                    <Input
-                        type="select"
-                        updateVisited={this.updateVisited}
-                        handleFieldChange={this.handleFieldChange}
-                        fieldName="email"
-                        value={state.email.value}
-                        visited={state.email.visited}
-                        label="Email"
-                        error={state.email.error}
-                    />
-                </ToggleTab>
-
-                {/*Button example*/}
-                <Button label="next step" className="Button_red-border" text="Save your current progress" />
-
-                {/*Step Example*/}
-                <Step number={4} hidden={false} />
+                <div className="App__container container">
+                    <div className="container px-0 mr-auto ml-0">
+                        <div className="row py-3">
+                            <div className="d-flex flex-wrap col-md-6">
+                                <Button label="retrieve saved application" className="mr-3" text="CONTINUE a saved existing application" />
+                                <Button label="save progress" text="SAVE your current progress" />
+                            </div>
+                            <div className="ml-auto col-md-3">
+                                <Button
+                                    label="I am returning client"
+                                    className="Button_red-border"
+                                    text="RECOVER your personal details quickly to pre-fill your application"
+                                />
+                            </div>
+                        </div>
+                        <Step number={1} hidden={false} />
+                    </div>
+                </div>
+                <div className="container mt-4">
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <Button label="Save progress" />
+                        </div>
+                        <div className=" col-sm-6">
+                            <Button className=" Button_red" label="Next step >" />
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
 }
 
 export default App;
+//
+// {/*RadioGroup GROUP EXAMPLE*/}
+// {/*<RadioGroup
+//     handleChange={this.handleSexChange}
+//     error={this.state.sex.error}
+//     title="Gender"
+//     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
+//     name="gender"
+// />*/}
+//
+// {/*ToggleTab example*/}
+// <ToggleTab label="Вкладка">
+//     {/*INPUT example*/}
+//     <Input
+//         type="date"
+//         updateVisited={this.updateVisited}
+//         handleFieldChange={this.handleFieldChange}
+//         fieldName="email"
+//         value={state.email.value}
+//         visited={state.email.visited}
+//         label="Email"
+//         placeholder="Enter email"
+//         error={state.email.error}
+//     />
+//     <Input
+//         type="select"
+//         updateVisited={this.updateVisited}
+//         handleFieldChange={this.handleFieldChange}
+//         fieldName="email"
+//         value={state.email.value}
+//         visited={state.email.visited}
+//         label="Email"
+//         error={state.email.error}
+//     />
+// </ToggleTab>
+//
+// {/*Button example*/}
+// <Button label="next step" className="Button_red-border" text="Save your current progress" />

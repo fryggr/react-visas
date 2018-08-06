@@ -4,6 +4,9 @@ body {
   font-family: sans-serif;
 }
 
+*{
+    box-sizing: border-box;
+}
 
 @media (max-width:767px),(max-device-width:767px) {
     html{
