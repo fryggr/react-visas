@@ -9,6 +9,7 @@ import { Header } from "./Components/Header/Header";
 import { RadioGroup } from "./Components/RadioGroup/RadioGroup";
 import { ToggleTab } from "./Components/ToggleTab/ToggleTab";
 import { Input } from "./Components/Input/Input";
+import { Button } from "./Components/Button/Button";
 
 //For Validation
 let Validator = require("validatorjs");
@@ -188,6 +189,9 @@ class App extends Component {
                     placeholder="Enter email"
                     error={state.email.error}
                 />
+
+                {/*Button example*/}
+                <Button label="next step" text="Save your current progress"/>
             </div>
         );
     }
