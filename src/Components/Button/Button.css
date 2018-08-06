@@ -35,3 +35,31 @@
     text-transform: uppercase;
     border: none
 }
+
+.Button_red-label{
+    color: #cc091d;
+    font-size: 13px;
+    text-transform: uppercase;
+    background-color: transparent;
+    display: block;
+    padding-right: 0;
+    outline: none;
+}
+
+.Button_red-label:hover{
+    color: tomato;
+}
+
+.Button_red-border{
+    color: #cc091d;
+    font-size: 13px;
+    text-transform: uppercase;
+    background-color: transparent;
+    border: 1px solid #cc091d;
+    display: block;
+    outline: none;
+}
+
+.Button_red-border:hover{
+    color: tomato;
+}

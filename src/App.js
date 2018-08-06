@@ -191,7 +191,7 @@ class App extends Component {
                 />
 
                 {/*Button example*/}
-                <Button label="next step" text="Save your current progress"/>
+                <Button label="next step" className="Button_red-border" text="Save your current progress"/>
             </div>
         );
     }
