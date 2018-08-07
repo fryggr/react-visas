@@ -49,7 +49,7 @@ export const Input = props => {
                 <label className="Input__label">{props.label}</label>
                 <Select
                     className="Input__field"
-                    value={props.currency}
+                    value={props.value}
                     onChange={selectedOption => {
                         props.updateField(props.fieldName + ".visited", true);
                         props.updateField(

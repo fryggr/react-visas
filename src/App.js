@@ -229,7 +229,7 @@ class App extends Component {
         arr.forEach(item => {
             code += "['" + item + "']";
         });
-        let state = this.state;
+        let state =this.state;
         eval("state" + code + "=value");
         this.setState(state);
         this.validate();
