@@ -69,7 +69,16 @@ export const Input = props => {
             </div>
         );
     } else if (props.type === "date") {
-        return <DatePicker locale="en-EN" />;
+        return (
+            <div className={"Input " + className}>
+                <label className="Input__label">{props.label}</label>
+                <DatePicker locale="en-EN" />
+                <div className="Input__error">
+                    {props.visited ? props.error : ""}
+                </div>
+            </div>
+        )
+
     } else if (props.type === "country") {
         return (
             <div className={"Input Select_country " + className}>

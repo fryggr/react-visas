@@ -36,9 +36,15 @@
 }
 
 .Select_country .selected--flag--option, .Select_country .country-label{
-    font-size: 1.2rem !important;
+    font-size: 1.0rem !important;
+    padding: 0px !important;
+    color: hsl(0,0%,50%);
 }
 
 .Select_country .country-flag > img{
     top: -2px !important;
+}
+
+.Select_country .flag-select{
+    padding: 6px 0px 10px 0px !important;
 }

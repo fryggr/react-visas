@@ -218,12 +218,14 @@ class App extends Component {
         this.updateError = this.updateError.bind(this);
         this.validate = this.validate.bind(this);
         this.updateField = this.updateField.bind(this);
+        this.renderVisitors = this.renderVisitors.bind(this);
     }
 
     // METHODS
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
+        console.log(value);
         let arr = path.split(".");
         let code = "";
         arr.forEach(item => {
@@ -277,6 +279,139 @@ class App extends Component {
                 this.updateError(inputField, "");
             }
         });
+    }
+
+    renderVisitors() {
+        let state = this.state;
+        // let arr = [];
+        // for (let i = 0; i < state.groupSize.value; i++)
+        //     arr[i] = i;
+
+        // return arr.map(visitorIndex => {
+        return (
+            <ToggleTab label="Visitor">
+                <Input
+                    className="mt-4"
+                    type="text"
+                    updateField={this.updateField}
+                    fieldName="visitor.0.firstName"
+                    value={state.visitors[0].firstName.value}
+                    visited={state.visitors[0].firstName.visited}
+                    label="First name"
+                    placeholder="Please enter First name"
+                    error={state.visitors[0].firstName.error}
+                />
+                <Input
+                    className="mt-4"
+                    type="text"
+                    updateField={this.updateField}
+                    fieldName="visitor.0.middleName"
+                    value={state.visitors[0].middleName.value}
+                    visited={state.visitors[0].middleName.visited}
+                    label="Middle name"
+                    placeholder="Please enter Middle name"
+                    error={state.visitors[0].middleName.error}
+                />
+                <Input
+                    className="mt-4"
+                    type="text"
+                    updateField={this.updateField}
+                    fieldName="visitor.0.surName"
+                    value={state.visitors[0].surName.value}
+                    visited={state.visitors[0].surName.visited}
+                    label="Surname"
+                    placeholder="Please enter Surname"
+                    error={state.visitors[0].surName.error}
+                />
+                <RadioGroup
+                    className="mt-3"
+                    handleChange={this.updateField}
+                    fieldName="visitor.0.sex"
+                    error={state.visitors[0].sex.error}
+                    title="Gender"
+                    options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
+                    name="gender"
+                />
+                <Input
+                    type="date"
+                    updateField={this.updateField}
+                    fieldName="visitor.0.birthDate"
+                    value={state.visitors[0].birthDate.value}
+                    visited={state.visitors[0].birthDate.visited}
+                    label="Date of birth"
+                    placeholder=""
+                    error={state.visitors[0].birthDate.error}
+                />
+                <div className="row" style={{ maxWidth: "655px" }}>
+                    <div className="col-md-6">
+                        <Input
+                            className="mt-4"
+                            type="country"
+                            updateField={this.updateField}
+                            fieldName="visitor.0.citizenship"
+                            visited={state.visitors[0].citizenship.visited}
+                            label="Citizenship"
+                            error={state.visitors[0].citizenship.error}
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <Input
+                            className="mt-4"
+                            type="text"
+                            updateField={this.updateField}
+                            fieldName="visitor.0.middleName"
+                            value={state.visitors[0].passportNumber.value}
+                            visited={state.visitors[0].passportNumber.visited}
+                            label="Passport number"
+                            placeholder="Please enter passport number"
+                            error={state.visitors[0].passportNumber.error}
+                        />
+                    </div>
+                </div>
+
+                <div className="row" style={{ maxWidth: "655px" }}>
+                    <div className="col-md-6">
+                        <Input
+                            type="date"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            fieldName="visitor.0.passportIssued"
+                            value={state.visitors[0].passportIssued.value}
+                            visited={state.visitors[0].passportIssued.visited}
+                            label="Date passport issued"
+                            placeholder=""
+                            error={state.visitors[0].passportIssued.error}
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <Input
+                            type="date"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            fieldName="visitor.0.passportExpired"
+                            value={state.visitors[0].passportExpired.value}
+                            visited={state.visitors[0].passportExpired.visited}
+                            label="Date passport expired"
+                            placeholder=""
+                            error={state.visitors[0].passportExpired.error}
+                        />
+                    </div>
+                </div>
+
+                <Input
+                        type="email"
+                        className="mt-4"
+                        updateField={this.updateField}
+                        fieldName="email"
+                        value={state.email.value}
+                        visited={state.email.visited}
+                        label="Email"
+                        placeholder="Please enter email"
+                        error={state.email.error}
+                    />
+            </ToggleTab>
+        );
+        // })
     }
 
     render() {
@@ -367,7 +502,9 @@ class App extends Component {
                                 options={state.OptionsDelivery}
                             />
                         </Step>
-                        <Step number={1} hidden={state.currentStep !== 1} />
+                        <Step number={1} hidden={state.currentStep !== 1}>
+                            {this.renderVisitors()}
+                        </Step>
                         <Step number={2} hidden={state.currentStep !== 2} />
                         <Step number={3} hidden={state.currentStep !== 3} />
                     </div>
@@ -378,12 +515,20 @@ class App extends Component {
                             <Button className="align-self-md-start align-self-center" label="Save progress" />
                         </div>
 
-                            <div className="col-sm-3">
-                                <Button className="Button_red-border align-self-md-end align-self-center" label="Previous step" />
-                            </div>
-                            <div className="col-sm-3">
-                                <Button className="Button_red align-self-md-end align-self-center" label="Next step >" />
-                            </div>
+                        <div className={"col-sm-3 " + (state.currentStep === 0 ? "d-none" : "d-block")}>
+                            <Button
+                                handleClick={() => this.updateField("currentStep", state.currentStep - 1)}
+                                className={"Button_red-border align-self-md-end align-self-center"}
+                                label="Previous step"
+                            />
+                        </div>
+                        <div className={"col-sm-3 " + (state.currentStep === 3 ? "d-none" : "d-block")}>
+                            <Button
+                                handleClick={() => this.updateField("currentStep", state.currentStep + 1)}
+                                className="Button_red align-self-md-end align-self-center"
+                                label="Next step >"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

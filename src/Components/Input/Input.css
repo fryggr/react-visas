@@ -1,4 +1,6 @@
 .Input {
+  display: flex !important;
+  flex-direction: column;
   max-width: 625px;
   border: 1px solid rgba(0, 0, 0, .31);
   background-color: #fefefe;
