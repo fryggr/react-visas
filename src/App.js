@@ -307,7 +307,7 @@ class App extends Component {
                                 />
                             </div>
                         </div>
-                        <Step number={1} hidden={false}>
+                        <Step number={0} hidden={state.currentStep !== 0}>
                             <Input
                                 type="select"
                                 updateField={this.updateField}
@@ -368,6 +368,9 @@ class App extends Component {
                             />
 
                         </Step>
+                        <Step number={1} hidden={state.currentStep !== 1}>
+
+                        </Step>>
                     </div>
                 </div>
                 <div className="container mt-4">
