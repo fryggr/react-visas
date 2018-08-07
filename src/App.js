@@ -333,13 +333,24 @@ class App extends Component {
             purpose: state.purpose.value.value,
             registration: state.registration.value.value,
             countryApplyIn: state.countryApplyIn.value,
-            delivery: state.delivery.value.value
+            delivery: state.delivery.value.value,
+            email: state.email.value,
+            phone: state.phone.value
         };
 
         //add inputFields for visitors
         for (let i = 0; i < state.visitors.length; i++)
         {
             inputFields['visitors.' + i + '.firstName'] = state.visitors[i].firstName.value;
+            inputFields['visitors.' + i + '.middleName'] = state.visitors[i].middleName.value;
+            inputFields['visitors.' + i + '.surName'] = state.visitors[i].surName.value;
+            inputFields['visitors.' + i + '.sex'] = state.visitors[i].sex.value;
+            inputFields['visitors.' + i + '.birthDate'] = state.visitors[i].birthDate.value;
+            inputFields['visitors.' + i + '.citizenship'] = state.visitors[i].citizenship.value;
+            inputFields['visitors.' + i + '.passportNumber'] = state.visitors[i].passportNumber.value;
+            inputFields['visitors.' + i + '.passportIssued'] = state.visitors[i].passportIssued.value;
+            inputFields['visitors.' + i + '.passportExpired'] = state.visitors[i].passportExpired.value;
+
         }
 
         let rules = {
@@ -348,12 +359,22 @@ class App extends Component {
             purpose: "required",
             registration: "required",
             countryApplyIn: "required",
-            delivery: "required"
+            delivery: "required",
+            email:'required|email',
+            phone: 'required|regex:/[0-9\-\S]{4,}/i'
         };
 
         for (let i = 0; i < state.visitors.length; i++)
         {
-            rules['visitors.' + i + '.firstName'] = 'required';
+            rules['visitors.' + i + '.firstName'] = 'required|alpha';
+            rules['visitors.' + i + '.middleName'] = 'required|alpha';
+            rules['visitors.' + i + '.surName'] = 'required|alpha';
+            rules['visitors.' + i + '.sex'] = 'required';
+            rules['visitors.' + i + '.birthDate'] = 'required|date';
+            rules['visitors.' + i + '.citizenship'] = 'required';
+            rules['visitors.' + i + '.passportNumber'] = 'required|alpha_dash';
+            rules['visitors.' + i + '.passportIssued'] = 'required|date';
+            rules['visitors.' + i + '.passportExpired'] = 'required|date';
         }
 
         let validation = new Validator(inputFields, rules);
@@ -364,8 +385,9 @@ class App extends Component {
         // Error messages
         Object.keys(inputFields).forEach(inputField => {
             if (validation.errors.first(inputField)) {
-                // if (inputField === 'visitors.0.firstName') alert(validation.errors.first(inputField))
-                this.updateError(inputField, validation.errors.first(inputField));
+                //we need regex, to replace fieldName (which can be f.e = visitor.1.sex) to just 'This field'
+                this.updateError(inputField, validation.errors.first(inputField).replace(/The [a-z0-9\.]+/i, "This"));
+
             } else {
                 this.updateError(inputField, "");
             }
@@ -377,7 +399,7 @@ class App extends Component {
         // let arr = [];
         // for (let i = 0; i < state.groupSize.value; i++)
         //     arr[i] = i;
-
+        //
         // return arr.map(visitorIndex => {
         return (
             <ToggleTab label="Visitor">
@@ -416,12 +438,12 @@ class App extends Component {
                 />
                 <RadioGroup
                     className="mt-3"
-                    handleChange={this.updateField}
+                    updateField={this.updateField}
                     fieldName="visitors.0.sex"
                     error={state.visitors[0].sex.error}
                     title="Gender"
                     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
-                    name="gender"
+                    name="sex"
                 />
                 <Input
                     type="date"
@@ -450,7 +472,7 @@ class App extends Component {
                             className="mt-4"
                             type="text"
                             updateField={this.updateField}
-                            fieldName="visitors.0.middleName"
+                            fieldName="visitors.0.passportNumber"
                             value={state.visitors[0].passportNumber.value}
                             visited={state.visitors[0].passportNumber.visited}
                             label="Passport number"
@@ -643,9 +665,9 @@ export default App;
 // {/*<RadioGroup
 //     handleChange={this.handleSexChange}
 //     error={this.state.sex.error}
-//     title="Gender"
+//     title="sex"
 //     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
-//     name="gender"
+//     name="sex"
 // />*/}
 //
 // {/*ToggleTab example*/}
