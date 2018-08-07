@@ -97,7 +97,7 @@ class App extends Component {
             /*************USER'S INPUT STEP 1************/
 
             groupSize: {
-                value: "",
+                value: "1",
                 error: "",
                 visited: false
             },
@@ -274,7 +274,7 @@ class App extends Component {
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
-        console.log(value);
+
         //generate code like [path][path]
         let arr = path.split(".");
         let code = "";
@@ -287,7 +287,7 @@ class App extends Component {
         let state = this.state;
         eval("state" + code + "=value");
         this.setState(state);
-        this.updateVisitorsArray()
+        this.updateVisitorsArray();
         this.validate();
     }
 
@@ -312,25 +312,41 @@ class App extends Component {
         this.setState(state, ()=>console.log(this.state))
     }
 
-    updateError(fieldName, value) {
-        let updatedField = this.state[fieldName];
-        updatedField.error = value;
+    updateError(path, value) {
+        console.log(path);
+        //generate code like [path][path]
+        let arr = path.split(".");
+        let code = "";
+        arr.forEach(item => {
+            code += "['" + item + "']";
+        });
 
-        let newState = this.state;
-        newState[fieldName] = updatedField;
-
-        this.setState(newState);
+        //updateState
+        let state = this.state;
+        if (path.indexOf('firstName') !== -1){
+            // eval("console.log('SUKA ===' ,state" + code + ")")
+            console.log('SUKA =',code)
+        }
+        eval("state" + code + ".error=value");
+        this.setState(state);
     }
 
     validate() {
+        let state = this.state;
         let inputFields = {
-            groupSize: this.state.groupSize.value.value,
-            numberOfEntries: this.state.numberOfEntries.value.value,
-            purpose: this.state.purpose.value.value,
-            registration: this.state.registration.value.value,
-            countryApplyIn: this.state.countryApplyIn.value,
-            delivery: this.state.delivery.value.value
+            groupSize: state.groupSize.value.value,
+            numberOfEntries: state.numberOfEntries.value.value,
+            purpose: state.purpose.value.value,
+            registration: state.registration.value.value,
+            countryApplyIn: state.countryApplyIn.value,
+            delivery: state.delivery.value.value
         };
+
+        //add inputFields for visitors
+        for (let i = 0; i < state.visitors.length; i++)
+        {
+            inputFields['visitors.' + i + '.firstName'] = state.visitors[i].firstName.value;
+        }
 
         let rules = {
             groupSize: "required",
@@ -341,6 +357,11 @@ class App extends Component {
             delivery: "required"
         };
 
+        for (let i = 0; i < state.visitors.length; i++)
+        {
+            rules['visitors.' + i + '.firstName'] = 'required';
+        }
+
         let validation = new Validator(inputFields, rules);
 
         validation.fails(); // true
@@ -349,6 +370,7 @@ class App extends Component {
         // Error messages
         Object.keys(inputFields).forEach(inputField => {
             if (validation.errors.first(inputField)) {
+                // if (inputField === 'visitors.0.firstName') alert(validation.errors.first(inputField))
                 this.updateError(inputField, validation.errors.first(inputField));
             } else {
                 this.updateError(inputField, "");
@@ -369,7 +391,7 @@ class App extends Component {
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
-                    fieldName="visitor.0.firstName"
+                    fieldName="visitors.0.firstName"
                     value={state.visitors[0].firstName.value}
                     visited={state.visitors[0].firstName.visited}
                     label="First name"
@@ -380,7 +402,7 @@ class App extends Component {
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
-                    fieldName="visitor.0.middleName"
+                    fieldName="visitors.0.middleName"
                     value={state.visitors[0].middleName.value}
                     visited={state.visitors[0].middleName.visited}
                     label="Middle name"
@@ -391,7 +413,7 @@ class App extends Component {
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
-                    fieldName="visitor.0.surName"
+                    fieldName="visitors.0.surName"
                     value={state.visitors[0].surName.value}
                     visited={state.visitors[0].surName.visited}
                     label="Surname"
@@ -401,7 +423,7 @@ class App extends Component {
                 <RadioGroup
                     className="mt-3"
                     handleChange={this.updateField}
-                    fieldName="visitor.0.sex"
+                    fieldName="visitors.0.sex"
                     error={state.visitors[0].sex.error}
                     title="Gender"
                     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
@@ -410,7 +432,7 @@ class App extends Component {
                 <Input
                     type="date"
                     updateField={this.updateField}
-                    fieldName="visitor.0.birthDate"
+                    fieldName="visitors.0.birthDate"
                     value={state.visitors[0].birthDate.value}
                     visited={state.visitors[0].birthDate.visited}
                     label="Date of birth"
@@ -423,7 +445,7 @@ class App extends Component {
                             className="mt-4"
                             type="country"
                             updateField={this.updateField}
-                            fieldName="visitor.0.citizenship"
+                            fieldName="visitors.0.citizenship"
                             visited={state.visitors[0].citizenship.visited}
                             label="Citizenship"
                             error={state.visitors[0].citizenship.error}
@@ -434,7 +456,7 @@ class App extends Component {
                             className="mt-4"
                             type="text"
                             updateField={this.updateField}
-                            fieldName="visitor.0.middleName"
+                            fieldName="visitors.0.middleName"
                             value={state.visitors[0].passportNumber.value}
                             visited={state.visitors[0].passportNumber.visited}
                             label="Passport number"
@@ -450,7 +472,7 @@ class App extends Component {
                             type="date"
                             className="mt-4"
                             updateField={this.updateField}
-                            fieldName="visitor.0.passportIssued"
+                            fieldName="visitors.0.passportIssued"
                             value={state.visitors[0].passportIssued.value}
                             visited={state.visitors[0].passportIssued.visited}
                             label="Date passport issued"
@@ -463,7 +485,7 @@ class App extends Component {
                             type="date"
                             className="mt-4"
                             updateField={this.updateField}
-                            fieldName="visitor.0.passportExpired"
+                            fieldName="visitors.0.passportExpired"
                             value={state.visitors[0].passportExpired.value}
                             visited={state.visitors[0].passportExpired.visited}
                             label="Date passport expired"
