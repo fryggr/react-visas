@@ -50,6 +50,7 @@ export const Input = props => {
                 <Select
                     className="Input__field"
                     value={props.value}
+                    placeholder="Please select"
                     onChange={selectedOption => {
                         props.updateField(props.fieldName + ".visited", true);
                         props.updateField(
@@ -75,11 +76,11 @@ export const Input = props => {
                 <label className="Input__label">{props.label}</label>
                 <ReactFlagsSelect
                     className=""
-                    defaultCountry="GB"
-                    placeholder="Select Country"
                     showSelectedLabel={true}
                     showOptionLabel={true}
                     selectedSize={14}
+                    placeholder="Please select"
+                    searchPlaceholder="please type"
                     searchable={true}
                     onSelect={selectedOption => {
                         props.updateField(props.fieldName + ".visited", true);
