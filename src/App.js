@@ -396,11 +396,11 @@ class App extends Component {
 
     renderVisitors() {
         let state = this.state;
-        // let arr = [];
-        // for (let i = 0; i < state.groupSize.value; i++)
-        //     arr[i] = i;
-        //
-        // return arr.map(visitorIndex => {
+        let arr = [];
+        for (let i = 0; i < state.groupSize.value.value; i++)
+            arr[i] = i;
+
+        return arr.map(visitorIndex => {
         return (
             <ToggleTab label="Visitor">
                 <Input
@@ -534,7 +534,7 @@ class App extends Component {
                 />
             </ToggleTab>
         );
-        // })
+        })
     }
 
     render() {
