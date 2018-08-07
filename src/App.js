@@ -229,7 +229,7 @@ class App extends Component {
         arr.forEach(item => {
             code += "['" + item + "']";
         });
-        let state =this.state;
+        let state = this.state;
         eval("state" + code + "=value");
         this.setState(state);
         this.validate();
@@ -261,7 +261,7 @@ class App extends Component {
             purpose: "required",
             registration: "required",
             countryApplyIn: "required",
-            delivery: "required",
+            delivery: "required"
         };
 
         let validation = new Validator(inputFields, rules);
@@ -366,21 +366,24 @@ class App extends Component {
                                 error={state.delivery.error}
                                 options={state.OptionsDelivery}
                             />
-
                         </Step>
-                        <Step number={1} hidden={state.currentStep !== 1}>
-
-                        </Step>>
+                        <Step number={1} hidden={state.currentStep !== 1} />
+                        <Step number={2} hidden={state.currentStep !== 2} />
+                        <Step number={3} hidden={state.currentStep !== 3} />
                     </div>
                 </div>
                 <div className="container mt-4">
-                    <div className="row" style={{maxWidth: "710px"}}>
+                    <div className="row" style={{ maxWidth: "710px" }}>
                         <div className="col-sm-6">
                             <Button className="align-self-md-start align-self-center" label="Save progress" />
                         </div>
-                        <div className="col-sm-6">
-                            <Button className="Button_red align-self-md-end align-self-center" label="Next step >" />
-                        </div>
+
+                            <div className="col-sm-3">
+                                <Button className="Button_red-border align-self-md-end align-self-center" label="Previous step" />
+                            </div>
+                            <div className="col-sm-3">
+                                <Button className="Button_red align-self-md-end align-self-center" label="Next step >" />
+                            </div>
                     </div>
                 </div>
             </div>
