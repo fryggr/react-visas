@@ -4,6 +4,8 @@ import React from "react";
 import Select from "react-select";
 import DatePicker from "react-date-picker";
 import ReactFlagsSelect from "react-flags-select";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 /*******IMPORT STYLES********/
 import "./Input.css";
@@ -11,17 +13,12 @@ import "react-flags-select/css/react-flags-select.css";
 import "./../Datepicker/Datepicker.css";
 
 export const Input = props => {
-    let className =
-        typeof props.className !== "undefined" ? props.className : "";
+    let className = typeof props.className !== "undefined" ? props.className : "";
     if (props.visited) {
         className += props.error !== "" ? " incorrect" : " correct";
     }
 
-    if (
-        props.type !== "select" &&
-        props.type !== "date" &&
-        props.type !== "country"
-    ) {
+    if (props.type !== "select" && props.type !== "date" && props.type !== "country" && props.type !== "phone") {
         return (
             <div className={"Input " + className}>
                 <label className="Input__label">{props.label}</label>
@@ -30,17 +27,13 @@ export const Input = props => {
                         props.updateField(props.fieldName + ".visited", true);
                         props.updateField(props.fieldName, e.target.value);
                     }}
-                    onChange={e =>
-                        props.updateField(props.fieldName, e.target.value)
-                    }
+                    onChange={e => props.updateField(props.fieldName, e.target.value)}
                     value={props.value}
                     className="Input__field"
                     type={props.type}
                     placeholder={props.placeholder}
                 />
-                <div className="Input__error">
-                    {props.visited ? props.error : ""}
-                </div>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
             </div>
         );
     } else if (props.type === "select") {
@@ -53,19 +46,12 @@ export const Input = props => {
                     placeholder="Please select"
                     onChange={selectedOption => {
                         props.updateField(props.fieldName + ".visited", true);
-                        props.updateField(
-                            props.fieldName + ".value",
-                            selectedOption
-                        );
+                        props.updateField(props.fieldName + ".value", selectedOption);
                     }}
-                    onBlur={e =>
-                        props.updateField(props.fieldName + ".visited", true)
-                    }
+                    onBlur={e => props.updateField(props.fieldName + ".visited", true)}
                     options={props.options}
                 />
-                <div className="Input__error">
-                    {props.visited ? props.error : ""}
-                </div>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
             </div>
         );
     } else if (props.type === "date") {
@@ -73,12 +59,9 @@ export const Input = props => {
             <div className={"Input " + className}>
                 <label className="Input__label">{props.label}</label>
                 <DatePicker locale="en-EN" />
-                <div className="Input__error">
-                    {props.visited ? props.error : ""}
-                </div>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
             </div>
-        )
-
+        );
     } else if (props.type === "country") {
         return (
             <div className={"Input Select_country " + className}>
@@ -93,16 +76,19 @@ export const Input = props => {
                     searchable={true}
                     onSelect={selectedOption => {
                         props.updateField(props.fieldName + ".visited", true);
-                        props.updateField(
-                            props.fieldName + ".value",
-                            selectedOption
-                        );
+                        props.updateField(props.fieldName + ".value", selectedOption);
                     }}
                 />
-                <div className="Input__error">
-                    {props.visited ? props.error : ""}
-                </div>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
             </div>
         );
+    } else if (props.type === "phone") {
+        return (
+            <div className={"Input Select_country " + className}>
+                <label className="Input__label">{props.label}</label>
+                <PhoneInput placeholder="Enter phone number" onChange={phone => props.updateField(props.fieldName + ".phone", phone)}/>
+                <div className="Input__error">{props.visited ? props.error : ""}</div>
+            </div>
+        )
     }
 };

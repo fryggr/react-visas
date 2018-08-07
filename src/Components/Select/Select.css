@@ -48,3 +48,11 @@
 .Select_country .flag-select{
     padding: 6px 0px 10px 0px !important;
 }
+
+.react-phone-number-input__icon{
+    position: relative;
+}
+
+.react-phone-number-input__icon > img{
+    position: absolute;
+}

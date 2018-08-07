@@ -399,16 +399,26 @@ class App extends Component {
                 </div>
 
                 <Input
-                        type="email"
-                        className="mt-4"
-                        updateField={this.updateField}
-                        fieldName="email"
-                        value={state.email.value}
-                        visited={state.email.visited}
-                        label="Email"
-                        placeholder="Please enter email"
-                        error={state.email.error}
-                    />
+                    type="email"
+                    className="mt-4"
+                    updateField={this.updateField}
+                    fieldName="email"
+                    value={state.email.value}
+                    visited={state.email.visited}
+                    label="Email"
+                    placeholder="Please enter email"
+                    error={state.email.error}
+                />
+                <Input
+                    type="phone"
+                    className="mt-4"
+                    updateField={this.updateField}
+                    fieldName="phone"
+                    value={state.phone.value}
+                    visited={state.phone.visited}
+                    label="Telephone"
+                    error={state.phone.error}
+                />
             </ToggleTab>
         );
         // })
