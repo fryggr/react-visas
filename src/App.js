@@ -18,6 +18,54 @@ const plugins = {
     dvr: Validator
 };
 
+let visitorTemplate = {
+    firstName: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    middleName: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    surName: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    sex: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    birthDate: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    citizenship: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    passportNumber: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    passportIssued: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    passportExpired: {
+        value: "",
+        error: "",
+        visited: false
+    }
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -219,6 +267,7 @@ class App extends Component {
         this.validate = this.validate.bind(this);
         this.updateField = this.updateField.bind(this);
         this.renderVisitors = this.renderVisitors.bind(this);
+        this.updateVisitorsArray = this.updateVisitorsArray.bind(this);
     }
 
     // METHODS
@@ -226,15 +275,41 @@ class App extends Component {
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
         console.log(value);
+        //generate code like [path][path]
         let arr = path.split(".");
         let code = "";
         arr.forEach(item => {
             code += "['" + item + "']";
         });
+
+
+        //updateState
         let state = this.state;
         eval("state" + code + "=value");
         this.setState(state);
+        this.updateVisitorsArray()
         this.validate();
+    }
+
+    updateVisitorsArray(){
+        let state = this.state;
+
+        let oldVisitorsCount = this.state.visitors.length;
+        let newVisitorsCount = this.state.groupSize.value.value;
+        console.log("oldVisitorsCount = ",this.state.visitors.length);
+        console.log("newVisitorsCount = ",this.state.groupSize.value.value);
+
+        if (oldVisitorsCount < newVisitorsCount){
+            for (let i = oldVisitorsCount; i < newVisitorsCount; i++)
+                state.visitors.push(JSON.parse(JSON.stringify(visitorTemplate)));
+        }
+        else {
+            for (let i = oldVisitorsCount; i > newVisitorsCount; i--)
+                state.visitors.pop();
+        }
+
+
+        this.setState(state, ()=>console.log(this.state))
     }
 
     updateError(fieldName, value) {
