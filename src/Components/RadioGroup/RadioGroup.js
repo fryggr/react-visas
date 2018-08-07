@@ -26,7 +26,7 @@ export const RadioGroup = props => {
                 name={props.name}
                 value={item.value}
                 id={generateIdForNewRadio()}
-                onClick={(e) => props.handleChange(e.target.value)}
+                onClick={(e) => props.updateField(props.fieldName + ".value",e.target.value)}
               />
               <label
                 className="RadioGroup__item-label"
