@@ -274,7 +274,6 @@ class App extends Component {
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
-
         //generate code like [path][path]
         let arr = path.split(".");
         let code = "";
@@ -285,6 +284,7 @@ class App extends Component {
 
         //updateState
         let state = this.state;
+        if (path === "email.visited") console.log(state);
         eval("state" + code + "=value");
         this.setState(state);
         this.updateVisitorsArray();
@@ -296,8 +296,7 @@ class App extends Component {
 
         let oldVisitorsCount = this.state.visitors.length;
         let newVisitorsCount = this.state.groupSize.value.value;
-        console.log("oldVisitorsCount = ",this.state.visitors.length);
-        console.log("newVisitorsCount = ",this.state.groupSize.value.value);
+
 
         if (oldVisitorsCount < newVisitorsCount){
             for (let i = oldVisitorsCount; i < newVisitorsCount; i++)
@@ -309,11 +308,10 @@ class App extends Component {
         }
 
 
-        this.setState(state, ()=>console.log(this.state))
+        this.setState(state)
     }
 
     updateError(path, value) {
-        console.log(path);
         //generate code like [path][path]
         let arr = path.split(".");
         let code = "";
@@ -323,10 +321,6 @@ class App extends Component {
 
         //updateState
         let state = this.state;
-        if (path.indexOf('firstName') !== -1){
-            // eval("console.log('SUKA ===' ,state" + code + ")")
-            console.log('SUKA =',code)
-        }
         eval("state" + code + ".error=value");
         this.setState(state);
     }

@@ -25,10 +25,9 @@ export const Input = props => {
                 <input
                     onBlur={e => {
                         props.updateField(props.fieldName + ".visited", true);
-                        props.updateField(props.fieldName, e.target.value);
+                        props.updateField(props.fieldName + ".value", e.target.value);
                     }}
-                    onChange={e => props.updateField(props.fieldName, e.target.value)}
-                    value={props.value}
+                    onChange={e => props.updateField(props.fieldName + ".value", e.target.value)}
                     className="Input__field"
                     type={props.type}
                     placeholder={props.placeholder}
