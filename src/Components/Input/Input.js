@@ -12,26 +12,7 @@ import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";
 import "./../Datepicker/Datepicker.css";
 
-// HELPERS for Datepicker's customisation
-var renderers = {
-    renderDay: function(props, currentDate, selectedDate) {
-        return <td {...props}>{currentDate.date()}</td>;
-    },
-    renderMonth: function(props, month, year, selectedDate) {
-        return (
-            <td {...props} className="Datepicker__month">
-                {Moment(month + 1, "MM").format("MMM")}
-            </td>
-        );
-    },
-    renderYear: function(props, year, selectedDate) {
-        return (
-            <td {...props} className="Datepicker__year">
-                {year}
-            </td>
-        );
-    }
-};
+
 
 export const Input = props => {
     let className = typeof props.className !== "undefined" ? props.className : "";
@@ -84,9 +65,7 @@ export const Input = props => {
                     onBlur={date => props.updateField(props.fieldName + ".visited", true)}
                     input={true}
                     closeOnSelect={true}
-                    renderDay={renderers.renderDay}
-                    renderMonth={renderers.renderMonth}
-                    renderYear={renderers.renderYear}
+
                     timeFormat={false}
                     dateFormat="DD MMM YYYY"
                     viewMode="years"

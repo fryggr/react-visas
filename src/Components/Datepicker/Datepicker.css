@@ -77,8 +77,9 @@
 .rdtPicker td.rdtDisabled,
 .rdtPicker td.rdtDisabled:hover {
   background: none;
-  color: #999999;
+  color: #000;
   cursor: not-allowed;
+  background: url(http://st4.styapokupayu.ru/images/blog_post_images/000/129/919_original.png) no-repeat center / 19px;
 }
 
 .rdtPicker td span.rdtOld {

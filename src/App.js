@@ -302,36 +302,112 @@ class App extends Component {
 
   getRestrictForDate(datePickerName) {
     let state = this.state;
+    //prepare data
+    let today = Moment();
+    var sixMonthAfterToday = Moment().add(182, "day");
+    var arrivalDate1 = Moment(state.arrivalDate1.value);
+    var arrivalDate2 = Moment(state.arrivalDate2.value);
+    var departureDate1 = Moment(state.departureDate1.value);
+    var departureDate2 = Moment(state.departureDate2.value);
+    var arrivalDate1Plus6Months = Moment(state.arrivalDate1.value).add(6, 'month');
+    var arrivalDate2Plus6Months = Moment(state.arrivalDate2.value).add(6, 'month');
+    var departureDate1Plus6Months = Moment(state.departureDate1.value).add(6, 'month');
+    var departureDate2Plus6Months = Moment(state.departureDate2.value).add(6, 'month');
+    var thirtyDaysAfterArrival1 = Moment(state.arrivalDate1.value).add(30,"day");
+    var thirtyDaysBeforeDeparture1 = Moment(state.departureDate1.value).subtract(30,"day");
+    var thirtyDaysAfterArrival2 = Moment(state.arrivalDate2.value).add(30,"day");
+    var thirtyDaysBeforeDeparture2 = Moment(state.departureDate2.value).subtract(30,"day");
+    var sixMonthBeforePassportExpired = Moment(
+      state.visitors[0].passportExpired.value
+  ).subtract(6, "month");
+
+
     if (datePickerName === "birthDate" || datePickerName === "passportIssued") {
       return function(current) {
-        var today = Moment();
+          //должна быть позже сегодня
         return current.isBefore(today);
       };
     } else if (datePickerName === "passportExpired") {
       return function(current) {
-        var sixMonthAfterToday = Moment().add(182, "day");
-        return current.isAfter(sixMonthAfterToday);
+          //дожна быть через 6 месяцев после сегодня
+          //должна быть после даты первого вьезда + 6 месяцев
+          //должна быть после даты первого выезда + 6 месяцев
+          //должна быть после даты второго вьезда + 6 месяцев
+          //должна быть после даты второго выезда + 6 месяцев
+        return (current.isAfter(sixMonthAfterToday) &&
+                (current.isAfter(arrivalDate1Plus6Months) || state.arrivalDate1.value === "") &&
+                (current.isAfter(arrivalDate2Plus6Months) || state.arrivalDate2.value === "") &&
+                (current.isAfter(departureDate1Plus6Months) || state.departureDate1.value === "") &&
+                (current.isAfter(departureDate2Plus6Months) || state.departureDate2.value === "")
+            );
       };
     } else if (datePickerName === "arrivalDate1") {
+        //должна быть позже сегодня
+        //должна быть до даты первого отьезда
+        //должна быть до даты второго вьезда
+        //должна быть до даты второго выезда
+        //должна быть минимум на 6 месяцев раньше даты истечения паспорта
+        //должна быть не раньше чем 30 дней с момента даты первого выезда
       return function(current) {
-        var today = Moment();
-        return current.isAfter(today);
+        return (current.isAfter(today) &&
+        (current.isBefore(departureDate1) || state.departureDate1.value === "") &&
+        (current.isBefore(arrivalDate2) || state.arrivalDate2.value === "") &&
+        (current.isBefore(departureDate2) || state.departureDate2.value === "") &&
+        (current.isBefore(sixMonthBeforePassportExpired) || state.visitors[0].passportExpired.value === "") &&
+        (current.isAfter(thirtyDaysBeforeDeparture1) || state.departureDate1.value === "")
+        );
       };
     } else if (datePickerName === "departureDate1") {
+        //должна быть позже сегодня
+        //должна быть после даты первого вьезда
+        //должна быть до даты второго вьезда
+        //должна быть до даты второго выезда
+        //должна быть минимум на 6 месяцев раньше даты истечения паспорта
+        //должна быть не позже чем на 30 дней после даты первого вьезда
       return function(current) {
-        var arrivalDate1 = Moment(state.arrivalDate1.value);
-        var sixMonthBeforePassportExpired = Moment(
-          state.visitors[0].passportExpired.value
-        ).subtract(182, "day");
-        var thirtyDaysAfterArrival1 = Moment(state.arrivalDate1.value).add(
-          30,
-          "day"
-        );
-
         return (
-          current.isBefore(thirtyDaysAfterArrival1) &&
-          current.isAfter(arrivalDate1) &&
-          current.isBefore(sixMonthBeforePassportExpired)
+          (current.isAfter(today)) &&
+          (current.isAfter(arrivalDate1) || state.arrivalDate1.value === "") &&
+          (current.isBefore(arrivalDate2) || state.arrivalDate2.value === "") &&
+          (current.isBefore(departureDate2) || state.departureDate2.value === "") &&
+          (current.isBefore(thirtyDaysAfterArrival1) || state.arrivalDate1.value === "") &&
+          (current.isBefore(sixMonthBeforePassportExpired) || state.visitors[0].passportExpired.value === "")
+        );
+      };
+    }
+    else if (datePickerName === "arrivalDate2") {
+        //должна быть после сегодня
+        //должна быть после даты первого вьезда
+        //должна быть после даты первого выезда
+        //дожна быть до даты второго выезда
+        //должна быть минимум на 6 месяцев раньше даты истечения паспорта
+        //должна быть не раньше чем 30 дней с момента даты второго выезда
+      return function(current) {
+        return (
+                (current.isAfter(today)) &&
+                (current.isAfter(arrivalDate1) || state.arrivalDate1.value === "") &&
+                (current.isAfter(departureDate1) || state.departureDate1.value === "") &&
+                (current.isBefore(departureDate2) || state.departureDate2.value === "") &&
+                (current.isBefore(sixMonthBeforePassportExpired) || state.visitors[0].passportExpired.value === "") &&
+                (current.isAfter(thirtyDaysBeforeDeparture2) || state.departureDate2.value === "")
+        );
+      };
+    }
+    else if (datePickerName === "departureDate2") {
+        //должна быть после сегодня
+        //должна быть после даты первого вьезда
+        //должна быть после даты первого выезда
+        //дожна быть после даты второго въезда
+        //должна быть минимум на 6 месяцев раньше даты истечения паспорта
+        //должна быть не позже чем на 30 дней после даты второго вьезда
+      return function(current) {
+        return (
+                (current.isAfter(today)) &&
+                (current.isAfter(arrivalDate1) || state.arrivalDate1.value === "") &&
+                (current.isAfter(departureDate1) || state.departureDate1.value === "") &&
+                (current.isAfter(arrivalDate2) || state.arrivalDate2.value === "") &&
+                (current.isBefore(sixMonthBeforePassportExpired) || state.visitors[0].passportExpired.value === "") &&
+                (current.isBefore(thirtyDaysAfterArrival2) || state.arrivalDate2.value === "")
         );
       };
     }
@@ -688,9 +764,9 @@ class App extends Component {
         <div className="row" style={{ maxWidth: "655px" }}>
           <div className="col-md-6">
             <Input
-              dateValidator={this.getRestrictForDate("arrivalDate1")}
+              dateValidator={this.getRestrictForDate("arrivalDate"+(inputIndex+1))}
               type="date"
-              className="mt-4"
+              className="mt-4 mr-2"
               updateField={this.updateField}
               fieldName={"arrivalDate" + (inputIndex + 1)}
               value={this.state["arrivalDate" + (inputIndex + 1)].value}
@@ -702,7 +778,7 @@ class App extends Component {
           </div>
           <div className="col-md-6">
             <Input
-              dateValidator={this.getRestrictForDate("departureDate1")}
+              dateValidator={this.getRestrictForDate("departureDate"+(inputIndex+1))}
               type="date"
               className="mt-4"
               updateField={this.updateField}
