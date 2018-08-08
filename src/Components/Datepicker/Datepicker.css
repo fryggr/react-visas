@@ -1,84 +1,298 @@
-.react-calendar button,
-.react-calendar__month-view__weekdays{
+/*!
+ * https://github.com/YouCanBookMe/react-datetime
+ */
+
+.rdt {
+  position: relative;
+}
+.rdtPicker {
+  display: none;
+  position: absolute;
+  width: 250px;
+  padding: 4px;
+  margin-top: 1px;
+  z-index: 99999 !important;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  border: 1px solid #f9f9f9;
+}
+.rdtOpen .rdtPicker {
+  display: block;
+}
+.rdtStatic .rdtPicker {
+  box-shadow: none;
+  position: static;
+}
+
+.rdtPicker .rdtTimeToggle {
+  text-align: center;
+}
+
+.rdtPicker table {
+  width: 100%;
+  margin: 0;
+}
+.rdtPicker td,
+.rdtPicker th {
+  text-align: center;
+  height: 28px;
+}
+.rdtPicker td {
+  cursor: pointer;
+}
+.rdtPicker td.rdtDay:hover,
+.rdtPicker td.rdtHour:hover,
+.rdtPicker td.rdtMinute:hover,
+.rdtPicker td.rdtSecond:hover,
+.rdtPicker .rdtTimeToggle:hover {
+  background: #eeeeee;
+  cursor: pointer;
+}
+.rdtPicker td.rdtOld,
+.rdtPicker td.rdtNew {
+  color: #999999;
+}
+.rdtPicker td.rdtToday {
+  position: relative;
+}
+.rdtPicker td.rdtToday:before {
+  content: '';
+  display: inline-block;
+  border-left: 7px solid transparent;
+  border-bottom: 7px solid #428bca;
+  border-top-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}
+.rdtPicker td.rdtActive,
+.rdtPicker td.rdtActive:hover {
+  background-color: #428bca;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.rdtPicker td.rdtActive.rdtToday:before {
+  border-bottom-color: #fff;
+}
+.rdtPicker td.rdtDisabled,
+.rdtPicker td.rdtDisabled:hover {
+  background: none;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+.rdtPicker td span.rdtOld {
+  color: #999999;
+}
+.rdtPicker td span.rdtDisabled,
+.rdtPicker td span.rdtDisabled:hover {
+  background: none;
+  color: #999999;
+  cursor: not-allowed;
+}
+.rdtPicker th {
+  border-bottom: 1px solid #f9f9f9;
+}
+.rdtPicker .dow {
+  width: 14.2857%;
+  border-bottom: none;
+  cursor: default;
+}
+.rdtPicker th.rdtSwitch {
+  width: 100px;
+}
+.rdtPicker th.rdtNext,
+.rdtPicker th.rdtPrev {
+  font-size: 21px;
+  vertical-align: top;
+}
+
+.rdtPrev span,
+.rdtNext span {
+  display: block;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.rdtPicker th.rdtDisabled,
+.rdtPicker th.rdtDisabled:hover {
+  background: none;
+  color: #999999;
+  cursor: not-allowed;
+}
+.rdtPicker thead tr:first-child th {
+  cursor: pointer;
+}
+.rdtPicker thead tr:first-child th:hover {
+  background: #eeeeee;
+}
+
+.rdtPicker tfoot {
+  border-top: 1px solid #f9f9f9;
+}
+
+.rdtPicker button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.rdtPicker button:hover {
+  background-color: #eee;
+}
+
+.rdtPicker thead button {
+  width: 100%;
+  height: 100%;
+}
+
+td.rdtMonth,
+td.rdtYear {
+  height: 50px;
+  width: 25%;
+  cursor: pointer;
+}
+td.rdtMonth:hover,
+td.rdtYear:hover {
+  background: #eee;
+}
+
+.rdtCounters {
+  display: inline-block;
+}
+
+.rdtCounters > div {
+  float: left;
+}
+
+.rdtCounter {
+  height: 100px;
+}
+
+.rdtCounter {
+  width: 40px;
+}
+
+.rdtCounterSeparator {
+  line-height: 100px;
+}
+
+.rdtCounter .rdtBtn {
+  height: 40%;
+  line-height: 40px;
+  cursor: pointer;
+  display: block;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+.rdtCounter .rdtBtn:hover {
+  background: #eee;
+}
+.rdtCounter .rdtCount {
+  height: 20%;
+  font-size: 1.2em;
+}
+
+.rdtMilli {
+  vertical-align: middle;
+  padding-left: 8px;
+  width: 48px;
+}
+
+.rdtMilli input {
+  width: 100%;
+  font-size: 1.2em;
+  margin-top: 37px;
+}
+
+.rdtTime td {
+  cursor: default;
+}
+
+
+/** CUSTOM **/
+.Datepicker .rdtPicker{
+    border: 10px solid #ccc;
+    outline: 1px solid #b0b0b0;
+    top: 100%;
+    bottom: auto;
+    padding: 0;
+}
+
+.Datepicker .rdtPicker table{
+    border-spacing: 0;
+}
+
+.Datepicker .rdtPicker th{
+    padding: 5px 0;
+    font-weight: 500;
     font-family: 'Open Sans', sans-serif;
 }
 
-
-.react-date-picker__button{
-    max-width: 625px;
-    width: 100%;
-    margin-bottom: 5px;
-    border: none !important;
-    background-color: #fefefe;
-    border-radius: 3px;
-    position: relative;
-    padding: 11px 0 0 15px;
-    cursor: pointer;
-    background: url(img/input-calendar.png) no-repeat 99% 91%;
-}
-
-
-.react-date-picker__button__icon{
-    display: none;
-}
-
-.react-date-picker__button__input__input{
-    border-bottom: none!important
-}
-
-.react-date-picker__calendar{
-    border: 10px solid #ccc;
-    outline: 1px solid #b0b0b0;
-    width: 300px;
-    top: 100%;
-    bottom: auto;
-}
-
-.react-calendar__navigation{
+.Datepicker .rdtPicker .rdtYears thead tr:first-child,
+.Datepicker .rdtPicker .rdtMonths thead tr:first-child{
     background: #cc091d;
-    margin-bottom: 0
-}
-
-.react-calendar__navigation button{
+    margin-bottom: 0;
     color: #fff;
 }
 
-.react-calendar__navigation button:enabled:hover, .react-calendar__navigation button:enabled:focus{
-    background-color: transparent;
+.Datepicker .rdtPicker .rdtYears thead tr:first-child .rdtPrev,
+.Datepicker .rdtPicker .rdtYears thead tr:first-child .rdtNext,
+.Datepicker .rdtPicker .rdtMonths thead tr:first-child .rdtPrev,
+.Datepicker .rdtPicker .rdtMonths thead tr:first-child .rdtNext
+{
+    width: 36px;
 }
 
-.react-calendar__navigation button.react-calendar__navigation__prev-button{
-    background: url(img/arrow-datepicker-left.png) no-repeat center center;
-    color: transparent;
+.Datepicker .rdtPicker th.rdtSwitch{
+    font-size: 14px;
 }
 
-.react-calendar__navigation button.react-calendar__navigation__next-button{
-    background: url(img/arrow-datepicker-right.png) no-repeat center center;
-    color: transparent;
+.Datepicker .rdtPicker thead tr:first-child th:hover{
+    background: transparent;
 }
 
-.react-calendar__navigation__next2-button, .react-calendar__navigation__prev2-button{
-    display: none;
+.Datepicker .rdtPicker .dow{
+    text-transform: uppercase;
+    font-size: 14px;
 }
 
-.react-calendar__month-view__weekdays{
-    border-bottom: 1px solid #ccc;
-    font-weight: normal;
+.Datepicker .rdtPicker td{
+    font-size: 14px;
+    height: 34px;
 }
 
-.react-calendar__month-view__weekdays__weekday{
-    text-transform: none;
-}
-
-.react-calendar__tile--active{
+.Datepicker .rdtPicker td.rdtActive{
+    background-color: #cc091d;
+    color: #fff;
     border-radius: 100%;
-    background: #cc091d;
 }
 
-.react-calendar__tile{
-    padding: 0.5em 0.5em;
+
+.Datepicker .rdtDays thead tr:first-child {
+    background: #cc091d;
+    margin-bottom: 0;
+    color: #fff;
 }
 
-button.react-calendar__tile--active:enabled:hover, button.react-calendar__tile--active:enabled:focus{
-    background: #cc091d;
+.Datepicker .rdtDays thead tr:last-child th{
+    border-bottom: 1px solid #ccc;
+}
+
+.Datepicker .form-control{
+    cursor: pointer;
+    border: none !important;
+    background: url('img/input-calendar.png') no-repeat 99% center / 2rem;
+}
+
+.Datepicker .form-control:focus{
+    box-shadow: none !important;
 }
