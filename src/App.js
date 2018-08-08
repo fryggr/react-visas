@@ -439,7 +439,7 @@ class App extends Component {
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
-                    fieldName="visitors.0.firstName"
+                    fieldName={"visitors." + visitorIndex + ".firstName"}
                     value={state.visitors[visitorIndex].firstName.value}
                     visited={state.visitors[visitorIndex].firstName.visited}
                     label="First name"
@@ -450,7 +450,7 @@ class App extends Component {
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
-                    fieldName="visitors.0.middleName"
+                    fieldName={"visitors." + visitorIndex + ".middleName"}
                     value={state.visitors[visitorIndex].middleName.value}
                     visited={state.visitors[visitorIndex].middleName.visited}
                     label="Middle name"
@@ -461,7 +461,7 @@ class App extends Component {
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
-                    fieldName="visitors.0.surName"
+                    fieldName={"visitors." + visitorIndex + ".surName"}
                     value={state.visitors[visitorIndex].surName.value}
                     visited={state.visitors[visitorIndex].surName.visited}
                     label="Surname"
@@ -471,7 +471,7 @@ class App extends Component {
                 <RadioGroup
 
                     updateField={this.updateField}
-                    fieldName="visitors.0.sex"
+                    fieldName={"visitors." + visitorIndex + ".sex"}
                     error={state.visitors[visitorIndex].sex.error}
                     title="Gender"
                     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
@@ -480,7 +480,7 @@ class App extends Component {
                 <Input
                     type="date"
                     updateField={this.updateField}
-                    fieldName="visitors.0.birthDate"
+                    fieldName={"visitors." + visitorIndex + ".birthDate"}
                     value={state.visitors[visitorIndex].birthDate.value}
                     visited={state.visitors[visitorIndex].birthDate.visited}
                     label="Date of birth"
@@ -493,7 +493,7 @@ class App extends Component {
                             className="mt-4"
                             type="country"
                             updateField={this.updateField}
-                            fieldName="visitors.0.citizenship"
+                            fieldName={"visitors." + visitorIndex + ".citizenship"}
                             visited={state.visitors[visitorIndex].citizenship.visited}
                             label="Citizenship"
                             error={state.visitors[visitorIndex].citizenship.error}
@@ -504,7 +504,7 @@ class App extends Component {
                             className="mt-4"
                             type="text"
                             updateField={this.updateField}
-                            fieldName="visitors.0.passportNumber"
+                            fieldName={"visitors." + visitorIndex + ".passportNumber"}
                             value={state.visitors[visitorIndex].passportNumber.value}
                             visited={state.visitors[visitorIndex].passportNumber.visited}
                             label="Passport number"
@@ -748,7 +748,7 @@ class App extends Component {
                         </Step>
                         <Step number={3} hidden={state.currentStep !== 3}>
                             <RadioGroup
-                                
+
                                 updateField={this.updateField}
                                 fieldName="userCompleteForm"
                                 error={state.userCompleteForm.error}
