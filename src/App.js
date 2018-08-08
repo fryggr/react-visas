@@ -490,7 +490,7 @@ class App extends Component {
                 <div className="row" style={{ maxWidth: "655px" }}>
                     <div className="col-md-6">
                         <Input
-                            className="mt-4"
+                            className="mt-4 mr-2"
                             type="country"
                             updateField={this.updateField}
                             fieldName={"visitors." + visitorIndex + ".citizenship"}
