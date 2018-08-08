@@ -6,7 +6,7 @@ import Datetime from "react-datetime";
 import ReactFlagsSelect from "react-flags-select";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import Moment from 'moment';
+import Moment from "moment";
 /*******IMPORT STYLES********/
 import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";
@@ -14,16 +14,24 @@ import "./../Datepicker/Datepicker.css";
 
 // HELPERS for Datepicker's customisation
 var renderers = {
-  renderDay: function( props, currentDate, selectedDate ){
-    return <td {...props}>{currentDate.date() }</td>;
-  },
-  renderMonth: function( props, month, year, selectedDate){
-    return <td {...props} className="Datepicker__month">{ Moment(month + 1, 'MM').format('MMM') }</td>;
-  },
-  renderYear: function( props, year, selectedDate ){
-    return <td {...props} className="Datepicker__year">{ year  }</td>;
-  }
-}
+    renderDay: function(props, currentDate, selectedDate) {
+        return <td {...props}>{currentDate.date()}</td>;
+    },
+    renderMonth: function(props, month, year, selectedDate) {
+        return (
+            <td {...props} className="Datepicker__month">
+                {Moment(month + 1, "MM").format("MMM")}
+            </td>
+        );
+    },
+    renderYear: function(props, year, selectedDate) {
+        return (
+            <td {...props} className="Datepicker__year">
+                {year}
+            </td>
+        );
+    }
+};
 
 export const Input = props => {
     let className = typeof props.className !== "undefined" ? props.className : "";
@@ -67,11 +75,14 @@ export const Input = props => {
             </div>
         );
     } else if (props.type === "date") {
+        var yesterday = Datetime.moment().subtract(1, "day");
         return (
             <div className={"Input " + className}>
                 <label className="Input__label">{props.label}</label>
                 <Datetime
+                    isValidDate={ props.dateValidator }
                     onChange={date => props.updateField(props.fieldName + ".value", date)}
+                    onBlur={date => props.updateField(props.fieldName + ".visited", true)}
                     input={true}
                     closeOnSelect={true}
                     renderDay={renderers.renderDay}

@@ -11,6 +11,7 @@ import { ToggleTab } from "./Components/ToggleTab/ToggleTab";
 import { Input } from "./Components/Input/Input";
 import { Button } from "./Components/Button/Button";
 import { Step } from "./Components/Step/Step";
+import Moment from "moment";
 
 //For Validation
 let Validator = require("validatorjs");
@@ -64,7 +65,7 @@ let visitorTemplate = {
         error: "",
         visited: false
     }
-}
+};
 
 let locationTemplate = {
     city: {
@@ -77,7 +78,7 @@ let locationTemplate = {
         error: "",
         visited: false
     }
-}
+};
 
 class App extends Component {
     constructor(props) {
@@ -110,7 +111,7 @@ class App extends Component {
             /*************USER'S INPUT STEP 1************/
 
             groupSize: {
-                value: {value: "1", label: "1"},
+                value: { value: "1", label: "1" },
                 error: "",
                 visited: false
             },
@@ -273,7 +274,7 @@ class App extends Component {
             OptionsRegistration: [{ value: "1", label: "No registration services needed" }, { value: "2", label: "Registration in Moscow" }],
             OptionsDelivery: [{ value: "1", label: "Email" }, { value: "2", label: "Another option" }],
             OptionsCities: [{ value: "1", label: "Moscow" }, { value: "2", label: "Magadan" }],
-            OptionsHotels: [{ value: "1", label: "Vzlyot" }, { value: "2", label: "Park inn" }],
+            OptionsHotels: [{ value: "1", label: "Vzlyot" }, { value: "2", label: "Park inn" }]
         };
 
         /******BINDING*****/
@@ -286,6 +287,48 @@ class App extends Component {
         this.renderArrivalAndDeparture = this.renderArrivalAndDeparture.bind(this);
         this.renderLocations = this.renderLocations.bind(this);
         this.removeLocation = this.removeLocation.bind(this);
+        this.getRestrictForDate = this.getRestrictForDate.bind(this);
+    }
+
+    getRestrictForDate(datePickerName) {
+        let state = this.state;
+        if (datePickerName === "birthDate" || datePickerName === 'passportIssued'){
+            return function(current) {
+                var today = Moment();
+                return current.isBefore(today);
+            };
+        }
+        else if (datePickerName === "passportExpired"){
+            return function(current) {
+                var sixMonthAfterToday = Moment().add( 182, 'day' );
+                return current.isAfter(sixMonthAfterToday);
+            };
+        }
+        else if(datePickerName === "arrivalDate1") {
+            return function(current) {
+                var today = Moment();
+                return current.isAfter(today);
+            };
+        }
+        else if(datePickerName === "departureDate1"){
+            return function(current) {
+                var sixMonthAfterToday = Moment().add( 182, 'day' );
+                var arrivalDate1 = Moment(state.arrivalDate1.value);
+                var passportExpired = Moment(state.visitors[0].passportExpired.value);
+                var sixMonthBeforePassportExpired = Moment(state.visitors[0].passportExpired.value).subtract(182, 'day');
+                var thirtyDaysAfterArrival1 = Moment(state.arrivalDate1.value).add(30, 'day');
+                // console.log("sixMonthAfterToday = ",sixMonthAfterToday );
+                // console.log("arrivalDate1 = ",arrivalDate1 );
+                // console.log("passportExpired = ",passportExpired );
+                // console.log("sixMonthBeforePassportExpired = ",sixMonthBeforePassportExpired );
+                // console.log("thirtyDaysAfterArrival1 = ",thirtyDaysAfterArrival1 );
+                return current.isBefore(thirtyDaysAfterArrival1) && current.isAfter(arrivalDate1) && current.isBefore(sixMonthBeforePassportExpired)
+            };
+            // паспорт 13.02.19
+            // вьезд 09.08.18
+            // выезда 10.08.18
+        }
+
     }
 
     // METHODS
@@ -299,33 +342,28 @@ class App extends Component {
             code += "['" + item + "']";
         });
 
-
         //updateState
         let state = this.state;
-        if (path.indexOf('location') !== -1) console.log(path);
+        if (path.indexOf("location") !== -1) console.log(path);
         eval("state" + code + "=value");
         this.setState(state);
         this.updateVisitorsArray();
         this.validate();
     }
 
-    updateVisitorsArray(){
+    updateVisitorsArray() {
         let state = this.state;
 
         let oldVisitorsCount = this.state.visitors.length;
         let newVisitorsCount = this.state.groupSize.value.value;
 
-
-        if (oldVisitorsCount < newVisitorsCount){
-            for (let i = oldVisitorsCount; i < newVisitorsCount; i++)
-                state.visitors.push(JSON.parse(JSON.stringify(visitorTemplate)));
-        }
-        else {
-            for (let i = oldVisitorsCount; i > newVisitorsCount; i--)
-                state.visitors.pop();
+        if (oldVisitorsCount < newVisitorsCount) {
+            for (let i = oldVisitorsCount; i < newVisitorsCount; i++) state.visitors.push(JSON.parse(JSON.stringify(visitorTemplate)));
+        } else {
+            for (let i = oldVisitorsCount; i > newVisitorsCount; i--) state.visitors.pop();
         }
 
-        this.setState(state)
+        this.setState(state);
     }
 
     updateError(path, value) {
@@ -342,16 +380,16 @@ class App extends Component {
         this.setState(state);
     }
 
-    removeLocation(index){
-        if (this.state.locations.length > 1){
+    removeLocation(index) {
+        if (this.state.locations.length > 1) {
             let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
-            updateLocations.splice(index,1);
-            this.setState({locations:updateLocations})
+            updateLocations.splice(index, 1);
+            this.setState({ locations: updateLocations });
             console.log(updateLocations);
         }
     }
-    addLocation(){
-        if (this.state.locations.length < 10){
+    addLocation() {
+        if (this.state.locations.length < 10) {
             let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
             updateLocations.push({
                 city: {
@@ -364,8 +402,8 @@ class App extends Component {
                     error: "",
                     visited: false
                 }
-            })
-            this.setState({locations:updateLocations})
+            });
+            this.setState({ locations: updateLocations });
             console.log(updateLocations);
         }
     }
@@ -380,28 +418,30 @@ class App extends Component {
             countryApplyIn: state.countryApplyIn.value,
             delivery: state.delivery.value.value,
             email: state.email.value,
-            phone: state.phone.value
+            phone: state.phone.value,
+            arrivalDate1: state.arrivalDate1.value,
+            arrivalDate2: state.arrivalDate2.value,
+            departureDate1: state.departureDate1.value,
+            departureDate2: state.departureDate2.value
         };
 
         //add inputFields for visitors
-        for (let i = 0; i < state.visitors.length; i++)
-        {
-            inputFields['visitors.' + i + '.firstName'] = state.visitors[i].firstName.value;
-            inputFields['visitors.' + i + '.middleName'] = state.visitors[i].middleName.value;
-            inputFields['visitors.' + i + '.surName'] = state.visitors[i].surName.value;
-            inputFields['visitors.' + i + '.sex'] = state.visitors[i].sex.value;
-            inputFields['visitors.' + i + '.birthDate'] = state.visitors[i].birthDate.value;
-            inputFields['visitors.' + i + '.citizenship'] = state.visitors[i].citizenship.value;
-            inputFields['visitors.' + i + '.passportNumber'] = state.visitors[i].passportNumber.value;
-            inputFields['visitors.' + i + '.passportIssued'] = state.visitors[i].passportIssued.value;
-            inputFields['visitors.' + i + '.passportExpired'] = state.visitors[i].passportExpired.value;
+        for (let i = 0; i < state.visitors.length; i++) {
+            inputFields["visitors." + i + ".firstName"] = state.visitors[i].firstName.value;
+            inputFields["visitors." + i + ".middleName"] = state.visitors[i].middleName.value;
+            inputFields["visitors." + i + ".surName"] = state.visitors[i].surName.value;
+            inputFields["visitors." + i + ".sex"] = state.visitors[i].sex.value;
+            inputFields["visitors." + i + ".birthDate"] = state.visitors[i].birthDate.value;
+            inputFields["visitors." + i + ".citizenship"] = state.visitors[i].citizenship.value;
+            inputFields["visitors." + i + ".passportNumber"] = state.visitors[i].passportNumber.value;
+            inputFields["visitors." + i + ".passportIssued"] = state.visitors[i].passportIssued.value;
+            inputFields["visitors." + i + ".passportExpired"] = state.visitors[i].passportExpired.value;
         }
 
         //add inputFields for location
-        for (let i = 0; i < state.locations.length; i++)
-        {
-            inputFields['locations.' + i + '.city'] = state.locations[i].city.value.value;
-            inputFields['locations.' + i + '.hotel'] = state.locations[i].hotel.value.value;
+        for (let i = 0; i < state.locations.length; i++) {
+            inputFields["locations." + i + ".city"] = state.locations[i].city.value.value;
+            inputFields["locations." + i + ".hotel"] = state.locations[i].hotel.value.value;
         }
 
         let rules = {
@@ -411,29 +451,31 @@ class App extends Component {
             registration: "required",
             countryApplyIn: "required",
             delivery: "required",
-            email:'required|email',
-            phone: 'required|regex:/[0-9\-\S]{4,}/i'
+            email: "required|email",
+            phone: "required|regex:/[0-9-S]{4,}/i",
+            arrivalDate1: "required|date",
+            arrivalDate2: "required|date",
+            departureDate1: "required|date",
+            departureDate2: "required|date"
         };
 
         //add rules for visitors
-        for (let i = 0; i < state.visitors.length; i++)
-        {
-            rules['visitors.' + i + '.firstName'] = 'required|alpha';
-            rules['visitors.' + i + '.middleName'] = 'required|alpha';
-            rules['visitors.' + i + '.surName'] = 'required|alpha';
-            rules['visitors.' + i + '.sex'] = 'required';
-            rules['visitors.' + i + '.birthDate'] = 'required|date';
-            rules['visitors.' + i + '.citizenship'] = 'required';
-            rules['visitors.' + i + '.passportNumber'] = 'required|alpha_dash';
-            rules['visitors.' + i + '.passportIssued'] = 'required|date';
-            rules['visitors.' + i + '.passportExpired'] = 'required|date';
+        for (let i = 0; i < state.visitors.length; i++) {
+            rules["visitors." + i + ".firstName"] = "required|alpha";
+            rules["visitors." + i + ".middleName"] = "required|alpha";
+            rules["visitors." + i + ".surName"] = "required|alpha";
+            rules["visitors." + i + ".sex"] = "required";
+            rules["visitors." + i + ".birthDate"] = "required|date";
+            rules["visitors." + i + ".citizenship"] = "required";
+            rules["visitors." + i + ".passportNumber"] = "required|alpha_dash";
+            rules["visitors." + i + ".passportIssued"] = "required|date";
+            rules["visitors." + i + ".passportExpired"] = "required|date";
         }
 
         //add rules for locations
-        for (let i = 0; i < state.locations.length; i++)
-        {
-            rules['locations.' + i + '.city'] = 'required';
-            rules['locations.' + i + '.hotel'] = 'required';
+        for (let i = 0; i < state.locations.length; i++) {
+            rules["locations." + i + ".city"] = "required";
+            rules["locations." + i + ".hotel"] = "required";
         }
 
         let validation = new Validator(inputFields, rules);
@@ -446,7 +488,6 @@ class App extends Component {
             if (validation.errors.first(inputField)) {
                 //we need regex, to replace fieldName (which can be f.e = visitor.1.sex) to just 'This field'
                 this.updateError(inputField, validation.errors.first(inputField).replace(/The [a-z0-9\.]+/i, "This"));
-
             } else {
                 this.updateError(inputField, "");
             }
@@ -456,200 +497,234 @@ class App extends Component {
     renderVisitors() {
         let state = this.state;
         let arr = [];
-        for (let i = 0; i < state.groupSize.value.value; i++)
-            arr[i] = i;
+        for (let i = 0; i < state.groupSize.value.value; i++) arr[i] = i;
 
         return arr.map(visitorIndex => {
-        return (
-            <ToggleTab className="mt-4" label={"Visitor " + (visitorIndex + 1) + (visitorIndex === 0 ? " (Main Applicant)" : "")}>
-                <Input
-                    className="mt-4"
-                    type="text"
-                    updateField={this.updateField}
-                    fieldName={"visitors." + visitorIndex + ".firstName"}
-                    value={state.visitors[visitorIndex].firstName.value}
-                    visited={state.visitors[visitorIndex].firstName.visited}
-                    label="First name"
-                    placeholder="Please enter First name"
-                    error={state.visitors[visitorIndex].firstName.error}
-                />
-                <Input
-                    className="mt-4"
-                    type="text"
-                    updateField={this.updateField}
-                    fieldName={"visitors." + visitorIndex + ".middleName"}
-                    value={state.visitors[visitorIndex].middleName.value}
-                    visited={state.visitors[visitorIndex].middleName.visited}
-                    label="Middle name"
-                    placeholder="Please enter Middle name"
-                    error={state.visitors[visitorIndex].middleName.error}
-                />
-                <Input
-                    className="mt-4"
-                    type="text"
-                    updateField={this.updateField}
-                    fieldName={"visitors." + visitorIndex + ".surName"}
-                    value={state.visitors[visitorIndex].surName.value}
-                    visited={state.visitors[visitorIndex].surName.visited}
-                    label="Surname"
-                    placeholder="Please enter Surname"
-                    error={state.visitors[visitorIndex].surName.error}
-                />
-                <RadioGroup
-
-                    updateField={this.updateField}
-                    fieldName={"visitors." + visitorIndex + ".sex"}
-                    error={state.visitors[visitorIndex].sex.error}
-                    title="Gender"
-                    options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
-                    name="sex"
-                />
-                <Input
-                    type="date"
-                    updateField={this.updateField}
-                    fieldName={"visitors." + visitorIndex + ".birthDate"}
-                    value={state.visitors[visitorIndex].birthDate.value}
-                    visited={state.visitors[visitorIndex].birthDate.visited}
-                    label="Date of birth"
-                    placeholder=""
-                    error={state.visitors[visitorIndex].birthDate.error}
-                />
-                <div className="row" style={{ maxWidth: "655px" }}>
-                    <div className="col-md-6">
-                        <Input
-                            className="mt-4 mr-2"
-                            type="country"
-                            updateField={this.updateField}
-                            fieldName={"visitors." + visitorIndex + ".citizenship"}
-                            visited={state.visitors[visitorIndex].citizenship.visited}
-                            label="Citizenship"
-                            error={state.visitors[visitorIndex].citizenship.error}
-                        />
+            return (
+                <ToggleTab className="mt-4" label={"Visitor " + (visitorIndex + 1) + (visitorIndex === 0 ? " (Main Applicant)" : "")}>
+                    <Input
+                        className="mt-4"
+                        type="text"
+                        updateField={this.updateField}
+                        fieldName={"visitors." + visitorIndex + ".firstName"}
+                        value={state.visitors[visitorIndex].firstName.value}
+                        visited={state.visitors[visitorIndex].firstName.visited}
+                        label="First name"
+                        placeholder="Please enter First name"
+                        error={state.visitors[visitorIndex].firstName.error}
+                    />
+                    <Input
+                        className="mt-4"
+                        type="text"
+                        updateField={this.updateField}
+                        fieldName={"visitors." + visitorIndex + ".middleName"}
+                        value={state.visitors[visitorIndex].middleName.value}
+                        visited={state.visitors[visitorIndex].middleName.visited}
+                        label="Middle name"
+                        placeholder="Please enter Middle name"
+                        error={state.visitors[visitorIndex].middleName.error}
+                    />
+                    <Input
+                        className="mt-4"
+                        type="text"
+                        updateField={this.updateField}
+                        fieldName={"visitors." + visitorIndex + ".surName"}
+                        value={state.visitors[visitorIndex].surName.value}
+                        visited={state.visitors[visitorIndex].surName.visited}
+                        label="Surname"
+                        placeholder="Please enter Surname"
+                        error={state.visitors[visitorIndex].surName.error}
+                    />
+                    <RadioGroup
+                        updateField={this.updateField}
+                        fieldName={"visitors." + visitorIndex + ".sex"}
+                        error={state.visitors[visitorIndex].sex.error}
+                        title="Gender"
+                        options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
+                        name="sex"
+                    />
+                    <Input
+                        type="date"
+                        dateValidator={this.getRestrictForDate("birthDate")}
+                        updateField={this.updateField}
+                        fieldName={"visitors." + visitorIndex + ".birthDate"}
+                        value={state.visitors[visitorIndex].birthDate.value}
+                        visited={state.visitors[visitorIndex].birthDate.visited}
+                        label="Date of birth"
+                        placeholder=""
+                        error={state.visitors[visitorIndex].birthDate.error}
+                    />
+                    <div className="row" style={{ maxWidth: "655px" }}>
+                        <div className="col-md-6">
+                            <Input
+                                className="mt-4 mr-2"
+                                type="country"
+                                updateField={this.updateField}
+                                fieldName={"visitors." + visitorIndex + ".citizenship"}
+                                visited={state.visitors[visitorIndex].citizenship.visited}
+                                label="Citizenship"
+                                error={state.visitors[visitorIndex].citizenship.error}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <Input
+                                className="mt-4"
+                                type="text"
+                                updateField={this.updateField}
+                                fieldName={"visitors." + visitorIndex + ".passportNumber"}
+                                value={state.visitors[visitorIndex].passportNumber.value}
+                                visited={state.visitors[visitorIndex].passportNumber.visited}
+                                label="Passport number"
+                                placeholder="Please enter passport number"
+                                error={state.visitors[visitorIndex].passportNumber.error}
+                            />
+                        </div>
                     </div>
-                    <div className="col-md-6">
-                        <Input
-                            className="mt-4"
-                            type="text"
-                            updateField={this.updateField}
-                            fieldName={"visitors." + visitorIndex + ".passportNumber"}
-                            value={state.visitors[visitorIndex].passportNumber.value}
-                            visited={state.visitors[visitorIndex].passportNumber.visited}
-                            label="Passport number"
-                            placeholder="Please enter passport number"
-                            error={state.visitors[visitorIndex].passportNumber.error}
-                        />
+
+                    <div className="row" style={{ maxWidth: "655px" }}>
+                        <div className='col-md-6'>
+                            <Input
+                                type="date"
+                                className="mt-4 mr-2"
+                                dateValidator={this.getRestrictForDate("passportIssued")}
+                                updateField={this.updateField}
+                                fieldName={"visitors." + visitorIndex + ".passportIssued"}
+                                value={state.visitors[visitorIndex].passportIssued.value}
+                                visited={state.visitors[visitorIndex].passportIssued.visited}
+                                label="Date passport issued"
+                                placeholder=""
+                                error={state.visitors[visitorIndex].passportIssued.error}
+                            />
+                        </div>
+
+                        <div className="col-md-6">
+                            <Input
+                                type="date"
+                                className="mt-4"
+                                dateValidator={this.getRestrictForDate("passportExpired")}
+                                updateField={this.updateField}
+                                fieldName={"visitors." + visitorIndex + ".passportExpired"}
+                                value={state.visitors[visitorIndex].passportExpired.value}
+                                visited={state.visitors[visitorIndex].passportExpired.visited}
+                                label="Date passport expired"
+                                placeholder=""
+                                error={state.visitors[visitorIndex].passportExpired.error}
+                            />
+                        </div>
+
+
                     </div>
-                </div>
 
-                {visitorIndex === 0 ?
-                    [
-                        <Input
-                            type="email"
-                            className="mt-4"
-                            updateField={this.updateField}
-                            fieldName="email"
-                            value={state.email.value}
-                            visited={state.email.visited}
-                            label="Email"
-                            placeholder="Please enter email"
-                            error={state.email.error}
-                        />,
+                    {visitorIndex === 0
+                        ? [
+                              <Input
+                                  type="email"
+                                  className="mt-4"
+                                  updateField={this.updateField}
+                                  fieldName="email"
+                                  value={state.email.value}
+                                  visited={state.email.visited}
+                                  label="Email"
+                                  placeholder="Please enter email"
+                                  error={state.email.error}
+                              />,
 
-                        <Input
-                            type="phone"
-                            className="mt-4"
-                            updateField={this.updateField}
-                            fieldName="phone"
-                            value={state.phone.value}
-                            visited={state.phone.visited}
-                            label="Telephone"
-                            error={state.phone.error}
-                        />
-                    ]
-                    :
-                    []
-                }
-
-
-            </ToggleTab>
-        );
-        })
+                              <Input
+                                  type="phone"
+                                  className="mt-4"
+                                  updateField={this.updateField}
+                                  fieldName="phone"
+                                  value={state.phone.value}
+                                  visited={state.phone.visited}
+                                  label="Telephone"
+                                  error={state.phone.error}
+                              />
+                          ]
+                        : []}
+                </ToggleTab>
+            );
+        });
     }
 
-    renderArrivalAndDeparture(){
+    renderArrivalAndDeparture() {
         let state = this.state;
         let arr = [0];
-        if (state.numberOfEntries.value.value === 'Double')
-            arr[1] = 1;
+        if (state.numberOfEntries.value.value === "Double") arr[1] = 1;
 
-        return arr.map(visitorIndex => {
+        return arr.map(inputIndex => {
             return (
                 <div className="row" style={{ maxWidth: "655px" }}>
                     <div className="col-md-6">
                         <Input
+                            dateValidator={this.getRestrictForDate("arrivalDate1")}
                             type="date"
                             className="mt-4"
                             updateField={this.updateField}
-                            fieldName={"arrivalDate" + (visitorIndex + 1)}
-                            value={state["arrivalDate" + (visitorIndex + 1)].value}
-                            visited={state["arrivalDate" + (visitorIndex + 1)].visited}
-                            label={"Entry " + (visitorIndex + 1) + " - Arrival date"}
+                            fieldName={"arrivalDate" + (inputIndex + 1)}
+                            value={state["arrivalDate" + (inputIndex + 1)].value}
+                            visited={state["arrivalDate" + (inputIndex + 1)].visited}
+                            label={"Entry " + (inputIndex + 1) + " - Arrival date"}
                             placeholder=""
-                            error={state["arrivalDate" + (visitorIndex + 1)].error}
+                            error={state["arrivalDate" + (inputIndex + 1)].error}
                         />
                     </div>
                     <div className="col-md-6">
                         <Input
+                            dateValidator={this.getRestrictForDate("departureDate1")}
                             type="date"
                             className="mt-4"
                             updateField={this.updateField}
-                            fieldName={"departureDate" + (visitorIndex + 1)}
-                            value={state["departureDate" + (visitorIndex + 1)].value}
-                            visited={state["departureDate" + (visitorIndex + 1)].visited}
-                            label={"Entry " + (visitorIndex + 1) + " - Departure date"}
+                            fieldName={"departureDate" + (inputIndex + 1)}
+                            value={state["departureDate" + (inputIndex + 1)].value}
+                            visited={state["departureDate" + (inputIndex + 1)].visited}
+                            label={"Entry " + (inputIndex + 1) + " - Departure date"}
                             placeholder=""
-                            error={state["departureDate" + (visitorIndex + 1)].error}
+                            error={state["departureDate" + (inputIndex + 1)].error}
                         />
                     </div>
                 </div>
-            )
-        })
+            );
+        });
     }
 
-    renderLocations(){
+    renderLocations() {
         let state = this.state;
         return [
-                state.locations.map((location, locationIndex) => {
-                    return [
-                        <ToggleTab className="mt-4" label={"Location " + (locationIndex + 1)}>
-                            <Input
-                                type="select"
-                                className="mt-4"
-                                updateField={this.updateField}
-                                value={state.locations[locationIndex].city.value}
-                                fieldName={"locations." + locationIndex + ".city"}
-                                visited={state.locations[locationIndex].city.visited}
-                                label="City"
-                                error={state.locations[locationIndex].city.error}
-                                options={state.OptionsCities}
-                            />
-                            <Input
-                                type="select"
-                                className="mt-4"
-                                updateField={this.updateField}
-                                value={state.locations[locationIndex].hotel.value}
-                                fieldName={"locations." + locationIndex + ".hotel"}
-                                visited={state.locations[locationIndex].hotel.visited}
-                                label="Hotel"
-                                error={state.locations[locationIndex].hotel.error}
-                                options={state.OptionsHotels}
-                            />
-                        </ToggleTab>,
-                        <Button className="Button_red-label ml-auto mr-5 mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)} />
-                    ]
-                }),
-                <Button className="Button_red-border mr-auto" handleClick={() => this.addLocation()} label={"+add another location"} />
-        ]
+            state.locations.map((location, locationIndex) => {
+                return [
+                    <ToggleTab className="mt-4" label={"Location " + (locationIndex + 1)}>
+                        <Input
+                            type="select"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            value={state.locations[locationIndex].city.value}
+                            fieldName={"locations." + locationIndex + ".city"}
+                            visited={state.locations[locationIndex].city.visited}
+                            label="City"
+                            error={state.locations[locationIndex].city.error}
+                            options={state.OptionsCities}
+                        />
+                        <Input
+                            type="select"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            value={state.locations[locationIndex].hotel.value}
+                            fieldName={"locations." + locationIndex + ".hotel"}
+                            visited={state.locations[locationIndex].hotel.visited}
+                            label="Hotel"
+                            error={state.locations[locationIndex].hotel.error}
+                            options={state.OptionsHotels}
+                        />
+                    </ToggleTab>,
+                    <Button
+                        className="Button_red-label ml-auto mr-5 mt-3"
+                        handleClick={() => this.removeLocation(locationIndex)}
+                        label={"remove location " + (locationIndex + 1)}
+                    />
+                ];
+            }),
+            <Button className="Button_red-border mr-auto" handleClick={() => this.addLocation()} label={"+add another location"} />
+        ];
     }
 
     render() {
@@ -748,7 +823,6 @@ class App extends Component {
                             {this.renderLocations()}
 
                             <RadioGroup
-
                                 updateField={this.updateField}
                                 fieldName="userNeedsNewsletter"
                                 error={state.userNeedsNewsletter.error}
@@ -757,7 +831,6 @@ class App extends Component {
                                 name="userNeedsNewsletter"
                             />
                             <RadioGroup
-
                                 updateField={this.updateField}
                                 fieldName="userNeedsJoinMailingList"
                                 error={state.userNeedsJoinMailingList.error}
@@ -766,7 +839,6 @@ class App extends Component {
                                 name="userNeedsJoinMailingList"
                             />
                             <RadioGroup
-
                                 updateField={this.updateField}
                                 fieldName="userNeedsNewsletter"
                                 error={state.userNeedsNewsletter.error}
@@ -777,7 +849,6 @@ class App extends Component {
                         </Step>
                         <Step number={3} hidden={state.currentStep !== 3}>
                             <RadioGroup
-
                                 updateField={this.updateField}
                                 fieldName="userCompleteForm"
                                 error={state.userCompleteForm.error}
