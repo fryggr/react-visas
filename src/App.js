@@ -352,7 +352,7 @@ class App extends Component {
             inputFields['visitors.' + i + '.passportExpired'] = state.visitors[i].passportExpired.value;
 
         }
-
+ 
         let rules = {
             groupSize: "required",
             numberOfEntries: "required",
