@@ -45,6 +45,7 @@
     text-transform: uppercase;
     background-color: transparent;
     display: block;
+    font-size: 0.8rem;
     padding-right: 0;
     outline: none;
 }

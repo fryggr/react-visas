@@ -66,6 +66,19 @@ let visitorTemplate = {
     }
 }
 
+let locationTemplate = {
+    city: {
+        value: "",
+        error: "",
+        visited: false
+    },
+    hotel: {
+        value: "",
+        error: "",
+        visited: false
+    }
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -255,10 +268,12 @@ class App extends Component {
 
             /*******DATA FROM SERVER**********/
             OptionsGroupSize: [{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }],
-            OptionsNumberOfEntries: [{ value: "1", label: "Single" }, { value: "2", label: "Double" }],
+            OptionsNumberOfEntries: [{ value: "Single", label: "Single" }, { value: "Double", label: "Double" }],
             OptionsPurpose: [{ value: "1", label: "Tourist" }, { value: "2", label: "Auto" }],
             OptionsRegistration: [{ value: "1", label: "No registration services needed" }, { value: "2", label: "Registration in Moscow" }],
-            OptionsDelivery: [{ value: "1", label: "Email" }, { value: "2", label: "Another option" }]
+            OptionsDelivery: [{ value: "1", label: "Email" }, { value: "2", label: "Another option" }],
+            OptionsCities: [{ value: "1", label: "Moscow" }, { value: "2", label: "Magadan" }],
+            OptionsHotels: [{ value: "1", label: "Vzlyot" }, { value: "2", label: "Park inn" }],
         };
 
         /******BINDING*****/
@@ -268,6 +283,9 @@ class App extends Component {
         this.updateField = this.updateField.bind(this);
         this.renderVisitors = this.renderVisitors.bind(this);
         this.updateVisitorsArray = this.updateVisitorsArray.bind(this);
+        this.renderArrivalAndDeparture = this.renderArrivalAndDeparture.bind(this);
+        this.renderLocations = this.renderLocations.bind(this);
+        this.removeLocation = this.removeLocation.bind(this);
     }
 
     // METHODS
@@ -307,7 +325,6 @@ class App extends Component {
                 state.visitors.pop();
         }
 
-
         this.setState(state)
     }
 
@@ -323,6 +340,21 @@ class App extends Component {
         let state = this.state;
         eval("state" + code + ".error=value");
         this.setState(state);
+    }
+
+    removeLocation(index){
+        if (this.state.locations.length > 1){
+            let state = this.state;
+            state.locations.splice(index,1);
+            this.setState(state);
+        }
+    }
+    addLocation(){
+        if (this.state.locations.length < 10){
+            let state = this.state;
+            state.locations.push(locationTemplate);
+            this.setState(state);
+        }
     }
 
     validate() {
@@ -352,7 +384,7 @@ class App extends Component {
             inputFields['visitors.' + i + '.passportExpired'] = state.visitors[i].passportExpired.value;
 
         }
- 
+
         let rules = {
             groupSize: "required",
             numberOfEntries: "required",
@@ -402,7 +434,7 @@ class App extends Component {
 
         return arr.map(visitorIndex => {
         return (
-            <ToggleTab label="Visitor">
+            <ToggleTab className="mt-4" label="Visitor">
                 <Input
                     className="mt-4"
                     type="text"
@@ -482,34 +514,8 @@ class App extends Component {
                     </div>
                 </div>
 
-                <div className="row" style={{ maxWidth: "655px" }}>
-                    <div className="col-md-6">
-                        <Input
-                            type="date"
-                            className="mt-4"
-                            updateField={this.updateField}
-                            fieldName="visitors.0.passportIssued"
-                            value={state.visitors[0].passportIssued.value}
-                            visited={state.visitors[0].passportIssued.visited}
-                            label="Date passport issued"
-                            placeholder=""
-                            error={state.visitors[0].passportIssued.error}
-                        />
-                    </div>
-                    <div className="col-md-6">
-                        <Input
-                            type="date"
-                            className="mt-4"
-                            updateField={this.updateField}
-                            fieldName="visitors.0.passportExpired"
-                            value={state.visitors[0].passportExpired.value}
-                            visited={state.visitors[0].passportExpired.visited}
-                            label="Date passport expired"
-                            placeholder=""
-                            error={state.visitors[0].passportExpired.error}
-                        />
-                    </div>
-                </div>
+
+
 
                 <Input
                     type="email"
@@ -535,6 +541,80 @@ class App extends Component {
             </ToggleTab>
         );
         })
+    }
+
+    renderArrivalAndDeparture(){
+        let state = this.state;
+        let arr = [0];
+        if (state.numberOfEntries.value.value === 'Double')
+            arr[1] = 1;
+
+        return arr.map(visitorIndex => {
+            return (
+                <div className="row" style={{ maxWidth: "655px" }}>
+                    <div className="col-md-6">
+                        <Input
+                            type="date"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            fieldName={"arrivalDate" + (visitorIndex + 1)}
+                            value={state["arrivalDate" + (visitorIndex + 1)].value}
+                            visited={state["arrivalDate" + (visitorIndex + 1)].visited}
+                            label={"Entry " + (visitorIndex + 1) + " - Arrival date"}
+                            placeholder=""
+                            error={state["arrivalDate" + (visitorIndex + 1)].error}
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <Input
+                            type="date"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            fieldName={"departureDate" + (visitorIndex + 1)}
+                            value={state["departureDate" + (visitorIndex + 1)].value}
+                            visited={state["departureDate" + (visitorIndex + 1)].visited}
+                            label={"Entry " + (visitorIndex + 1) + " - Departure date"}
+                            placeholder=""
+                            error={state["departureDate" + (visitorIndex + 1)].error}
+                        />
+                    </div>
+                </div>
+            )
+        })
+    }
+
+    renderLocations(){
+        let state = this.state;
+        return [
+                state.locations.map((location, locationIndex) => {
+                    return [
+                        <ToggleTab className="mt-4" label={"Location " + (locationIndex + 1)}>
+                            <Input
+                                type="select"
+                                className="mt-4"
+                                updateField={this.updateField}
+                                fieldName={"locations[" + locationIndex + "].city"}
+                                visited={state.locations[locationIndex].city.visited}
+                                label="City"
+                                error={state.locations[locationIndex].city.error}
+                                options={state.OptionsCities}
+                            />
+                            <Input
+                                type="select"
+                                className="mt-4"
+                                updateField={this.updateField}
+                                fieldName={"locations[" + locationIndex + "].hotel"}
+                                visited={state.locations[locationIndex].hotel.visited}
+                                label="Hotel"
+                                error={state.locations[locationIndex].hotel.error}
+                                options={state.OptionsHotels}
+                            />
+                        </ToggleTab>,
+                        <Button className="Button_red-label ml-auto mr-5" handleClick={locationIndex => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)} />
+                    ]
+                }),
+                <Button className="Button_red-border mr-auto" handleClick={() => this.addLocation()} label={"+add another location"} />
+        ]
     }
 
     render() {
@@ -628,7 +708,10 @@ class App extends Component {
                         <Step number={1} hidden={state.currentStep !== 1}>
                             {this.renderVisitors()}
                         </Step>
-                        <Step number={2} hidden={state.currentStep !== 2} />
+                        <Step number={2} hidden={state.currentStep !== 2}>
+                            {this.renderArrivalAndDeparture()}
+                            {this.renderLocations()}
+                        </Step>
                         <Step number={3} hidden={state.currentStep !== 3} />
                     </div>
                 </div>
@@ -660,41 +743,3 @@ class App extends Component {
 }
 
 export default App;
-//
-// {/*RadioGroup GROUP EXAMPLE*/}
-// {/*<RadioGroup
-//     handleChange={this.handleSexChange}
-//     error={this.state.sex.error}
-//     title="sex"
-//     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
-//     name="sex"
-// />*/}
-//
-// {/*ToggleTab example*/}
-// <ToggleTab label="Вкладка">
-//     {/*INPUT example*/}
-//     <Input
-//         type="date"
-//         updateVisited={this.updateVisited}
-//         updateField={this.updateField}
-//         fieldName="email"
-//         value={state.email.value}
-//         visited={state.email.visited}
-//         label="Email"
-//         placeholder="Enter email"
-//         error={state.email.error}
-//     />
-//     <Input
-//         type="select"
-//         updateVisited={this.updateVisited}
-//         updateField={this.updateField}
-//         fieldName="email"
-//         value={state.email.value}
-//         visited={state.email.visited}
-//         label="Email"
-//         error={state.email.error}
-//     />
-// </ToggleTab>
-//
-// {/*Button example*/}
-// <Button label="next step" className="Button_red-border" text="Save your current progress" />
