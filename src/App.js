@@ -741,7 +741,7 @@ class App extends Component {
                                 updateField={this.updateField}
                                 fieldName="userNeedsNewsletter"
                                 error={state.userNeedsNewsletter.error}
-                                title="I have read and understood the terms and conditions"
+                                title="<b>I have read and understood the <a style='color:black;text-decoration:underline'href='#'>terms and conditions</a></b>"
                                 options={[{ value: "1", text: "Yes" }, { value: "2", text: "No" }]}
                                 name="userReadTerms"
                             />
