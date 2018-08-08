@@ -302,7 +302,7 @@ class App extends Component {
 
         //updateState
         let state = this.state;
-        if (path === "email.visited") console.log(state);
+        if (path.indexOf('location') !== -1) console.log(path);
         eval("state" + code + "=value");
         this.setState(state);
         this.updateVisitorsArray();
@@ -344,16 +344,29 @@ class App extends Component {
 
     removeLocation(index){
         if (this.state.locations.length > 1){
-            let state = this.state;
-            state.locations.splice(index,1);
-            this.setState(state);
+            let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
+            updateLocations.splice(index,1);
+            this.setState({locations:updateLocations})
+            console.log(updateLocations);
         }
     }
     addLocation(){
         if (this.state.locations.length < 10){
-            let state = this.state;
-            state.locations.push(locationTemplate);
-            this.setState(state);
+            let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
+            updateLocations.push({
+                city: {
+                    value: "",
+                    error: "",
+                    visited: false
+                },
+                hotel: {
+                    value: "",
+                    error: "",
+                    visited: false
+                }
+            })
+            this.setState({locations:updateLocations})
+            console.log(updateLocations);
         }
     }
 
@@ -382,7 +395,13 @@ class App extends Component {
             inputFields['visitors.' + i + '.passportNumber'] = state.visitors[i].passportNumber.value;
             inputFields['visitors.' + i + '.passportIssued'] = state.visitors[i].passportIssued.value;
             inputFields['visitors.' + i + '.passportExpired'] = state.visitors[i].passportExpired.value;
+        }
 
+        //add inputFields for location
+        for (let i = 0; i < state.locations.length; i++)
+        {
+            inputFields['locations.' + i + '.city'] = state.locations[i].city.value.value;
+            inputFields['locations.' + i + '.hotel'] = state.locations[i].hotel.value.value;
         }
 
         let rules = {
@@ -396,6 +415,7 @@ class App extends Component {
             phone: 'required|regex:/[0-9\-\S]{4,}/i'
         };
 
+        //add rules for visitors
         for (let i = 0; i < state.visitors.length; i++)
         {
             rules['visitors.' + i + '.firstName'] = 'required|alpha';
@@ -407,6 +427,13 @@ class App extends Component {
             rules['visitors.' + i + '.passportNumber'] = 'required|alpha_dash';
             rules['visitors.' + i + '.passportIssued'] = 'required|date';
             rules['visitors.' + i + '.passportExpired'] = 'required|date';
+        }
+
+        //add rules for locations
+        for (let i = 0; i < state.locations.length; i++)
+        {
+            rules['locations.' + i + '.city'] = 'required';
+            rules['locations.' + i + '.hotel'] = 'required';
         }
 
         let validation = new Validator(inputFields, rules);
@@ -599,7 +626,8 @@ class App extends Component {
                                 type="select"
                                 className="mt-4"
                                 updateField={this.updateField}
-                                fieldName={"locations[" + locationIndex + "].city"}
+                                value={state.locations[locationIndex].city.value}
+                                fieldName={"locations." + locationIndex + ".city"}
                                 visited={state.locations[locationIndex].city.visited}
                                 label="City"
                                 error={state.locations[locationIndex].city.error}
@@ -609,14 +637,15 @@ class App extends Component {
                                 type="select"
                                 className="mt-4"
                                 updateField={this.updateField}
-                                fieldName={"locations[" + locationIndex + "].hotel"}
+                                value={state.locations[locationIndex].hotel.value}
+                                fieldName={"locations." + locationIndex + ".hotel"}
                                 visited={state.locations[locationIndex].hotel.visited}
                                 label="Hotel"
                                 error={state.locations[locationIndex].hotel.error}
                                 options={state.OptionsHotels}
                             />
                         </ToggleTab>,
-                        <Button className="Button_red-label ml-auto mr-5" handleClick={locationIndex => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)} />
+                        <Button className="Button_red-label ml-auto mr-5 mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)} />
                     ]
                 }),
                 <Button className="Button_red-border mr-auto" handleClick={() => this.addLocation()} label={"+add another location"} />
