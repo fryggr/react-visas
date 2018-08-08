@@ -110,7 +110,7 @@ class App extends Component {
             /*************USER'S INPUT STEP 1************/
 
             groupSize: {
-                value: "1",
+                value: {value: "1", label: "1"},
                 error: "",
                 visited: false
             },
