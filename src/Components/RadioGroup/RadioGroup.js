@@ -7,10 +7,6 @@ function generateIdForNewRadio() {
   return "r" + ++radioElementsCount;
 }
 
-function getMaxId() {
-  return radioElementsCount;
-}
-
 export const RadioGroup = props => {
   let className = typeof props.className !== "undefined" ? props.className : "";
   return (

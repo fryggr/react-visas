@@ -75,7 +75,6 @@ export const Input = props => {
             </div>
         );
     } else if (props.type === "date") {
-        var yesterday = Datetime.moment().subtract(1, "day");
         return (
             <div className={"Input " + className}>
                 <label className="Input__label">{props.label}</label>

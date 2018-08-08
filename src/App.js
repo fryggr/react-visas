@@ -67,18 +67,6 @@ let visitorTemplate = {
   }
 };
 
-let locationTemplate = {
-  city: {
-    value: "",
-    error: "",
-    visited: false
-  },
-  hotel: {
-    value: "",
-    error: "",
-    visited: false
-  }
-};
 
 class App extends Component {
   constructor(props) {
@@ -125,11 +113,6 @@ class App extends Component {
         visited: false
       },
       purpose: {
-        value: "",
-        error: "",
-        visited: false
-      },
-      registration: {
         value: "",
         error: "",
         visited: false
@@ -336,9 +319,7 @@ class App extends Component {
       };
     } else if (datePickerName === "departureDate1") {
       return function(current) {
-        var sixMonthAfterToday = Moment().add(182, "day");
         var arrivalDate1 = Moment(state.arrivalDate1.value);
-        var passportExpired = Moment(state.visitors[0].passportExpired.value);
         var sixMonthBeforePassportExpired = Moment(
           state.visitors[0].passportExpired.value
         ).subtract(182, "day");
@@ -346,20 +327,13 @@ class App extends Component {
           30,
           "day"
         );
-        // console.log("sixMonthAfterToday = ",sixMonthAfterToday );
-        // console.log("arrivalDate1 = ",arrivalDate1 );
-        // console.log("passportExpired = ",passportExpired );
-        // console.log("sixMonthBeforePassportExpired = ",sixMonthBeforePassportExpired );
-        // console.log("thirtyDaysAfterArrival1 = ",thirtyDaysAfterArrival1 );
+
         return (
           current.isBefore(thirtyDaysAfterArrival1) &&
           current.isAfter(arrivalDate1) &&
           current.isBefore(sixMonthBeforePassportExpired)
         );
       };
-      // паспорт 13.02.19
-      // вьезд 09.08.18
-      // выезда 10.08.18
     }
   }
 

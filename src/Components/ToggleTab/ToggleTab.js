@@ -14,9 +14,6 @@ function showOrHide(e) {
 }
 
 export const ToggleTab = props => {
-  {
-    /* define variables for state */
-  }
   let className = typeof props.className !== "undefined" ? props.className : "";
   let display =
     typeof props.open !== "undefined"
