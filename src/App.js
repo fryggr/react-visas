@@ -711,8 +711,38 @@ class App extends Component {
                         <Step number={2} hidden={state.currentStep !== 2}>
                             {this.renderArrivalAndDeparture()}
                             {this.renderLocations()}
+
+                            <RadioGroup
+                                className="mt-3"
+                                updateField={this.updateField}
+                                fieldName="userNeedsNewsletter"
+                                error={state.userNeedsNewsletter.error}
+                                title="Would you like to join our monthly newsletter list"
+                                options={[{ value: "1", text: "Yes" }, { value: "2", text: "No" }]}
+                                name="userNeedsNewsletter"
+                            />
+                            <RadioGroup
+                                className="mt-3"
+                                updateField={this.updateField}
+                                fieldName="userNeedsJoinMailingList"
+                                error={state.userNeedsJoinMailingList.error}
+                                title="Would you like to join our mailing list for special offers, news and information"
+                                options={[{ value: "1", text: "Yes" }, { value: "2", text: "No" }]}
+                                name="userNeedsJoinMailingList"
+                            />
+                            <RadioGroup
+                                className="mt-3"
+                                updateField={this.updateField}
+                                fieldName="userNeedsNewsletter"
+                                error={state.userNeedsNewsletter.error}
+                                title="I have read and understood the terms and conditions"
+                                options={[{ value: "1", text: "Yes" }, { value: "2", text: "No" }]}
+                                name="userReadTerms"
+                            />
                         </Step>
-                        <Step number={3} hidden={state.currentStep !== 3} />
+                        <Step number={3} hidden={state.currentStep !== 3}>
+
+                        </Step>
                     </div>
                 </div>
                 <div className="container mt-4">
