@@ -469,7 +469,7 @@ class App extends Component {
                     error={state.visitors[visitorIndex].surName.error}
                 />
                 <RadioGroup
-                    className="mt-3"
+
                     updateField={this.updateField}
                     fieldName="visitors.0.sex"
                     error={state.visitors[visitorIndex].sex.error}
@@ -719,7 +719,7 @@ class App extends Component {
                             {this.renderLocations()}
 
                             <RadioGroup
-                                className="mt-3"
+
                                 updateField={this.updateField}
                                 fieldName="userNeedsNewsletter"
                                 error={state.userNeedsNewsletter.error}
@@ -728,7 +728,7 @@ class App extends Component {
                                 name="userNeedsNewsletter"
                             />
                             <RadioGroup
-                                className="mt-3"
+
                                 updateField={this.updateField}
                                 fieldName="userNeedsJoinMailingList"
                                 error={state.userNeedsJoinMailingList.error}
@@ -737,7 +737,7 @@ class App extends Component {
                                 name="userNeedsJoinMailingList"
                             />
                             <RadioGroup
-                                className="mt-3"
+
                                 updateField={this.updateField}
                                 fieldName="userNeedsNewsletter"
                                 error={state.userNeedsNewsletter.error}
@@ -747,7 +747,15 @@ class App extends Component {
                             />
                         </Step>
                         <Step number={3} hidden={state.currentStep !== 3}>
-
+                            <RadioGroup
+                                
+                                updateField={this.updateField}
+                                fieldName="userCompleteForm"
+                                error={state.userCompleteForm.error}
+                                title="Having completed my application, I agree that the above visa application is suitable."
+                                options={[{ value: "1", text: "Yes" }, { value: "2", text: "No" }]}
+                                name="userCompleteForm"
+                            />
                         </Step>
                     </div>
                 </div>
