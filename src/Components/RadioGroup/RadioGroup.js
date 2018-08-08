@@ -15,7 +15,7 @@ export const RadioGroup = props => {
   let className = typeof props.className !== "undefined" ? props.className : "";
   return (
     <div className={"RadioGroup " + className}>
-      <div className="RadioGroup__title">{props.title}</div>
+      <div className="RadioGroup__title" dangerouslySetInnerHTML={{ __html: props.title }}></div>
       <div className="RadioGroup__wrapper">
         {props.options.map(item => {
           return (
