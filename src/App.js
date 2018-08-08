@@ -434,45 +434,45 @@ class App extends Component {
 
         return arr.map(visitorIndex => {
         return (
-            <ToggleTab className="mt-4" label="Visitor">
+            <ToggleTab className="mt-4" label={"Visitor " + (visitorIndex + 1) + (visitorIndex === 0 ? " (Main Applicant)" : "")}>
                 <Input
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
                     fieldName="visitors.0.firstName"
-                    value={state.visitors[0].firstName.value}
-                    visited={state.visitors[0].firstName.visited}
+                    value={state.visitors[visitorIndex].firstName.value}
+                    visited={state.visitors[visitorIndex].firstName.visited}
                     label="First name"
                     placeholder="Please enter First name"
-                    error={state.visitors[0].firstName.error}
+                    error={state.visitors[visitorIndex].firstName.error}
                 />
                 <Input
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
                     fieldName="visitors.0.middleName"
-                    value={state.visitors[0].middleName.value}
-                    visited={state.visitors[0].middleName.visited}
+                    value={state.visitors[visitorIndex].middleName.value}
+                    visited={state.visitors[visitorIndex].middleName.visited}
                     label="Middle name"
                     placeholder="Please enter Middle name"
-                    error={state.visitors[0].middleName.error}
+                    error={state.visitors[visitorIndex].middleName.error}
                 />
                 <Input
                     className="mt-4"
                     type="text"
                     updateField={this.updateField}
                     fieldName="visitors.0.surName"
-                    value={state.visitors[0].surName.value}
-                    visited={state.visitors[0].surName.visited}
+                    value={state.visitors[visitorIndex].surName.value}
+                    visited={state.visitors[visitorIndex].surName.visited}
                     label="Surname"
                     placeholder="Please enter Surname"
-                    error={state.visitors[0].surName.error}
+                    error={state.visitors[visitorIndex].surName.error}
                 />
                 <RadioGroup
                     className="mt-3"
                     updateField={this.updateField}
                     fieldName="visitors.0.sex"
-                    error={state.visitors[0].sex.error}
+                    error={state.visitors[visitorIndex].sex.error}
                     title="Gender"
                     options={[{ value: "Male", text: "Male" }, { value: "Female", text: "Female" }]}
                     name="sex"
@@ -481,11 +481,11 @@ class App extends Component {
                     type="date"
                     updateField={this.updateField}
                     fieldName="visitors.0.birthDate"
-                    value={state.visitors[0].birthDate.value}
-                    visited={state.visitors[0].birthDate.visited}
+                    value={state.visitors[visitorIndex].birthDate.value}
+                    visited={state.visitors[visitorIndex].birthDate.visited}
                     label="Date of birth"
                     placeholder=""
-                    error={state.visitors[0].birthDate.error}
+                    error={state.visitors[visitorIndex].birthDate.error}
                 />
                 <div className="row" style={{ maxWidth: "655px" }}>
                     <div className="col-md-6">
@@ -494,9 +494,9 @@ class App extends Component {
                             type="country"
                             updateField={this.updateField}
                             fieldName="visitors.0.citizenship"
-                            visited={state.visitors[0].citizenship.visited}
+                            visited={state.visitors[visitorIndex].citizenship.visited}
                             label="Citizenship"
-                            error={state.visitors[0].citizenship.error}
+                            error={state.visitors[visitorIndex].citizenship.error}
                         />
                     </div>
                     <div className="col-md-6">
@@ -505,39 +505,45 @@ class App extends Component {
                             type="text"
                             updateField={this.updateField}
                             fieldName="visitors.0.passportNumber"
-                            value={state.visitors[0].passportNumber.value}
-                            visited={state.visitors[0].passportNumber.visited}
+                            value={state.visitors[visitorIndex].passportNumber.value}
+                            visited={state.visitors[visitorIndex].passportNumber.visited}
                             label="Passport number"
                             placeholder="Please enter passport number"
-                            error={state.visitors[0].passportNumber.error}
+                            error={state.visitors[visitorIndex].passportNumber.error}
                         />
                     </div>
                 </div>
 
+                {visitorIndex === 0 ?
+                    [
+                        <Input
+                            type="email"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            fieldName="email"
+                            value={state.email.value}
+                            visited={state.email.visited}
+                            label="Email"
+                            placeholder="Please enter email"
+                            error={state.email.error}
+                        />,
+
+                        <Input
+                            type="phone"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            fieldName="phone"
+                            value={state.phone.value}
+                            visited={state.phone.visited}
+                            label="Telephone"
+                            error={state.phone.error}
+                        />
+                    ]
+                    :
+                    []
+                }
 
 
-
-                <Input
-                    type="email"
-                    className="mt-4"
-                    updateField={this.updateField}
-                    fieldName="email"
-                    value={state.email.value}
-                    visited={state.email.visited}
-                    label="Email"
-                    placeholder="Please enter email"
-                    error={state.email.error}
-                />
-                <Input
-                    type="phone"
-                    className="mt-4"
-                    updateField={this.updateField}
-                    fieldName="phone"
-                    value={state.phone.value}
-                    visited={state.phone.visited}
-                    label="Telephone"
-                    error={state.phone.error}
-                />
             </ToggleTab>
         );
         })
