@@ -884,7 +884,7 @@ class App extends Component {
                         fieldName="userReadTerms"
                         error={this.state.userReadTerms.error}
                         value={this.state.userReadTerms.value}
-                        title="<b>I have read and understood the <a style='color:black;text-decoration:underline'href='#'>terms and conditions</a></b>"
+                        title="<b>I have read and understood the <a style='color:black;text-decoration:underline' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>"
                         options={[{ value: "1", text: "Yes" }, { value: "2", text: "No" }]}
                         name="userReadTerms"
                     />
