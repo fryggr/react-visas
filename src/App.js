@@ -11,8 +11,9 @@ import { ToggleTab } from "./Components/ToggleTab/ToggleTab";
 import { Input } from "./Components/Input/Input";
 import { Button } from "./Components/Button/Button";
 import { Step } from "./Components/Step/Step";
+import { Sticky } from "./Components/Sticky/Sticky";
 import Moment from "moment";
-
+import _ from 'lodash';
 //For Validation
 let Validator = require("validatorjs");
 const plugins = {
@@ -255,7 +256,10 @@ class App extends Component {
             OptionsRegistration: [{ value: "1", label: "No registration services needed" }, { value: "2", label: "Registration in Moscow" }],
             OptionsDelivery: [{ value: "1", label: "Email" }, { value: "2", label: "Another option" }],
             OptionsCities: [{ value: "1", label: "Moscow" }, { value: "2", label: "Magadan" }],
-            OptionsHotels: [{ value: "1", label: "Vzlyot" }, { value: "2", label: "Park inn" }]
+            OptionsHotels: [{ value: "1", label: "Vzlyot" }, { value: "2", label: "Park inn" }],
+
+            /****ERRORS*****/
+            errors: []
         };
 
         /******BINDING*****/
@@ -416,10 +420,8 @@ class App extends Component {
 
         if (path.indexOf("currentStep") !== -1) {
             if (!this.checkIsStepCorrect(visitedStepIndex)) {
-                console.log("ERROR visitedStepIndex = ", visitedStepIndex);
                 state.steps[visitedStepIndex].correct = false;
             } else {
-                console.log(" NICE! visitedStepIndex = ", visitedStepIndex);
                 state.steps[visitedStepIndex].correct = true;
             }
             this.setState(state);
@@ -467,6 +469,9 @@ class App extends Component {
                 this.state.locations[i].hotel.visited = true;
             }
         }
+        if (stepIndex === 3) {
+          this.state.userCompleteForm.visited = true;
+        }
 
         this.setState(state);
     }
@@ -475,47 +480,129 @@ class App extends Component {
         let state = this.state;
         let correct = true;
         if (stepIndex === 0) {
-            correct =
-                state.groupSize.error == "" &&
-                state.numberOfEntries.error == "" &&
-                state.purpose.error == "" &&
-                state.registration.error == "" &&
-                state.purpose.error == "" &&
-                state.countryApplyIn.error == "" &&
-                state.delivery.error == ""
+          state.errors = state.errors.filter(item => item.step !== 0);
+          if (state.groupSize.error !== ""){
+            correct = false;
+            state.errors.push({name:"groupSize" ,text: "Group Size", step: 0})
+          }
+          if (state.numberOfEntries.error !== ""){
+            correct = false;
+            state.errors.push({name:"numberOfEntries" ,text: "Number of Entries", step: 0})
+          }
+          if (state.purpose.error !== ""){
+            correct = false;
+            state.errors.push({name:"purpose" ,text: "Purpose of Visit", step: 0})
+          }
+          if (state.registration.error !== ""){
+            correct = false;
+            state.errors.push({name:"registration" ,text: "Registration", step: 0})
+          }
+          if (state.countryApplyIn.error !== ""){
+            correct = false;
+            state.errors.push({name:"countryApplyIn" ,text: "Country Apply In", step: 0})
+          }
+          if (state.delivery.error !== ""){
+            correct = false;
+            state.errors.push({name:"delivery" ,text: "Delivery", step: 0})
+          }
         }
         if (stepIndex === 1) {
+          state.errors = state.errors.filter(item => item.step !== 1);
             for (let i = 0; i < this.state.visitors.length; i++){
-                correct = correct && this.state.visitors[i].firstName.error === "";
-                correct = correct && this.state.visitors[i].middleName.error === "";
-                correct = correct && this.state.visitors[i].surName.error === "";
-                correct = correct && this.state.visitors[i].sex.error === "";
-                correct = correct && this.state.visitors[i].birthDate.error === "";
-                correct = correct && this.state.visitors[i].citizenship.error === "";
-                correct = correct && this.state.visitors[i].passportNumber.error === "";
-                correct = correct && this.state.visitors[i].passportIssued.error === "";
-                correct = correct && this.state.visitors[i].passportExpired.error === "";
-            }
-
-            correct = correct && this.state.email.error === "";
-            correct = correct && this.state.phone.error === "";
+                if (this.state.visitors[i].firstName.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".firstName",text: "Visitor's " + (i + 1) + " First name", step: 1})
+                }
+                if (this.state.visitors[i].middleName.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".middleName",text: "Visitor's " + (i + 1) + " Middle name", step: 1})
+                }
+                if (this.state.visitors[i].surName.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".surName",text: "Visitor's " + (i + 1) + " Surname", step: 1})
+                }
+                if (this.state.visitors[i].sex.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".sex",text: "Visitor's " + (i + 1) + " Gender", step: 1})
+                }
+                if (this.state.visitors[i].birthDate.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".birthDate",text: "Visitor's " + (i + 1) + " Birth date", step: 1})
+                }
+                if (this.state.visitors[i].citizenship.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".citizenship",text: "Visitor's " + (i + 1) + " Citizenship", step: 1})
+                }
+                if (this.state.visitors[i].passportNumber.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".passportNumber",text: "Visitor's " + (i + 1) + " Passport number", step: 1})
+                }
+                if (this.state.visitors[i].passportIssued.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".passportIssued",text: "Visitor's " + (i + 1) + " Date passport issued", step: 1})
+                }
+                if (this.state.visitors[i].passportExpired.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "visitors." + i + ".passportExpired",text: "Visitor's " + (i + 1) + " Date passport expired", step: 1})
+                }            }
+              if (this.state.email.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "email", text: "email", step: 1})
+              }
+              if (this.state.phone.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "phone", text: "phone", step: 1})
+              }
         }
 
         if (stepIndex === 2) {
-            correct = correct && this.state.arrivalDate1.error === "";
-            correct = correct && this.state.departureDate1.error === "";
-
-            if (state.numberOfEntries.value.value === 'Double'){
-                correct = correct && this.state.departureDate2.error === "";
-                correct = correct && this.state.arrivalDate2.error === "";
+          state.errors = state.errors.filter(item => item.step !== 2);
+            if (this.state.arrivalDate1.error !== ""){
+              correct = false;
+                state.errors.push({name: "arrivalDate1", text: "Entry 1 Arrival Date", step: 2})
             }
+            if (this.state.departureDate1.error !== ""){
+              correct = false;
+                state.errors.push({name: "departureDate1", text: "Entry 1 Departure Date", step: 2})
+            }
+            if (state.numberOfEntries.value.value === 'Double'){
+              if (this.state.arrivalDate2.error !== ""){
+                correct = false;
+                  state.errors.push({name: "arrivalDate2", text: "Entry 2 Arrival Date", step: 2})
+              }
+              if (this.state.departureDate2.error !== ""){
+                correct = false;
+                  state.errors.push({name: "departureDate2", text: "Entry 2 Departure Date", step: 2})
+              }
+            }
+
 
             for (let i = 0; i < this.state.visitors.length; i++){
-                correct = correct && this.state.locations[i].city.error === "";
-                correct = correct && this.state.locations[i].hotel.error === "";
+              if (this.state.locations[i].city.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " city", step: 2})
+              }
+              if (this.state.locations[i].hotel.error !== ""){
+                  correct = false;
+                  state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " hotel", step: 2})
+              }
             }
-            correct = correct && this.state.userReadTerms.error === "";
+            if (this.state.userReadTerms.error !== ""){
+              correct = false;
+              state.errors.push({name: "userReadTerms", text: "Please Read Terms and Conditions", step: 2})
+            }
         }
+
+        if (stepIndex === 3){
+          state.errors = state.errors.filter(item => item.step !== 3);
+            if (this.state.userCompleteForm.error !== ""){
+              correct = false;
+              state.errors.push({name: "userCompleteForm", text: "Please complete form", step: 3})
+            }
+        }
+        //remove duplicates
+        state.errors = _.uniqBy(state.errors, 'name')
+        this.setState(state);
 
         return correct;
     }
@@ -1024,6 +1111,7 @@ class App extends Component {
     render() {
         return (
             <div className="App text-center text-md-left">
+
                 <Header
                     updateField={this.updateField}
                     steps={this.state.steps}
@@ -1034,6 +1122,7 @@ class App extends Component {
                 />
 
                 <div className="App__container container">
+                    <Sticky type="errorSticky" links={this.state.errors}/>
                     <div className="container px-0 mr-auto ml-0">
                         <div className="row py-3">
                             <div className="d-flex col-md-6 flex-column flex-md-row">
