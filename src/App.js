@@ -260,6 +260,9 @@ class App extends Component {
                 visited: false
             },
 
+            /****ERRORS****/
+            errors: [],
+
             /*******DATA FROM SERVER**********/
             OptionsGroupSize: [
                 {
@@ -971,83 +974,68 @@ class App extends Component {
                     price={this.state.price}
                 />
 
-                <div className="App__container container">
-                    <Sticky type="errorSticky" links={this.state.errors}/>
-                    <div className="container px-0 mr-auto ml-0">
-                        <div className="row py-3">
-                            <div className="d-flex col-md-6 flex-column flex-md-row">
-                                <Button label="retrieve saved application" className="mr-3" text="CONTINUE a saved existing application" />
-                                <Button label="save progress" text="SAVE your current progress" />
-                            </div>
-                            <div className="ml-auto col-md-4">
-                                <Button
-                                    label="I am returning client"
-                                    className="Button_red-border"
-                                    text="RECOVER your personal details quickly to pre-fill your application"
-                                />
-                            </div>
-                        </div>
 
-            <div className="App__container container">
-                <div className="container px-0 mr-auto ml-0">
-                    <div className="row py-3">
-                        <div className="d-flex col-md-6 flex-column flex-md-row">
-                            <Button
-                                label="retrieve saved application"
-                                className={
-                                    "mr-3 " + (
-                                        this.state.currentStep !== 0
-                                        ? "d-none"
-                                        : "d-block")
-                                    }
-                                text={
-                                    (
-                                        this.state.currentStep !== 0
-                                        ? ""
-                                        : "CONTINUE a saved existing application")
-                                    }
-                            />
-                            <Button
-                                label="save progress"
-                                text="SAVE your current progress"
-                            />
-                        </div>
-                        <div className="ml-auto col-md-4">
-                            <Button label="I am returning client" className="Button_red-border" text="RECOVER your personal details quickly to pre-fill your application"/>
-                        </div>
-                    </div>
+              <div className="App__container container">
+                <Sticky type="errorSticky" links={this.state.errors}/>
+                  <div className="container px-0 mr-auto ml-0">
+                      <div className="row py-3">
+                          <div className="d-flex col-md-6 flex-column flex-md-row">
+                              <Button
+                                  label="retrieve saved application"
+                                  className={
+                                      "mr-3 " + (
+                                          this.state.currentStep !== 0
+                                          ? "d-none"
+                                          : "d-block")
+                                      }
+                                  text={
+                                      (
+                                          this.state.currentStep !== 0
+                                          ? ""
+                                          : "CONTINUE a saved existing application")
+                                      }
+                              />
+                              <Button
+                                  label="save progress"
+                                  text="SAVE your current progress"
+                              />
+                          </div>
+                          <div className="ml-auto col-md-4">
+                              <Button label="I am returning client" className="Button_red-border" text="RECOVER your personal details quickly to pre-fill your application"/>
+                          </div>
+                      </div>
 
-                    {this.showCurrentStep()}
-                </div>
-            </div>
-            <div className="container mt-4">
-                <div className="row" style={{
-                        maxWidth: "710px"
-                    }}>
-                    <div className="col-sm-6">
-                        <Button className="align-self-md-start align-self-center" label="Save progress"/>
-                    </div>
+                      {this.showCurrentStep()}
+                  </div>
+              </div>
+              <div className="container mt-4">
+                  <div className="row" style={{
+                          maxWidth: "710px"
+                      }}>
+                      <div className="col-sm-6">
+                          <Button className="align-self-md-start align-self-center" label="Save progress"/>
+                      </div>
 
-                    <div className={
-                            ((this.state.currentStep === 3) ? "col-sm-6 d-block" : (this.state.currentStep !== 0) ? "col-sm-3 d-block"  : "d-none")
-                        }>
-                        <Button
-                            handleClick={() => this.updateField("currentStep", this.state.currentStep - 1)}
-                            className={"Button_red-border align-self-md-end align-self-center"}
-                            label="Previous step"
-                        />
-                    </div>
-                    <div className={
-                            ((this.state.currentStep === 0) ? "col-sm-6 d-block" : (this.state.currentStep !== 3) ? "col-sm-3 d-block"  : "d-none")
-                        }>
-                        <Button
-                            handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
-                            className="Button_red align-self-md-end align-self-center"
-                            label="Next step >"
-                        />
-                    </div>
-                </div>
-            </div>
+                      <div className={
+                              ((this.state.currentStep === 3) ? "col-sm-6 d-block" : (this.state.currentStep !== 0) ? "col-sm-3 d-block"  : "d-none")
+                          }>
+                          <Button
+                              handleClick={() => this.updateField("currentStep", this.state.currentStep - 1)}
+                              className={"Button_red-border align-self-md-end align-self-center"}
+                              label="Previous step"
+                          />
+                      </div>
+                      <div className={
+                              ((this.state.currentStep === 0) ? "col-sm-6 d-block" : (this.state.currentStep !== 3) ? "col-sm-3 d-block"  : "d-none")
+                          }>
+                          <Button
+                              handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
+                              className="Button_red align-self-md-end align-self-center"
+                              label="Next step >"
+                          />
+                      </div>
+                  </div>
+              </div>
         </div>
         );
     }
