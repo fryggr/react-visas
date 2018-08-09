@@ -32,6 +32,7 @@ export const Input = props => {
                     onChange={e => props.updateField(props.fieldName + ".value", e.target.value)}
                     className="Input__field"
                     type={props.type}
+                    value={props.value}
                     placeholder={props.placeholder}
                 />
                 <div className="Input__error">{props.visited ? props.error : ""}</div>
@@ -84,6 +85,7 @@ export const Input = props => {
                     showSelectedLabel={true}
                     showOptionLabel={true}
                     selectedSize={14}
+                    defaultCountry={props.value}
                     placeholder="Please select"
                     searchPlaceholder="please type"
                     searchable={true}
@@ -101,6 +103,7 @@ export const Input = props => {
                 <label className="Input__label">{props.label}</label>
                 <PhoneInput
                     placeholder="Enter phone number"
+                    value={props.value}
                     onChange={phone => props.updateField(props.fieldName + ".value", phone)}
                     onBlur={e => props.updateField(props.fieldName + ".visited", true)}
                 />

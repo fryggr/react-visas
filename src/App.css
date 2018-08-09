@@ -1,8 +1,16 @@
 .App, .App *{
     font-family: "Open Sans" !important;
+    text-align: left;
 }
 
 .App__container{
     background-color: #f7f7f7;
     padding-bottom: 2rem;
+}
+
+
+@media (max-width:768px), (max-device-width:768px) {
+    .App, .App *{
+        text-align: center !important;
+    }
 }

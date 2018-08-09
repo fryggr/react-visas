@@ -98,7 +98,7 @@ class App extends Component {
             /*************USER'S INPUT STEP 1************/
 
             groupSize: {
-                value: { value: "1", label: "1" },
+                value: "",
                 error: "",
                 visited: false
             },
@@ -614,6 +614,7 @@ class App extends Component {
                                 type="country"
                                 updateField={this.updateField}
                                 fieldName={"visitors." + visitorIndex + ".citizenship"}
+                                value={this.state.visitors[visitorIndex].citizenship.value}
                                 visited={this.state.visitors[visitorIndex].citizenship.visited}
                                 label="Citizenship"
                                 error={this.state.visitors[visitorIndex].citizenship.error}
@@ -778,13 +779,15 @@ class App extends Component {
     }
 
     showCurrentStep() {
-        if (this.state.currentStep === 0)
+        if (this.state.currentStep === 0){
+
             return (
                 <Step number={0} hidden={this.state.currentStep !== 0}>
                     <Input
                         type="select"
                         updateField={this.updateField}
                         fieldName="groupSize"
+                        value={this.state.groupSize.value}
                         visited={this.state.groupSize.visited}
                         label="Group Size"
                         error={this.state.groupSize.error}
@@ -795,6 +798,7 @@ class App extends Component {
                         type="select"
                         updateField={this.updateField}
                         fieldName="numberOfEntries"
+                        value={this.state.numberOfEntries.value}
                         visited={this.state.numberOfEntries.visited}
                         label="Number of entries"
                         error={this.state.numberOfEntries.error}
@@ -805,6 +809,7 @@ class App extends Component {
                         type="select"
                         updateField={this.updateField}
                         fieldName="purpose"
+                        value={this.state.purpose.value}
                         visited={this.state.purpose.visited}
                         label="Purpose of visit"
                         error={this.state.purpose.error}
@@ -815,6 +820,7 @@ class App extends Component {
                         type="select"
                         updateField={this.updateField}
                         fieldName="registration"
+                        value={this.state.registration.value}
                         visited={this.state.registration.visited}
                         label="Registration"
                         error={this.state.registration.error}
@@ -825,6 +831,7 @@ class App extends Component {
                         type="country"
                         updateField={this.updateField}
                         fieldName="countryApplyIn"
+                        value={this.state.countryApplyIn.value}
                         visited={this.state.countryApplyIn.visited}
                         label="Country appling in"
                         error={this.state.countryApplyIn.error}
@@ -834,6 +841,7 @@ class App extends Component {
                         type="select"
                         updateField={this.updateField}
                         fieldName="delivery"
+                        value={this.state.delivery.value}
                         visited={this.state.delivery.visited}
                         label="Delivery option"
                         error={this.state.delivery.error}
@@ -841,6 +849,8 @@ class App extends Component {
                     />
                 </Step>
             );
+        }
+
         else if (this.state.currentStep === 1)
             return (
                 <Step number={1} hidden={this.state.currentStep !== 1}>

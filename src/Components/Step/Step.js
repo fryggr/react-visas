@@ -6,6 +6,7 @@ import userImg from "./img/user.png";
 import locationImg from "./img/location.png";
 import paymentImg from "./img/payment.png";
 
+
 export const Step = props => {
     let title, text, stepImg;
     if (props.number === 0) {

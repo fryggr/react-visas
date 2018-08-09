@@ -22,7 +22,7 @@ export class RadioGroup extends React.Component{
         return (
             <div className={"RadioGroup " + className}>
               <div className="RadioGroup__title" dangerouslySetInnerHTML={{ __html: this.props.title }}></div>
-              <div className="RadioGroup__wrapper">
+              <div className="RadioGroup__wrapper justify-content-center justify-content-md-start">
                 {this.props.options.map((item, index) => {
                   return (
                     <div className="RadioGroup__item">
