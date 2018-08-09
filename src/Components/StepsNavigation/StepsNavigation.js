@@ -32,7 +32,7 @@ export const StepsNavigation = props => {
               " " +
               props.className
             }
-            onClick={() => {props.updateField("currentStep",index);props.updateField("steps." + index + ".visited",true) }}
+            onClick={() => {props.updateField("currentStep",index);props.updateField("steps." + props.currentStep + ".visited",true) }}
           >
             {index + 1} {/*because human numeration starts with 1, not 0*/}
             <div className="StepsNavigation__item-text">{step.stepName}</div>

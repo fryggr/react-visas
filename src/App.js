@@ -79,8 +79,7 @@ class App extends Component {
             steps: [
                 {
                     stepName: "service details",
-                    visited: true,
-                    correct: true
+                    visited: false
                 },
                 {
                     stepName: "personal details",
@@ -271,6 +270,8 @@ class App extends Component {
         this.removeLocation = this.removeLocation.bind(this);
         this.getRestrictForDate = this.getRestrictForDate.bind(this);
         this.showCurrentStep = this.showCurrentStep.bind(this);
+        this.makeFieldsVisited = this.makeFieldsVisited.bind(this);
+        this.checkIsStepCorrect = this.checkIsStepCorrect.bind(this);
     }
 
     getRestrictForDate(datePickerName) {
@@ -387,6 +388,7 @@ class App extends Component {
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
+        let state = this.state;
         //generate code like [path][path]
         let arr = path.split(".");
         let code = "";
@@ -395,11 +397,127 @@ class App extends Component {
         });
 
         //updateState
-        let state = this.state;
+
+        //make currentStep visited
+        let visitedStepIndex;
+        if (path.indexOf("currentStep") !== -1) {
+            visitedStepIndex = this.state.currentStep;
+            console.log("INITIAL ",visitedStepIndex);
+            state.steps[visitedStepIndex].visited = true;
+            //make fields of visited steps visited
+            this.makeFieldsVisited(visitedStepIndex);
+        }
+
         eval("state" + code + "=value");
         this.setState(state);
         if (path.indexOf("groupSize") !== -1) this.updateVisitorsArray();
         this.validate();
+
+
+        if (path.indexOf("currentStep") !== -1) {
+            if (!this.checkIsStepCorrect(visitedStepIndex)) {
+                console.log("ERROR visitedStepIndex = ", visitedStepIndex);
+                state.steps[visitedStepIndex].correct = false;
+            } else {
+                console.log(" NICE! visitedStepIndex = ", visitedStepIndex);
+                state.steps[visitedStepIndex].correct = true;
+            }
+            this.setState(state);
+        }
+    }
+
+    makeFieldsVisited(stepIndex) {
+        let state = this.state;
+        if (stepIndex === 0) {
+            state.groupSize.visited = true;
+            state.numberOfEntries.visited = true;
+            state.purpose.visited = true;
+            state.registration.visited = true;
+            state.purpose.visited = true;
+            state.countryApplyIn.visited = true;
+            state.delivery.visited = true;
+        }
+        if (stepIndex === 1) {
+            for (let i = 0; i < this.state.visitors.length; i++){
+                state.visitors[i].firstName.visited =true;
+                state.visitors[i].middleName.visited =true;
+                state.visitors[i].surName.visited =true;
+                state.visitors[i].sex.visited =true;
+                state.visitors[i].birthDate.visited =true;
+                state.visitors[i].citizenship.visited =true;
+                state.visitors[i].passportNumber.visited =true;
+                state.visitors[i].passportIssued.visited =true;
+                state.visitors[i].passportExpired.visited =true;
+            }
+
+            state.email.visited = true;
+            state.phone.visited = true;
+        }
+        if (stepIndex === 2) {
+            state.arrivalDate1.visited = true;
+            state.departureDate1.visited = true;
+
+            if (state.numberOfEntries.value.value === 'Double'){
+                state.arrivalDate2.visited = true;
+                state.departureDate2.visited = true;
+            }
+
+            for (let i = 0; i < this.state.visitors.length; i++){
+                this.state.locations[i].city.visited = true;
+                this.state.locations[i].hotel.visited = true;
+            }
+        }
+
+        this.setState(state);
+    }
+
+    checkIsStepCorrect(stepIndex) {
+        let state = this.state;
+        let correct = true;
+        if (stepIndex === 0) {
+            correct =
+                state.groupSize.error == "" &&
+                state.numberOfEntries.error == "" &&
+                state.purpose.error == "" &&
+                state.registration.error == "" &&
+                state.purpose.error == "" &&
+                state.countryApplyIn.error == "" &&
+                state.delivery.error == ""
+        }
+        if (stepIndex === 1) {
+            for (let i = 0; i < this.state.visitors.length; i++){
+                correct = correct && this.state.visitors[i].firstName.error === "";
+                correct = correct && this.state.visitors[i].middleName.error === "";
+                correct = correct && this.state.visitors[i].surName.error === "";
+                correct = correct && this.state.visitors[i].sex.error === "";
+                correct = correct && this.state.visitors[i].birthDate.error === "";
+                correct = correct && this.state.visitors[i].citizenship.error === "";
+                correct = correct && this.state.visitors[i].passportNumber.error === "";
+                correct = correct && this.state.visitors[i].passportIssued.error === "";
+                correct = correct && this.state.visitors[i].passportExpired.error === "";
+            }
+
+            correct = correct && this.state.email.error === "";
+            correct = correct && this.state.phone.error === "";
+        }
+
+        if (stepIndex === 2) {
+            correct = correct && this.state.arrivalDate1.error === "";
+            correct = correct && this.state.departureDate1.error === "";
+
+            if (state.numberOfEntries.value.value === 'Double'){
+                correct = correct && this.state.departureDate2.error === "";
+                correct = correct && this.state.arrivalDate2.error === "";
+            }
+
+            for (let i = 0; i < this.state.visitors.length; i++){
+                correct = correct && this.state.locations[i].city.error === "";
+                correct = correct && this.state.locations[i].hotel.error === "";
+            }
+            correct = correct && this.state.userReadTerms.error === "";
+        }
+
+        return correct;
     }
 
     updateVisitorsArray() {
@@ -779,8 +897,7 @@ class App extends Component {
     }
 
     showCurrentStep() {
-        if (this.state.currentStep === 0){
-
+        if (this.state.currentStep === 0) {
             return (
                 <Step number={0} hidden={this.state.currentStep !== 0}>
                     <Input
@@ -849,9 +966,7 @@ class App extends Component {
                     />
                 </Step>
             );
-        }
-
-        else if (this.state.currentStep === 1)
+        } else if (this.state.currentStep === 1)
             return (
                 <Step number={1} hidden={this.state.currentStep !== 1}>
                     {this.renderVisitors()}
