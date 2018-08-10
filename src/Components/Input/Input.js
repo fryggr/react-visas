@@ -11,104 +11,166 @@ import Moment from "moment";
 import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";
 import "./../Datepicker/Datepicker.css";
+import { Hint } from "./../Hint/Hint";
 
+export class Input extends React.Component {
+    constructor(props) {
+        super(props);
 
-
-export const Input = props => {
-    let className = typeof props.className !== "undefined" ? props.className : "";
-    if (props.visited) {
-        className += props.error !== "" ? " incorrect" : " correct";
+        this.state = { inFocus: false };
+        this.toggleFocus = this.toggleFocus.bind(this);
     }
 
-    if (props.type !== "select" && props.type !== "date" && props.type !== "country" && props.type !== "phone") {
-        return (
-            <div className={"Input " + className}>
-                <label className="Input__label">{props.label}</label>
-                <input
-                    onBlur={e => {
-                        props.updateField(props.fieldName + ".visited", true);
-                        props.updateField(props.fieldName + ".value", e.target.value);
-                    }}
-                    onChange={e => props.updateField(props.fieldName + ".value", e.target.value)}
-                    className="Input__field"
-                    type={props.type}
-                    value={props.value}
-                    placeholder={props.placeholder}
-                />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
-            </div>
-        );
-    } else if (props.type === "select") {
-        return (
-            <div className={"Input Select " + className}>
-                <label className="Input__label">{props.label}</label>
-                <Select
-                    className="Input__field"
-                    value={props.value}
-                    placeholder="Please select"
-                    onChange={selectedOption => {
-                        props.updateField(props.fieldName + ".visited", true);
-                        props.updateField(props.fieldName + ".value", selectedOption);
-                    }}
-                    onBlur={e => props.updateField(props.fieldName + ".visited", true)}
-                    options={props.options}
-                />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
-            </div>
-        );
-    } else if (props.type === "date") {
-        return (
-            <div className={"Input " + className}>
-                <label className="Input__label">{props.label}</label>
-                <Datetime
-                    isValidDate={ props.dateValidator }
-                    onChange={date => props.updateField(props.fieldName + ".value", date)}
-                    onBlur={date => props.updateField(props.fieldName + ".visited", true)}
-                    input={true}
-                    closeOnSelect={true}
-
-                    timeFormat={false}
-                    dateFormat="DD MMM YYYY"
-                    viewMode="years"
-                    className="Datepicker"
-                    value={props.value}
-                />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
-            </div>
-        );
-    } else if (props.type === "country") {
-        return (
-            <div className={"Input Select_country " + className} onClick={() => props.updateField(props.fieldName + ".visited", true)}>
-                <label className="Input__label">{props.label}</label>
-                <ReactFlagsSelect
-                    className=""
-                    showSelectedLabel={true}
-                    showOptionLabel={true}
-                    selectedSize={14}
-                    defaultCountry={props.value}
-                    placeholder="Please select"
-                    searchPlaceholder="please type"
-                    searchable={true}
-                    onSelect={selectedOption => {
-                        props.updateField(props.fieldName + ".visited", true);
-                        props.updateField(props.fieldName + ".value", selectedOption);
-                    }}
-                />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
-            </div>
-        );
-    } else if (props.type === "phone") {
-        return (
-            <div className={"Input Select_country " + className}>
-                <label className="Input__label">{props.label}</label>
-                <PhoneInput
-                    placeholder="Enter phone number"
-                    value={props.value}
-                    onChange={phone => props.updateField(props.fieldName + ".value", phone)}
-                    onBlur={e => props.updateField(props.fieldName + ".visited", true)}
-                />
-                <div className="Input__error">{props.visited ? props.error : ""}</div>
-            </div>
+    toggleFocus() {
+        this.setState({ inFocus: !this.state.inFocus }, () =>
+            console.log(this.state.inFocus)
         );
     }
-};
+
+    render() {
+        const {
+            type,
+            label,
+            fieldName,
+            placeholder,
+            visited,
+            value,
+            dateValidator,
+            error,
+            updateField,
+            options
+        } = { ...this.props };
+        const { inFocus } = { ...this.state };
+        let className =
+            typeof this.props.className !== "undefined"
+                ? this.props.className
+                : "";
+        if (visited) {
+            className += error !== "" ? " incorrect" : " correct";
+        }
+
+        if (
+            type !== "select" &&
+            type !== "date" &&
+            type !== "country" &&
+            type !== "phone"
+        ) {
+            return (
+                <div className={"Input " + className}>
+                    <label className="Input__label">{label}</label>
+                    <input
+                        onFocus={this.toggleFocus}
+                        onBlur={e => {
+                            updateField(fieldName + ".visited", true);
+                            updateField(fieldName + ".value", e.target.value);
+                            this.toggleFocus();
+                        }}
+                        onChange={e =>
+                            updateField(fieldName + ".value", e.target.value)
+                        }
+                        className="Input__field"
+                        type={type}
+                        value={value}
+                        placeholder={placeholder}
+                    />
+
+                    <div className="Input__error">{visited ? error : ""}</div>
+                    {inFocus ? <Hint /> : ""}
+                </div>
+            );
+        } else if (type === "select") {
+            return (
+                <div className={"Input Select " + className}>
+                    <label className="Input__label">{label}</label>
+                    <Select
+                        className="Input__field"
+                        value={value}
+                        placeholder="Please select"
+                        onChange={selectedOption => {
+                            updateField(fieldName + ".visited", true);
+                            updateField(fieldName + ".value", selectedOption);
+                        }}
+                        onFocus={this.toggleFocus}
+                        onBlur={e => {
+                            updateField(fieldName + ".visited", true);
+                            this.toggleFocus();
+                        }}
+                        options={options}
+                    />
+                    {inFocus ? <Hint /> : ""}
+                    <div className="Input__error">{visited ? error : ""}</div>
+                </div>
+            );
+        } else if (type === "date") {
+            return (
+                <div className={"Input " + className}>
+                    <label className="Input__label">{label}</label>
+                    <Datetime
+                        isValidDate={dateValidator}
+                        onChange={date =>
+                            updateField(fieldName + ".value", date)
+                        }
+                        onBlur={date =>
+                            updateField(fieldName + ".visited", true)
+                        }
+                        input={true}
+                        closeOnSelect={true}
+                        timeFormat={false}
+                        dateFormat="DD MMM YYYY"
+                        viewMode="years"
+                        className="Datepicker"
+                        value={value}
+                    />
+                    {inFocus ? <Hint /> : ""}
+                    <div className="Input__error">{visited ? error : ""}</div>
+                </div>
+            );
+        } else if (type === "country") {
+            return (
+                <div
+                    className={"Input Select_country " + className}
+                    onClick={() => updateField(fieldName + ".visited", true)}
+                >
+                    <label className="Input__label">{label}</label>
+                    <ReactFlagsSelect
+                        className=""
+                        showSelectedLabel={true}
+                        showOptionLabel={true}
+                        selectedSize={14}
+                        defaultCountry={value}
+                        placeholder="Please select"
+                        searchPlaceholder="please type"
+                        searchable={true}
+                        onFocus={this.toggleFocus}
+                        onSelect={selectedOption => {
+                            updateField(fieldName + ".visited", true);
+                            updateField(fieldName + ".value", selectedOption);
+                        }}
+                    />
+                    {inFocus ? <Hint /> : ""}
+                    <div className="Input__error">{visited ? error : ""}</div>
+                </div>
+            );
+        } else if (type === "phone") {
+            return (
+                <div className={"Input Select_country " + className}>
+                    <label className="Input__label">{label}</label>
+                    <PhoneInput
+                        placeholder="Enter phone number"
+                        onFocus={this.toggleFocus}
+                        value={value}
+                        onChange={phone =>
+                            updateField(fieldName + ".value", phone)
+                        }
+                        onBlur={e => {
+                            updateField(fieldName + ".visited", true);
+                            this.toggleFocus();
+                        }}
+                    />
+                    {inFocus ? <Hint /> : ""}
+                    <div className="Input__error">{visited ? error : ""}</div>
+                </div>
+            );
+        }
+    }
+}
