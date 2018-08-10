@@ -1,0 +1,22 @@
+.Info{
+    max-width: 626px;
+    margin: 10px 0;
+    background: #f2f2f2;
+    padding: 16px 26px 20px 14px;
+    font-family: 'Open Sans', sans-serif;
+    display: none;
+}
+
+.Info__title{
+    text-transform: uppercase;
+    color: #000;
+    font-size: 13px;
+    line-height: 21px;
+    font-weight: 700;
+}
+
+.Info__body{
+    color: #000;
+    font-size: 13px;
+    line-height: 21px;
+}
