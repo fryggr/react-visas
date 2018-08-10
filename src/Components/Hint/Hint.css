@@ -1,0 +1,126 @@
+.hint {
+	/* display: none; */
+	width: 380px;
+	position: absolute;
+	right: -435px;
+	top: -13px;
+}
+
+.hint.active {
+	display: block;
+}
+
+.hint_right {
+	right: -767px;
+}
+
+.hint__header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.hint__header-icon {
+	width: 28px;
+	height: 29px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	color: #fff;
+
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 11.25px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.hint__header-text {
+	color: #010000;
+
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 21px;
+}
+
+.hint__tab {
+	width: 198px;
+	height: 42px;
+	cursor: pointer;
+	background-color: #f9e2a9;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 9px 0 25px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+.hint__tab_active {
+	background-color: #fcd370;
+}
+
+.hint__tab_active .hint__header-text {
+	font-weight: 400;
+}
+
+.hint__body {
+	background-color: #fcd370;
+	padding: 30px;
+	display: none;
+}
+
+.hint__body.active {
+	display: block;
+}
+
+.hint__body-text {
+	color: #000;
+
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 21px;
+}
+
+.hint__action {
+	display: flex;
+	align-items: center;
+	margin-top: 17px;
+	cursor: pointer;
+}
+
+.hint__action-icon {
+	width: 25px;
+	height: 25px;
+	background-color: #cc091d;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 7px;
+	border-radius: 50%;
+}
+
+.hint__action-icon img {
+	width: 14px;
+	height: 14px;
+}
+
+.hint__action-text a, .hint__action-text a:link, .hint__action-text a:visited,.hint__action-text  a:focus, .hint__action-text a:hover, .hint__action-text a:active{
+	color: #cc091d !important;
+	font-size: 21px;
+	font-weight: 700;
+	line-height: 26px;
+	text-decoration: none;
+}
+.hint__action-text_black {
+	color: #000;
+}
+
+.hint__action-text_grey {
+	color: #353535;
+}
+
+@media (max-width: 1170px), (max-device-width: 1170px) {
+	.hint {
+		display: none !important;
+	}
+}
