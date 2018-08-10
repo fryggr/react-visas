@@ -109,7 +109,7 @@ class App extends Component {
             /*************USER'S INPUT STEP 1************/
 
             groupSize: {
-                value: "",
+                value: {value: 1, label: 1},
                 error: "",
                 visited: false
             },
@@ -976,7 +976,7 @@ class App extends Component {
 
 
               <div className="App__container container">
-                <Sticky type="errorSticky" links={this.state.errors}/>
+                <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
                       <div className="row py-3">
                           <div className="d-flex col-md-6 flex-column flex-md-row">

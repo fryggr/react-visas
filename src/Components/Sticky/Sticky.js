@@ -5,13 +5,13 @@ import './Sticky.css';
 export const Sticky = (props) => {
   if (props.type === 'errorSticky')
     return (
-      <div className="Sticky">
+      <div className="Sticky" hidden={props.links.length === 0}>
         <img className="Sticky__error-img"src={stickyError}/>
         <div className="Sticky__error-content">
           <div className="Sticky__error-title">The following fields have problems</div>
           {props.links.map((link) => {
             return (
-              <span className="sticky__error-item">{link.text}</span>
+              <span className="sticky__error-item" onClick={() => {props.updateField('currentStep', link.step)}}>{link.text}</span>
             )
           })}
       </div>
