@@ -29,6 +29,47 @@
   margin: 0px 5px;
 }
 
+.Sticky_error{
+    top: 39px;
+}
+
+.Sticky_price{
+    display: flex;
+    background-color: #fff;
+    border-top: 3px solid #d89c22;
+    padding-left: 46px;
+    height: 47px;
+    align-items: center;
+    padding-right: 10px;
+    top: 0;
+}
+
+.Sticky__price-title{
+    color: #cc091d;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    width: 100%;
+}
+
+.Sticky__price__total-result{
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+}
+
+.Sticky__price__total-label{
+    font-size: 12px;
+    color: #353535;
+    text-transform: uppercase;
+}
+
+.Sticky__price__total-sum{
+    color: #cc091d;
+    font-size: 16px;
+    font-weight: 700;
+}
+
 @media(max-width: 767px), (max-device-width:767px){
     .Sticky{
         position: static;

@@ -1,6 +1,7 @@
 .App, .App *{
     font-family: "Open Sans" !important;
     text-align: left;
+    box-sizing: border-box !important;
 }
 
 .App__container{

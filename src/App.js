@@ -9,6 +9,7 @@ import { Header } from "./Components/Header/Header";
 import { RadioGroup } from "./Components/RadioGroup/RadioGroup";
 import { ToggleTab } from "./Components/ToggleTab/ToggleTab";
 import { Input } from "./Components/Input/Input";
+import { Info } from "./Components/Info/Info";
 import { Button } from "./Components/Button/Button";
 import { Step } from "./Components/Step/Step";
 import { Sticky } from "./Components/Sticky/Sticky";
@@ -329,7 +330,9 @@ class App extends Component {
                     value: "2",
                     label: "Park inn"
                 }
-            ]
+            ],
+            countryApplyInNotesText: "",
+            countryApplyInFullName: ""
         };
 
         /******BINDING*****/
@@ -346,6 +349,62 @@ class App extends Component {
         this.showCurrentStep = this.showCurrentStep.bind(this);
         this.makeFieldsVisited = this.makeFieldsVisited.bind(this);
         this.checkIsStepCorrect = this.checkIsStepCorrect.bind(this);
+        this.getDataFromServer = this.getDataFromServer.bind(this);
+    }
+
+    getDataFromServer(){
+        var state = this.state;
+
+        var groupSize = document.querySelectorAll('.input-group-size option');
+        var visitPurpose = document.querySelectorAll('.input-purpose option');
+        var entriesNumber = document.querySelectorAll('.input-entries option');
+        var registration = document.querySelectorAll('.input-registration option');
+        var optionsDelivery = document.querySelectorAll('.input-delivery option');
+        var optionsCities = document.querySelectorAll('datalist#browsers option');
+
+        var newGroup = [],
+            newVisitPurpose = [],
+            newEntriesNumber = [],
+            newRegistration = [],
+            newOptionsDelivery = [],
+            newOptionsCities = [];
+
+        getData(groupSize, newGroup);
+        getData(visitPurpose, newVisitPurpose);
+        getData(entriesNumber, newEntriesNumber);
+        getDataInsideTag(registration, newRegistration);
+        getDataInsideTag(optionsDelivery, newOptionsDelivery);
+        getData(optionsCities, newOptionsCities);
+
+        state.OptionsGroupSize = newGroup.slice();
+        state.OptionsPurpose = newVisitPurpose.slice();
+        state.OptionsNumberOfEntries = newEntriesNumber.slice();
+        state.OptionsRegistration = newRegistration.slice();
+        state.OptionsDelivery = newOptionsDelivery.slice();
+        state.OptionsCities = newOptionsCities.slice();
+
+        function getData(obj, array) {
+          obj.forEach(function (domItem) {
+            var newObj = {};
+            newObj.value = domItem.value;
+            newObj.label = domItem.value;
+            array.push(newObj);
+          });
+        }
+
+        function getDataInsideTag(obj, array) {
+          obj.forEach(function (domItem) {
+            var newObj = {};
+            newObj.value = domItem.innerHTML;
+            newObj.label = domItem.innerHTML;
+            array.push(newObj);
+          });
+        }
+    }
+
+    componentWillMount(){
+
+      this.getDataFromServer()
     }
 
     getRestrictForDate(datePickerName) {
@@ -437,7 +496,6 @@ class App extends Component {
         });
 
         //updateState
-
         //make currentStep visited
         let visitedStepIndex;
         if (path.indexOf("currentStep") !== -1) {
@@ -447,8 +505,32 @@ class App extends Component {
             //make fields of visited steps visited
             this.makeFieldsVisited(visitedStepIndex);
         }
-
         eval("state" + code + "=value");
+        if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
+            window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
+                state.OptionsHotels = [];
+                data.forEach(hotel => {
+                    state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
+                })
+                let locationIndex = path.split(".")[1];
+                state.locations[locationIndex].hotel.value = {};
+                this.setState(state);
+            });
+
+        }
+
+        //PRICE CALCULATING
+        // console.log("state.numberOfEntries.value.value = ", state.numberOfEntries.value.value);
+        // console.log("state.numberOfEntries.value.value = ", state.registration.value.value);
+        // console.log("state.numberOfEntries.value.value = ", state.OptionsNumberOfEntries);
+        // console.log("state.numberOfEntries.value.value = ", state.OptionsRegistration);
+        // window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(state.numberOfEntries.value.value), window.Visas.Russian.RegistrationTypeId.parseFrom(state.registration.value.value), state.groupSize.value, function(data) {
+        //     var totalPrice = data.Total.toFixed(2);
+        //     state.price = totalPrice;
+        // });
+
+
+        
         this.setState(state);
         if (path.indexOf("groupSize") !== -1)
             this.updateVisitorsArray();
@@ -461,6 +543,15 @@ class App extends Component {
                 state.steps[visitedStepIndex].correct = true;
             }
             this.setState(state);
+        }
+
+        if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
+            console.log("countryApplyIn = ", state.countryApplyIn.value);
+            let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
+            let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
+            state.countryApplyInNotesText = text;
+            state.countryApplyInFullName = country;
+
         }
     }
 
@@ -908,6 +999,7 @@ class App extends Component {
                 <Input className="mt-4" type="select" updateField={this.updateField} fieldName="purpose" value={this.state.purpose.value} visited={this.state.purpose.visited} label="Purpose of visit" error={this.state.purpose.error} options={this.state.OptionsPurpose}/>
                 <Input className="mt-4" type="select" updateField={this.updateField} fieldName="registration" value={this.state.registration.value} visited={this.state.registration.visited} label="Registration" error={this.state.registration.error} options={this.state.OptionsRegistration}/>
                 <Input className="mt-4" type="country" updateField={this.updateField} fieldName="countryApplyIn" value={this.state.countryApplyIn.value} visited={this.state.countryApplyIn.visited} label="Country appling in" error={this.state.countryApplyIn.error}/>
+                {this.state.countryApplyInNotesText !== "" ? <Info text={this.state.countryApplyInNotesText} data={[this.state.countryApplyInFullName]} replaceStr="{Country}"/> : ""}
                 <Input className="mt-4" type="select" updateField={this.updateField} fieldName="delivery" value={this.state.delivery.value} visited={this.state.delivery.visited} label="Delivery option" error={this.state.delivery.error} options={this.state.OptionsDelivery}/>
             </Step>);
         } else if (this.state.currentStep === 1)
@@ -948,7 +1040,14 @@ class App extends Component {
                     ]} name="userReadTerms"/>
             </Step>);
         else if (this.state.currentStep === 3)
-            return (<Step number={3} hidden={this.state.currentStep !== 3}>
+            return (
+                <Step number={3} hidden={this.state.currentStep !== 3}>
+                <Info
+                    text="The visa support document applied for will be valid for processing a visa for the named person to enter Russia on or after  < not specified > and they must leave Russia on or before < not specified >. The visa will allow one entry to and one exit from Russia during this period. It is the applicant’s responsibility to confirm that the visa support document/visa meet their requirements before they process the visa, or travel or use the visa itself.
+                    Please note that once the visa support is issued, no refunds are possible."
+                    data={[new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]}
+                    replaceStr="< not specified >"
+                />
                 <RadioGroup updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable." options={[
                         {
                             value: "1",
@@ -976,6 +1075,7 @@ class App extends Component {
 
 
               <div className="App__container container">
+                {/*<Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep}/>*/}
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
                       <div className="row py-3">
