@@ -530,7 +530,7 @@ class App extends Component {
         // });
 
 
-        
+
         this.setState(state);
         if (path.indexOf("groupSize") !== -1)
             this.updateVisitorsArray();
@@ -1011,7 +1011,7 @@ class App extends Component {
                 {this.renderArrivalAndDeparture()}
                 {this.renderLocations()}
 
-                <RadioGroup updateField={this.updateField} fieldName="userNeedsNewsletter" error={this.state.userNeedsNewsletter.error} title="Would you like to join our monthly newsletter list" options={[
+                <RadioGroup updateField={this.updateField} fieldName="userNeedsNewsletter" error={this.state.userNeedsNewsletter.error} value={this.state.userNeedsNewsletter.value} title="Would you like to join our monthly newsletter list" options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -1020,7 +1020,7 @@ class App extends Component {
                             text: "No"
                         }
                     ]} name="userNeedsNewsletter"/>
-                <RadioGroup updateField={this.updateField} fieldName="userNeedsJoinMailingList" error={this.state.userNeedsJoinMailingList.error} title="Would you like to join our mailing list for special offers, news and information" options={[
+                <RadioGroup updateField={this.updateField} fieldName="userNeedsJoinMailingList" error={this.state.userNeedsJoinMailingList.error} value={this.state.userNeedsJoinMailingList.value} title="Would you like to join our mailing list for special offers, news and information" options={[
                         {
                             value: "1",
                             text: "Yes"
