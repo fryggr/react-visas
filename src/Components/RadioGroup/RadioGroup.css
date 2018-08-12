@@ -43,8 +43,6 @@
   color: #cc091d;
   font-size: 0.75rem;
   line-height: 1.5rem;
-  position: relative;
-  z-index: 1;
 }
 
 @media (max-width:380px),(max-device-width:380px) {

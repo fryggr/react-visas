@@ -114,7 +114,7 @@ class App extends Component {
 
             /*************USER'S INPUT STEP 1************/
             groupSize: {
-                value: {value: 1, label: 1},
+                value: "",
                 error: "",
                 visited: false
             },
@@ -146,53 +146,53 @@ class App extends Component {
 
             /*************USER'S INPUT STEP 2************/
             visitors: [
-                {
-                    firstName: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    middleName: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    surName: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    sex: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    birthDate: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    citizenship: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    passportNumber: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    passportIssued: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    passportExpired: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    }
-                }
+                // {
+                //     firstName: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     middleName: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     surName: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     sex: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     birthDate: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     citizenship: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     passportNumber: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     passportIssued: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     },
+                //     passportExpired: {
+                //         value: "",
+                //         error: "",
+                //         visited: false
+                //     }
+                // }
             ],
             email: {
                 value: "",
@@ -405,7 +405,7 @@ class App extends Component {
     }
 
     componentWillMount(){
-      this.getDataFromServer()
+      // this.getDataFromServer()
     }
 
     getRestrictForDate(datePickerName) {
@@ -425,7 +425,10 @@ class App extends Component {
         var thirtyDaysBeforeDeparture1 = Moment(state.departureDate1.value).subtract(30, "day");
         var thirtyDaysAfterArrival2 = Moment(state.arrivalDate2.value).add(30, "day");
         var thirtyDaysBeforeDeparture2 = Moment(state.departureDate2.value).subtract(30, "day");
-        var sixMonthBeforePassportExpired = Moment(state.visitors[0].passportExpired.value).subtract(6, "month");
+        if (state.visitors.length > 0)
+          var sixMonthBeforePassportExpired = Moment(state.visitors[0].passportExpired.value).subtract(6, "month");
+        else
+          sixMonthBeforePassportExpired = new Date().setFullYear(3000);
 
         if (datePickerName === "birthDate" || datePickerName === "passportIssued") {
             return function(current) {
@@ -489,12 +492,7 @@ class App extends Component {
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
         let state = this.state;
-        //generate code like [path][path]
-        let arr = path.split(".");
-        let code = "";
-        arr.forEach(item => {
-            code += "['" + item + "']";
-        });
+        _.set(state, path, value);
 
         //updateState
         //make currentStep visited
@@ -506,7 +504,7 @@ class App extends Component {
             //make fields of visited steps visited
             this.makeFieldsVisited(visitedStepIndex);
         }
-        eval("state" + code + "=value");
+
         if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
             window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
                 state.OptionsHotels = [];
@@ -547,12 +545,11 @@ class App extends Component {
         }
 
         if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
-            console.log("countryApplyIn = ", state.countryApplyIn.value);
             let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
             let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
             state.countryApplyInNotesText = text;
             state.countryApplyInFullName = country;
-
+            this.setState(state);
         }
     }
 
@@ -744,13 +741,15 @@ class App extends Component {
         if (oldVisitorsCount < newVisitorsCount) {
             for (let i = oldVisitorsCount; i < newVisitorsCount; i++)
                 state.visitors.push(JSON.parse(JSON.stringify(visitorTemplate)));
+            this.setState(state);
             }
-        else {
+        else if (oldVisitorsCount > newVisitorsCount){
             for (let i = oldVisitorsCount; i > newVisitorsCount; i--)
                 state.visitors.pop();
+            this.setState(state);
             }
 
-        this.setState(state);
+
     }
 
     updateError(path, value) {
@@ -1062,6 +1061,7 @@ class App extends Component {
         }
 
     render() {
+
         return (
             <div className="App text-center text-md-left">
 
@@ -1076,7 +1076,6 @@ class App extends Component {
 
 
               <div className="App__container container">
-                {/*<Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep}/>*/}
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
                       <div className="row py-3">
