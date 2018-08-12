@@ -492,7 +492,6 @@ class App extends Component {
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
         let state = this.state;
-        _.set(state, path, value);
 
         //updateState
         //make currentStep visited
@@ -503,20 +502,30 @@ class App extends Component {
             state.steps[visitedStepIndex].visited = true;
             //make fields of visited steps visited
             this.makeFieldsVisited(visitedStepIndex);
+            this.validate();
+            if (!this.checkIsStepCorrect(visitedStepIndex)) {
+                state.steps[visitedStepIndex].correct = false;
+            } else {
+                state.steps[visitedStepIndex].correct = true;
+            }
+            this.setState(state);
         }
 
-        if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
-            window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
-                state.OptionsHotels = [];
-                data.forEach(hotel => {
-                    state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
-                })
-                let locationIndex = path.split(".")[1];
-                state.locations[locationIndex].hotel.value = {};
-                this.setState(state);
-            });
+        _.set(state, path, value);
+        this.setState(state);
 
-        }
+        // if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
+        //     window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
+        //         state.OptionsHotels = [];
+        //         data.forEach(hotel => {
+        //             state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
+        //         })
+        //         let locationIndex = path.split(".")[1];
+        //         state.locations[locationIndex].hotel.value = {};
+        //         this.setState(state);
+        //     });
+        //
+        // }
 
         //PRICE CALCULATING
         // console.log("state.numberOfEntries.value.value = ", state.numberOfEntries.value.value);
@@ -529,28 +538,42 @@ class App extends Component {
         // });
 
 
-
-        this.setState(state);
         if (path.indexOf("groupSize") !== -1)
             this.updateVisitorsArray();
         this.validate();
 
-        if (path.indexOf("currentStep") !== -1) {
-            if (!this.checkIsStepCorrect(visitedStepIndex)) {
-                state.steps[visitedStepIndex].correct = false;
-            } else {
-                state.steps[visitedStepIndex].correct = true;
+
+        //проверяем, заполнил ли пользователь все предыдущие поля
+        if (path.indexOf("userCompleteForm") !== -1 && value === "1"){
+            let state = this.state;
+            this.makeFieldsVisited(0);
+            this.makeFieldsVisited(1);
+            this.makeFieldsVisited(2);
+            this.validate();
+            state['steps'][0].correct = this.checkIsStepCorrect(0);
+            state['steps'][1].correct = this.checkIsStepCorrect(1);
+            state['steps'][2].correct = this.checkIsStepCorrect(2);
+            if (!state['steps'][0].correct || !state['steps'][1].correct || !state['steps'][2].correct){
+              alert("You have errors!");
+              state['userCompleteForm'].value = "2";
+              state['userCompleteForm'].error = "This field must be accepted."
             }
-            this.setState(state);
+            else {
+              console.log(value);
+              state['userCompleteForm'].value = value;
+              this.setState(state);
+            }
+
         }
 
-        if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
-            let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
-            let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
-            state.countryApplyInNotesText = text;
-            state.countryApplyInFullName = country;
-            this.setState(state);
-        }
+        // if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
+        //     let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
+        //     let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
+        //     state.countryApplyInNotesText = text;
+        //     state.countryApplyInFullName = country;
+        //     this.setState(state);
+        // }
+
     }
 
     makeFieldsVisited(stepIndex) {
@@ -589,7 +612,7 @@ class App extends Component {
                 state.departureDate2.visited = true;
             }
 
-            for (let i = 0; i < this.state.visitors.length; i++) {
+            for (let i = 0; i < this.state.locations.length; i++) {
                 this.state.locations[i].city.visited = true;
                 this.state.locations[i].hotel.visited = true;
             }
@@ -814,7 +837,6 @@ class App extends Component {
         //add inputFields for visitors
         for (let i = 0; i < state.visitors.length; i++) {
             inputFields["visitors." + i + ".firstName"] = state.visitors[i].firstName.value;
-            inputFields["visitors." + i + ".middleName"] = state.visitors[i].middleName.value;
             inputFields["visitors." + i + ".surName"] = state.visitors[i].surName.value;
             inputFields["visitors." + i + ".sex"] = state.visitors[i].sex.value;
             inputFields["visitors." + i + ".birthDate"] = state.visitors[i].birthDate.value;
@@ -1072,6 +1094,7 @@ class App extends Component {
                     currencies={this.state.currencies}
                     currency={this.state.currency}
                     price={this.state.price}
+                    userCompleteForm ={this.state.userCompleteForm.value}
                 />
 
 
@@ -1117,7 +1140,7 @@ class App extends Component {
                       </div>
 
                       <div className={
-                              ((this.state.currentStep === 3) ? "col-sm-6 d-block" : (this.state.currentStep !== 0) ? "col-sm-3 d-block"  : "d-none")
+                              ((this.state.currentStep !== 0 && this.state.userCompleteForm.value !== "1" ) ? "col-sm-3 d-block"  : "d-none")
                           }>
                           <Button
                               handleClick={() => this.updateField("currentStep", this.state.currentStep - 1)}

@@ -14,49 +14,75 @@
   top: 6px;
 }
 
-.Input__field > *{
-    border: none !important;
-    background: #fff !important;
+.Input__field>* {
+  border: none !important;
+  background: #fff !important;
 }
 
-.Select .Input__field{
-    padding-bottom: 0px;
-    padding-top: 2px;
-    margin-left: -9px;
+.Select .Input__field {
+  padding-bottom: 0px;
+  padding-top: 2px;
+  margin-left: -9px;
 }
 
-.Input.Select.incorrect .Input__field > *{
-    background-color: #fbe3e3 !important;
+.Input.Select.incorrect .Input__field>* {
+  background-color: #fbe3e3 !important;
 }
 
-.Select_country{
-    display: flex !important;
-    flex-direction: column;
-    user-select: none;
+.Select_country {
+  display: flex !important;
+  flex-direction: column;
+  user-select: none;
 }
 
-.Select_country .selected--flag--option, .Select_country .country-label{
-    font-size: 1.0rem !important;
-    padding: 0px !important;
-    color: hsl(0,0%,50%);
+.Select_country .selected--flag--option, .Select_country .country-label {
+  font-size: 1.0rem !important;
+  padding: 0px !important;
+  color: hsl(0, 0%, 50%);
 }
 
-.Select_country .country-flag > img{
-    top: -2px !important;
+.Select_country .country-flag>img {
+  top: -2px !important;
 }
 
-.Select_country .flag-select{
-    padding: 6px 0px 10px 0px !important;
+.Select_country .flag-select {
+  padding: 6px 0px 10px 0px !important;
+}
+
+.Select_country .selected--flag--option {
+  display: flex !important;
+  justify-content: space-between;
 }
 
 .Select_country .arrow-down {
-    display: none !important;
+  font-size: 0px !important;
+  display: block;
+  background: url(https://cdn4.iconfinder.com/data/icons/iready-symbols-arrows-vol-1/28/004_038_down_arrow_next_bottom_end_circle1x-512.png) no-repeat center / 13px;
+  width: 16px;
+  height: 16px;
+  margin-right: 19px;
+  margin-top: 7px;
 }
 
-.react-phone-number-input__icon{
-    position: relative;
+.Select_country .selected--flag--option  .country-flag{
+  display: flex;
 }
 
-.react-phone-number-input__icon > img{
-    position: absolute;
+.Select_country .flag-select .country-flag .country-label {
+  position: relative;
+  top: -3px;
+  left: 5px;
+  white-space: nowrap;
+}
+
+.Select_country .flag-options {
+  width: 100%;
+}
+
+.react-phone-number-input__icon {
+  position: relative;
+}
+
+.react-phone-number-input__icon>img {
+  position: absolute;
 }

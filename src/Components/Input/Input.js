@@ -19,6 +19,7 @@ export class Input extends React.Component {
 
         this.state = { inFocus: false };
         this.toggleFocus = this.toggleFocus.bind(this);
+
     }
 
     toggleFocus() {
@@ -79,10 +80,18 @@ export class Input extends React.Component {
                 </div>
             );
         } else if (type === "select") {
+          // CUSTOM STYLES FOR Select
+          const indicatorSeparator = () => ({
+            color: "red"
+          });
+          const colourStyles = {
+            indicatorSeparator: styles => ({ ...indicatorSeparator})
+          };
             return (
                 <div className={"Input Select " + className}>
                     <label className="Input__label">{label}</label>
                     <Select
+                        styles={colourStyles}
                         className="Input__field"
                         value={value}
                         placeholder="Please select"

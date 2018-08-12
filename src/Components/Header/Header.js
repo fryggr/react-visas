@@ -14,11 +14,11 @@ export const Header = props => {
                     <h2 className="Header__title">
                         Russian Tourist Visa Support Application
                     </h2>
-                    <StepsNavigation
+                    {props.userCompleteForm === "1" ? "" : <StepsNavigation
                         updateField={props.updateField}
                         steps={props.steps}
                         currentStep={props.currentStep}
-                    />
+                    />}
                 </div>
                 <div className="col-lg-5">
                     <div className="container">
