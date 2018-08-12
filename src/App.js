@@ -15,12 +15,15 @@ import { Step } from "./Components/Step/Step";
 import { Sticky } from "./Components/Sticky/Sticky";
 import Moment from "moment";
 import _ from 'lodash';
-//For Validation
+
+
+/************FOR VALIDATION***********/
 let Validator = require("validatorjs");
 const plugins = {
     dvr: Validator
 };
 
+/*************FOR ADDING NEW VISITORS WHEN GROUP SIZE CHANGE***************/
 let visitorTemplate = {
     firstName: {
         value: "",
@@ -91,7 +94,8 @@ class App extends Component {
                     label: "€ - EUR"
                 }
             ],
-            //this data for StepsNavigation Component
+
+            /********THIS DATA FOR STEPSNAVIGATION COMPONENT**********/
             steps: [
                 {
                     stepName: "service details",
@@ -107,8 +111,8 @@ class App extends Component {
                     visited: false
                 }
             ],
-            /*************USER'S INPUT STEP 1************/
 
+            /*************USER'S INPUT STEP 1************/
             groupSize: {
                 value: {value: 1, label: 1},
                 error: "",
@@ -202,7 +206,6 @@ class App extends Component {
             },
 
             /*************USER'S INPUT STEP 3************/
-
             arrivalDate1: {
                 value: "",
                 error: "",
@@ -254,7 +257,6 @@ class App extends Component {
             },
 
             /*************USER'S INPUT STEP 4************/
-
             userCompleteForm: {
                 value: "",
                 error: "",
@@ -403,7 +405,6 @@ class App extends Component {
     }
 
     componentWillMount(){
-
       this.getDataFromServer()
     }
 
