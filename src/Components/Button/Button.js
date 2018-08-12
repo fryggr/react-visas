@@ -7,7 +7,12 @@ export const Button = (props) => {
     return (
         <div className="Button-wrapper">
             <button type={props.type} className={"Button " + className} onClick={props.handleClick}>{props.label}</button>
-            <div className="Button__text">{props.text}</div>
+            <div className={
+                "Button__text " + (
+                    props.text == ""
+                    ? "d-none"
+                    : "d-block")
+                }>{props.text}</div>
         </div>
     )
 }

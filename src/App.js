@@ -1099,6 +1099,7 @@ class App extends Component {
 
 
               <div className="App__container container">
+                <Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep} currency={this.state.currency} price={this.state.price}/>
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
                       <div className="row py-3">
