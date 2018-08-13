@@ -204,6 +204,26 @@ class App extends Component {
                 error: "",
                 visited: false
             },
+            autoType:{
+                value: "",
+                error: "",
+                visited: false
+            },
+            autoModel:{
+                value: "",
+                error: "",
+                visited: false
+            },
+            autoColor:{
+                value: "",
+                error: "",
+                visited: false
+            }
+            autoNumber:{
+                value: "",
+                error: "",
+                visited: false
+            }
 
             /*************USER'S INPUT STEP 3************/
             arrivalDate1: {
@@ -514,18 +534,18 @@ class App extends Component {
         _.set(state, path, value);
         this.setState(state);
 
-        // if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
-        //     window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
-        //         state.OptionsHotels = [];
-        //         data.forEach(hotel => {
-        //             state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
-        //         })
-        //         let locationIndex = path.split(".")[1];
-        //         state.locations[locationIndex].hotel.value = {};
-        //         this.setState(state);
-        //     });
-        //
-        // }
+        if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
+            window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
+                state.OptionsHotels = [];
+                data.forEach(hotel => {
+                    state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
+                })
+                let locationIndex = path.split(".")[1];
+                state.locations[locationIndex].hotel.value = {};
+                this.setState(state);
+            });
+
+        }
 
         //PRICE CALCULATING
         // console.log("state.numberOfEntries.value.value = ", state.numberOfEntries.value.value);
@@ -566,13 +586,13 @@ class App extends Component {
 
         }
 
-        // if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
-        //     let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
-        //     let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
-        //     state.countryApplyInNotesText = text;
-        //     state.countryApplyInFullName = country;
-        //     this.setState(state);
-        // }
+        if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
+            let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
+            let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
+            state.countryApplyInNotesText = text;
+            state.countryApplyInFullName = country;
+            this.setState(state);
+        }
 
     }
 
@@ -602,6 +622,11 @@ class App extends Component {
 
             state.email.visited = true;
             state.phone.visited = true;
+            state.autoType.visited = true;
+            state.autoModel.visited = true;
+            state.autoColor.visited = true;
+            state.autoNumber.visited = true;
+
         }
         if (stepIndex === 2) {
             state.arrivalDate1.visited = true;
@@ -701,6 +726,7 @@ class App extends Component {
                   correct = false;
                   state.errors.push({name: "phone", text: "phone", step: 1})
               }
+              // if (this.state.purpose ) autoType  autoModel autoColor
         }
 
         if (stepIndex === 2) {
@@ -831,7 +857,12 @@ class App extends Component {
             departureDate1: state.departureDate1.value,
             departureDate2: state.departureDate2.value,
             userReadTerms: state.userReadTerms.value,
-            userCompleteForm: state.userCompleteForm.value
+            userCompleteForm: state.userCompleteForm.value,
+            autoType: state.autoType.value,
+            autoModel: state.autoModel.value,
+            autoColor: state.autoColor.value,
+            autoNumber: state.autoNumber.value
+
         };
 
         //add inputFields for visitors
@@ -866,7 +897,11 @@ class App extends Component {
             departureDate1: "required|date",
             departureDate2: "required|date",
             userReadTerms: "accepted",
-            userCompleteForm: "accepted"
+            userCompleteForm: "accepted",
+            autoType: "required",
+            autoModel: "required",
+            autoColor: "required",
+            autoNumber: "required"
         };
 
         //add rules for visitors
@@ -962,6 +997,24 @@ class App extends Component {
                 }
             </ToggleTab>);
         });
+    }
+
+    renderAuto(){
+        return (
+            <RadioGroup updateField={this.updateField} fieldName="autoType" error={this.state.autoType.error} value={this.state.autoType.value} title="Vehicle type" options={[
+                    {
+                        value: "car",
+                        text: "Car"
+                    }, {
+                        value: "moto",
+                        text: "Motorcycle"
+                    }
+            ]}/>
+
+        <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.autoModel.value} fieldName="autoModel" visited={this.state.autoModel.visited} label="Vehicle make" error={this.state.autoModel.error} options={this.state.OptionsAutoModels}/>
+        <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.autoColor.value} fieldName="autoColor" visited={this.state.autoColor.visited} label="Vehicle color" error={this.state.autoColor.error} options={this.state.OptionsAutoColors}/>
+        <Input type="text" className="mt-4" updateField={this.updateField} value={this.state.autoNumber.value} fieldName="autoNumber" visited={this.state.autoNumber.visited} label="Licence Plate number" error={this.state.autoNumber.error}/>
+        )
     }
 
     renderArrivalAndDeparture() {
