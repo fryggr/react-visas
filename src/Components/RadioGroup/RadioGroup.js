@@ -45,7 +45,7 @@ export class RadioGroup extends React.Component{
                   );
                 })}
               </div>
-              <div className="RadioGroup__error">{this.props.error}</div>
+              <div className="RadioGroup__error">{(this.props.visited ? this.props.error : "")}</div>
             </div>
         )
     }

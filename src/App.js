@@ -642,10 +642,6 @@ class App extends Component {
 
         let state = this.state;
         //PRICE CALCULATING
-        console.log("state.numberOfEntries.value.value = ", state.numberOfEntries.value.value);
-        console.log("state.numberOfEntries.value.value = ", state.registration.value.value);
-        console.log("state.numberOfEntries.value.value = ", state.OptionsNumberOfEntries);
-        console.log("state.numberOfEntries.value.value = ", state.OptionsRegistration);
 
         let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
         let defaultRegistration = state.registration.value.value || "NO";
@@ -697,7 +693,7 @@ class App extends Component {
         if (stepIndex === 2) {
             state.arrivalDate1.visited = true;
             state.departureDate1.visited = true;
-
+            state.userReadTerms.visited = true;
             if (state.numberOfEntries.value.value === 'Double') {
                 state.arrivalDate2.visited = true;
                 state.departureDate2.visited = true;
@@ -975,7 +971,7 @@ class App extends Component {
             countryApplyIn: "required",
             delivery: "required",
             email: "required|email",
-            phone: "required|regex:/[0-9-S]{4,}/i",
+            phone: "required|regex:/[0-9]{4,}/i",
             arrivalDate1: "required|date",
             arrivalDate2: "required|date",
             departureDate1: "required|date",
@@ -990,9 +986,9 @@ class App extends Component {
 
         //add rules for visitors
         for (let i = 0; i < state.visitors.length; i++) {
-            rules["visitors." + i + ".firstName"] = "required|alpha";
-            rules["visitors." + i + ".middleName"] = "required|alpha";
-            rules["visitors." + i + ".surName"] = "required|alpha";
+            rules["visitors." + i + ".firstName"] = "required|regex:/^[a-z\\-\\s]+$/ig";
+            rules["visitors." + i + ".middleName"] = "regex:/^[a-z\\-\\s]+$/ig";
+            rules["visitors." + i + ".surName"] = "required|regex:/^[a-z\\-\\s]+$/ig";
             rules["visitors." + i + ".sex"] = "required";
             rules["visitors." + i + ".birthDate"] = "required|date";
             rules["visitors." + i + ".citizenship"] = "required";
@@ -1037,7 +1033,7 @@ class App extends Component {
                 <Input className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".firstName"} value={this.state.visitors[visitorIndex].firstName.value} visited={this.state.visitors[visitorIndex].firstName.visited} label="First name" placeholder="Please enter First name" error={this.state.visitors[visitorIndex].firstName.error}/>
                 <Input className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".middleName"} value={this.state.visitors[visitorIndex].middleName.value} visited={this.state.visitors[visitorIndex].middleName.visited} label="Middle name" placeholder="Please enter Middle name" error={this.state.visitors[visitorIndex].middleName.error}/>
                 <Input className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".surName"} value={this.state.visitors[visitorIndex].surName.value} visited={this.state.visitors[visitorIndex].surName.visited} label="Surname" placeholder="Please enter Surname" error={this.state.visitors[visitorIndex].surName.error}/>
-                <RadioGroup updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
+                <RadioGroup visited={this.state.visitors[visitorIndex].sex.visited} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
                         {
                             value: "Male",
                             text: "Male"
@@ -1073,7 +1069,7 @@ class App extends Component {
                 {
                     visitorIndex === 0
                         ? [
-                            <Input type="email" className="mt-4" updateField={this.updateField} fieldName="email" value={this.state.email.value} visited={this.state.email.visited} label="Email" placeholder="Please enter email" error={this.state.email.error}/>,
+                            <Input type="email" className="mt-4" updateField={this.updateField} fieldName="email" value={this.state.email.value} visited={this.state.email.visited} label="Email" placeholder="example@mail.com" error={this.state.email.error}/>,
 
                             <Input type="phone" className="mt-4" updateField={this.updateField} fieldName="phone" value={this.state.phone.value} visited={this.state.phone.visited} label="Telephone" error={this.state.phone.error}/>
                         ]
@@ -1191,7 +1187,7 @@ class App extends Component {
                             text: "No"
                         }
                     ]} name="userNeedsJoinMailingList"/>
-                <RadioGroup updateField={this.updateField} fieldName="userReadTerms" error={this.state.userReadTerms.error} value={this.state.userReadTerms.value} title="<b>I have read and understood the <a style='color:black;text-decoration:underline' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
+                <RadioGroup updateField={this.updateField} visited={this.state.userReadTerms.visited} fieldName="userReadTerms" error={this.state.userReadTerms.error} value={this.state.userReadTerms.value} title="<b>I have read and understood the <a style='color:black;text-decoration:underline' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -1210,7 +1206,7 @@ class App extends Component {
                     data={[new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]}
                     replaceStr="< not specified >"
                 />
-                <RadioGroup updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable." options={[
+            <RadioGroup visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable." options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -1225,7 +1221,7 @@ class App extends Component {
     render() {
 
         return (
-            <div className="App text-center text-md-left">
+            <div className="App text-center text-md-left mb-5">
 
                 <Header
                     updateField={this.updateField}

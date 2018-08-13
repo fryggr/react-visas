@@ -85,7 +85,8 @@ export class Input extends React.Component {
             color: "red"
           });
           const colourStyles = {
-            indicatorSeparator: styles => ({ ...indicatorSeparator})
+            indicatorSeparator: styles => ({ ...indicatorSeparator}),
+            menu: styles => ({...styles, position: 'relative', zIndex: "999999"}),
           };
             return (
                 <div className={"Input Select " + className}>
@@ -138,7 +139,6 @@ export class Input extends React.Component {
             return (
                 <div
                     className={"Input Select_country " + className}
-                    onClick={() => updateField(fieldName + ".visited", true)}
                 >
                     <label className="Input__label">{label}</label>
                     <ReactFlagsSelect
@@ -165,7 +165,8 @@ export class Input extends React.Component {
                 <div className={"Input Select_country " + className}>
                     <label className="Input__label">{label}</label>
                     <PhoneInput
-                        placeholder="Enter phone number"
+                        country="US"
+                        placeholder="+1 234 567 89"
                         onFocus={this.toggleFocus}
                         value={value}
                         onChange={phone =>

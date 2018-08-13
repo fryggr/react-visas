@@ -76,6 +76,7 @@
 }
 
 .Select_country .flag-select .filterBox input{
+    background: #fff !important;
     width: calc(100% - 14px);
     margin: 0 7px;
     border: 1px solid rgba(0, 0, 0, .31);
