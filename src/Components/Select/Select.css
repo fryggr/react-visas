@@ -75,8 +75,17 @@
   white-space: nowrap;
 }
 
+.Select_country .flag-select .filterBox input{
+    width: calc(100% - 14px);
+    margin: 0 7px;
+    border: 1px solid rgba(0, 0, 0, .31);
+    padding: 5px 0;
+    text-indent: 10px;
+}
+
 .Select_country .flag-options {
-  width: 100%;
+    margin-left: -17px;
+    width: calc(100% + 18px);
 }
 
 .react-phone-number-input__icon {

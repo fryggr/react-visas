@@ -835,7 +835,7 @@ class App extends Component {
             }
 
 
-            for (let i = 0; i < this.state.visitors.length; i++){
+            for (let i = 0; i < this.state.locations.length; i++){
               if (this.state.locations[i].city.error !== ""){
                   correct = false;
                   state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " city", step: 2})
