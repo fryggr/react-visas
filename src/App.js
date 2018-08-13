@@ -218,12 +218,12 @@ class App extends Component {
                 value: "",
                 error: "",
                 visited: false
-            }
+            },
             autoNumber:{
                 value: "",
                 error: "",
                 visited: false
-            }
+            },
 
             /*************USER'S INPUT STEP 3************/
             arrivalDate1: {
@@ -372,6 +372,7 @@ class App extends Component {
         this.makeFieldsVisited = this.makeFieldsVisited.bind(this);
         this.checkIsStepCorrect = this.checkIsStepCorrect.bind(this);
         this.getDataFromServer = this.getDataFromServer.bind(this);
+        this.renderAuto = this.renderAuto.bind(this);
     }
 
     getDataFromServer(){
@@ -405,6 +406,7 @@ class App extends Component {
         state.OptionsDelivery = newOptionsDelivery.slice();
         state.OptionsCities = newOptionsCities.slice();
 
+
         function getData(obj, array) {
           obj.forEach(function (domItem) {
             var newObj = {};
@@ -425,7 +427,7 @@ class App extends Component {
     }
 
     componentWillMount(){
-      // this.getDataFromServer()
+      this.getDataFromServer()
     }
 
     getRestrictForDate(datePickerName) {
@@ -622,10 +624,13 @@ class App extends Component {
 
             state.email.visited = true;
             state.phone.visited = true;
-            state.autoType.visited = true;
-            state.autoModel.visited = true;
-            state.autoColor.visited = true;
-            state.autoNumber.visited = true;
+            if (this.state.purpose.value.value === "Auto Tourist"){
+                state.autoType.visited = true;
+                state.autoModel.visited = true;
+                state.autoColor.visited = true;
+                state.autoNumber.visited = true;
+            }
+
 
         }
         if (stepIndex === 2) {
@@ -727,6 +732,24 @@ class App extends Component {
                   state.errors.push({name: "phone", text: "phone", step: 1})
               }
               // if (this.state.purpose ) autoType  autoModel autoColor
+              if (this.state.purpose.value.value === "Auto Tourist"){
+                  if (this.state.autoType.error !== ""){
+                      correct = false;
+                      state.errors.push({name: "autoType", text: "Auto type", step: 1})
+                  }
+                  if (this.state.autoModel.error !== ""){
+                      correct = false;
+                      state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
+                  }
+                  if (this.state.autoColor.error !== ""){
+                      correct = false;
+                      state.errors.push({name: "autoColor", text: "Auto color", step: 1})
+                  }
+                  if (this.state.autoNumber.error !== ""){
+                      correct = false;
+                      state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
+                  }
+              }
         }
 
         if (stepIndex === 2) {
@@ -1000,7 +1023,7 @@ class App extends Component {
     }
 
     renderAuto(){
-        return (
+        return [
             <RadioGroup updateField={this.updateField} fieldName="autoType" error={this.state.autoType.error} value={this.state.autoType.value} title="Vehicle type" options={[
                     {
                         value: "car",
@@ -1009,12 +1032,12 @@ class App extends Component {
                         value: "moto",
                         text: "Motorcycle"
                     }
-            ]}/>
+            ]}/>,
 
-        <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.autoModel.value} fieldName="autoModel" visited={this.state.autoModel.visited} label="Vehicle make" error={this.state.autoModel.error} options={this.state.OptionsAutoModels}/>
-        <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.autoColor.value} fieldName="autoColor" visited={this.state.autoColor.visited} label="Vehicle color" error={this.state.autoColor.error} options={this.state.OptionsAutoColors}/>
+        <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.autoModel.value} fieldName="autoModel" visited={this.state.autoModel.visited} label="Vehicle make" error={this.state.autoModel.error} options={this.state.OptionsAutoModels}/>,
+        <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.autoColor.value} fieldName="autoColor" visited={this.state.autoColor.visited} label="Vehicle color" error={this.state.autoColor.error} options={this.state.OptionsAutoColors}/>,
         <Input type="text" className="mt-4" updateField={this.updateField} value={this.state.autoNumber.value} fieldName="autoNumber" visited={this.state.autoNumber.visited} label="Licence Plate number" error={this.state.autoNumber.error}/>
-        )
+        ]
     }
 
     renderArrivalAndDeparture() {
@@ -1080,6 +1103,9 @@ class App extends Component {
         } else if (this.state.currentStep === 1)
             return (<Step number={1} hidden={this.state.currentStep !== 1}>
                 {this.renderVisitors()}
+                {<div hidden={this.state.purpose.value.value !== "Auto Tourist"}>
+                    {this.renderAuto()}
+                </div>}
             </Step>);
         else if (this.state.currentStep === 2)
             return (<Step number={2} hidden={this.state.currentStep !== 2}>
