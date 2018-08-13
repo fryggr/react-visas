@@ -353,6 +353,19 @@ class App extends Component {
                     label: "Park inn"
                 }
             ],
+            OptionsAutoModels: [
+                {
+                    value: "",
+                    label: ""
+                }
+            ],
+            OptionsAutoColors: [
+                {
+                    value: "",
+                    label: ""
+                }
+            ],
+
             countryApplyInNotesText: "",
             countryApplyInFullName: ""
         };
@@ -384,13 +397,18 @@ class App extends Component {
         var registration = document.querySelectorAll('.input-registration option');
         var optionsDelivery = document.querySelectorAll('.input-delivery option');
         var optionsCities = document.querySelectorAll('datalist#browsers option');
+        var autoModel = document.querySelectorAll('.input-vehicle-make option');
+        var autoColor = document.querySelectorAll('.input-vehicle-color option');
+
 
         var newGroup = [],
             newVisitPurpose = [],
             newEntriesNumber = [],
             newRegistration = [],
             newOptionsDelivery = [],
-            newOptionsCities = [];
+            newOptionsCities = [],
+            newAutoModel = [],
+            newAutoColor= [];
 
         getData(groupSize, newGroup);
         getData(visitPurpose, newVisitPurpose);
@@ -398,6 +416,8 @@ class App extends Component {
         getDataInsideTag(registration, newRegistration);
         getDataInsideTag(optionsDelivery, newOptionsDelivery);
         getData(optionsCities, newOptionsCities);
+        getData(autoModel, newAutoModel);
+        getData(autoColor, newAutoColor);
 
         state.OptionsGroupSize = newGroup.slice();
         state.OptionsPurpose = newVisitPurpose.slice();
@@ -405,7 +425,10 @@ class App extends Component {
         state.OptionsRegistration = newRegistration.slice();
         state.OptionsDelivery = newOptionsDelivery.slice();
         state.OptionsCities = newOptionsCities.slice();
+        state.OptionsAutoModels = newAutoModel.slice();
+        state.OptionsAutoColors = newAutoColor.slice();
 
+        console.log("OptionsNumberOfEntries", OptionsNumberOfEntries);
 
         function getData(obj, array) {
           obj.forEach(function (domItem) {
@@ -520,7 +543,6 @@ class App extends Component {
         let visitedStepIndex;
         if (path.indexOf("currentStep") !== -1) {
             visitedStepIndex = this.state.currentStep;
-            console.log("INITIAL ", visitedStepIndex);
             state.steps[visitedStepIndex].visited = true;
             //make fields of visited steps visited
             this.makeFieldsVisited(visitedStepIndex);
@@ -581,7 +603,6 @@ class App extends Component {
               state['userCompleteForm'].error = "This field must be accepted."
             }
             else {
-              console.log(value);
               state['userCompleteForm'].value = value;
               this.setState(state);
             }
@@ -1042,7 +1063,7 @@ class App extends Component {
 
     renderArrivalAndDeparture() {
         let arr = [0];
-        if (this.state.numberOfEntries.value.value === "Double")
+        if (this.state.numberOfEntries.value.value === "Double entry visa")
             arr[1] = 1;
 
         return arr.map(inputIndex => {
