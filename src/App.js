@@ -386,6 +386,7 @@ class App extends Component {
         this.checkIsStepCorrect = this.checkIsStepCorrect.bind(this);
         this.getDataFromServer = this.getDataFromServer.bind(this);
         this.renderAuto = this.renderAuto.bind(this);
+        this.priceCalculate = this.priceCalculate.bind(this);
     }
 
     getDataFromServer(){
@@ -428,7 +429,6 @@ class App extends Component {
         state.OptionsAutoModels = newAutoModel.slice();
         state.OptionsAutoColors = newAutoColor.slice();
 
-        console.log("OptionsNumberOfEntries", OptionsNumberOfEntries);
 
         function getData(obj, array) {
           obj.forEach(function (domItem) {
@@ -442,7 +442,7 @@ class App extends Component {
         function getDataInsideTag(obj, array) {
           obj.forEach(function (domItem) {
             var newObj = {};
-            newObj.value = domItem.innerHTML;
+            newObj.value = domItem.value;
             newObj.label = domItem.innerHTML;
             array.push(newObj);
           });
@@ -571,15 +571,6 @@ class App extends Component {
 
         }
 
-        //PRICE CALCULATING
-        // console.log("state.numberOfEntries.value.value = ", state.numberOfEntries.value.value);
-        // console.log("state.numberOfEntries.value.value = ", state.registration.value.value);
-        // console.log("state.numberOfEntries.value.value = ", state.OptionsNumberOfEntries);
-        // console.log("state.numberOfEntries.value.value = ", state.OptionsRegistration);
-        // window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(state.numberOfEntries.value.value), window.Visas.Russian.RegistrationTypeId.parseFrom(state.registration.value.value), state.groupSize.value, function(data) {
-        //     var totalPrice = data.Total.toFixed(2);
-        //     state.price = totalPrice;
-        // });
 
 
         if (path.indexOf("groupSize") !== -1)
@@ -616,6 +607,55 @@ class App extends Component {
             state.countryApplyInFullName = country;
             this.setState(state);
         }
+
+        if (path.indexOf('groupSize') !== -1 || path.indexOf('registration') !== -1 || path.indexOf('numberOfEntries') !== -1)
+            this.priceCalculate();
+
+    }
+
+    priceCalculate(){
+
+        window.Visas.Russian.EntryTypeId.parseFrom = function(val) {
+            val = val.toLowerCase();
+            if (val.indexOf("single") >= 0) {
+                return window.Visas.Russian.EntryTypeId.Single;
+            }
+
+            if (val.indexOf("double") >= 0) {
+                return window.Visas.Russian.EntryTypeId.Double;
+            }
+            // throw new Error();
+        };
+
+        window.Visas.Russian.RegistrationTypeId.parseFrom = function(val) {
+            switch (val) {
+                case "NO":
+                    return null;
+                case "YES":
+                    return window.Visas.Russian.RegistrationTypeId.RegistrationInMoscow;
+                case "YES_Piter":
+                    return window.Visas.Russian.RegistrationTypeId.RegistrationInStPetersburg;
+                // default:
+                    // throw new Error();
+            }
+        };
+
+        let state = this.state;
+        //PRICE CALCULATING
+        console.log("state.numberOfEntries.value.value = ", state.numberOfEntries.value.value);
+        console.log("state.numberOfEntries.value.value = ", state.registration.value.value);
+        console.log("state.numberOfEntries.value.value = ", state.OptionsNumberOfEntries);
+        console.log("state.numberOfEntries.value.value = ", state.OptionsRegistration);
+
+        let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
+        let defaultRegistration = state.registration.value.value || "NO";
+        let defaultGroupSize = state.groupSize.value || 1;
+
+        window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(defaultNumberOfEntries), window.Visas.Russian.RegistrationTypeId.parseFrom(defaultRegistration), defaultGroupSize, (data) => {
+            var totalPrice = parseFloat(data.Total.toFixed(2));
+            state.price = totalPrice;
+            this.setState(state);
+        });
 
     }
 
