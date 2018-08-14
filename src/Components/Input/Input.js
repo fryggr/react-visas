@@ -39,7 +39,9 @@ export class Input extends React.Component {
             dateValidator,
             error,
             updateField,
-            options
+            options,
+            updateCurrentHint,
+            currentHint
         } = { ...this.props };
         const { inFocus } = { ...this.state };
         let className =
@@ -60,11 +62,11 @@ export class Input extends React.Component {
                 <div className={"Input " + className}>
                     <label className="Input__label">{label}</label>
                     <input
-                        onFocus={this.toggleFocus}
+                        onFocus={() => updateCurrentHint(fieldName) }
                         onBlur={e => {
                             updateField(fieldName + ".visited", true);
                             updateField(fieldName + ".value", e.target.value);
-                            this.toggleFocus();
+
                         }}
                         onChange={e =>
                             updateField(fieldName + ".value", e.target.value)
@@ -76,7 +78,7 @@ export class Input extends React.Component {
                     />
 
                     <div className="Input__error">{visited ? error : ""}</div>
-                    {inFocus ? <Hint /> : ""}
+                    {currentHint === fieldName ? <Hint/> : ""}
                 </div>
             );
         } else if (type === "select") {
@@ -100,14 +102,14 @@ export class Input extends React.Component {
                             updateField(fieldName + ".visited", true);
                             updateField(fieldName + ".value", selectedOption);
                         }}
-                        onFocus={this.toggleFocus}
+                        onFocus={() => updateCurrentHint(fieldName) }
                         onBlur={e => {
                             updateField(fieldName + ".visited", true);
-                            this.toggleFocus();
+
                         }}
                         options={options}
                     />
-                    {inFocus ? <Hint /> : ""}
+                    {currentHint === fieldName ? <Hint/> : ""}
                     <div className="Input__error">{visited ? error : ""}</div>
                 </div>
             );
@@ -131,7 +133,7 @@ export class Input extends React.Component {
                         className="Datepicker"
                         value={value}
                     />
-                    {inFocus ? <Hint /> : ""}
+                    {currentHint === fieldName ? <Hint/> : ""}
                     <div className="Input__error">{visited ? error : ""}</div>
                 </div>
             );
@@ -150,13 +152,13 @@ export class Input extends React.Component {
                         placeholder="Please select"
                         searchPlaceholder="please type"
                         searchable={true}
-                        onFocus={this.toggleFocus}
+                        onFocus={() => updateCurrentHint(fieldName) }
                         onSelect={selectedOption => {
                             updateField(fieldName + ".visited", true);
                             updateField(fieldName + ".value", selectedOption);
                         }}
                     />
-                    {inFocus ? <Hint /> : ""}
+                    {currentHint === fieldName ? <Hint/> : ""}
                     <div className="Input__error">{visited ? error : ""}</div>
                 </div>
             );
@@ -167,17 +169,17 @@ export class Input extends React.Component {
                     <PhoneInput
                         country="US"
                         placeholder="+1 234 567 89"
-                        onFocus={this.toggleFocus}
+                        onFocus={() => updateCurrentHint(fieldName) }
                         value={value}
                         onChange={phone =>
                             updateField(fieldName + ".value", phone)
                         }
                         onBlur={e => {
                             updateField(fieldName + ".visited", true);
-                            this.toggleFocus();
+
                         }}
                     />
-                    {inFocus ? <Hint /> : ""}
+                    {currentHint === fieldName ? <Hint/> : ""}
                     <div className="Input__error">{visited ? error : ""}</div>
                 </div>
             );
