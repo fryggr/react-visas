@@ -666,32 +666,35 @@ class App extends Component {
         if (path.indexOf('groupSize') !== -1 || path.indexOf('registration') !== -1 || path.indexOf('numberOfEntries') !== -1)
             this.priceCalculate();
 
-        if (path.indexOf('registration') !== -1 || path.indexOf("arrivalDate") !== -1 ||  path.indexOf("departureDate") !== -1 ){
+        if ((path.indexOf('registration') !== -1 || path.indexOf("arrivalDate") !== -1 ||  path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1){
             //если регистрация выбрана
             if (typeof this.state.registration.value.value !== 'undefined'){
                 //если регистрация нужна
                 if (this.state.registration.value.value !== 'NO'){
-                    //если даты первого вьезда и выезда известны
+                    //ДЛЯ ПЕРВОЙ ДАТЫ
                     if (typeof this.state.arrivalDate1.value === 'object' && typeof this.state.departureDate1.value === 'object'){
                         //если между датами меньше 7 дней
-                        if (daysBetween(this.state.arrivalDate1.value, this.state.departureDate1.value) < 7){
+                        if (daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7){
+                            //вывести alert о том, что регистрация необязательна
+                            alert('Your tourney less than 7 days, registration is not required');
+                        }
+                    //ДЛЯ ВТООРОЙ ДАТЫ
+                    if (typeof this.state.arrivalDate2.value === 'object' && typeof this.state.departureDate2.value === 'object'){
+                        //если между датами меньше 7 дней
+                        if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7){
                             //вывести alert о том, что регистрация необязательна
                             alert('Your tourney less than 7 days, registration is not required');
                         }
 
                     }
 
-
-
-                    //если даты второго вьезда и выезда известны
-                        //если между датами меньше 7 дней
-                            //вывести alert о том, что регистрация необязательна
                 }
 
             }
         }
 
     }
+}
 
     priceCalculate(){
 
@@ -773,7 +776,7 @@ class App extends Component {
         if (stepIndex === 2) {
             state.arrivalDate1.visited = true;
             state.departureDate1.visited = true;
-            if (state.numberOfEntries.value.value === 'Double') {
+            if (state.numberOfEntries.value.value === 'Double entry visa') {
                 state.arrivalDate2.visited = true;
                 state.departureDate2.visited = true;
             }
