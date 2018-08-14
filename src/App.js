@@ -81,7 +81,8 @@ class App extends Component {
         this.state = {
             currentHint: "",
             currentStep: 0,
-            price: 15.4,
+            priceInPounds: 15.4,
+            totalPrice: 0,
             currency: {
                 value: "gbp",
                 label: "£ - GBP"
@@ -455,6 +456,7 @@ class App extends Component {
         var optionsCities = document.querySelectorAll('datalist#browsers option');
         var autoModel = document.querySelectorAll('.input-vehicle-make option');
         var autoColor = document.querySelectorAll('.input-vehicle-color option');
+        var currencyRates = document.querySelectorAll('[name="currency"] option');
 
 
         var newGroup = [],
@@ -464,7 +466,8 @@ class App extends Component {
             newOptionsDelivery = [],
             newOptionsCities = [],
             newAutoModel = [],
-            newAutoColor= [];
+            newAutoColor= [],
+            newCurrencyRates = [];
 
         getData(groupSize, newGroup);
         getData(visitPurpose, newVisitPurpose);
@@ -474,7 +477,9 @@ class App extends Component {
         getData(optionsCities, newOptionsCities);
         getData(autoModel, newAutoModel);
         getData(autoColor, newAutoColor);
-
+        getData(autoColor, newAutoColor);
+        getData(currencyRates, newCurrencyRates);
+        console.log(newCurrencyRates);
         state.OptionsGroupSize = newGroup.slice();
         state.OptionsPurpose = newVisitPurpose.slice();
         state.OptionsNumberOfEntries = newEntriesNumber.slice();
@@ -483,13 +488,13 @@ class App extends Component {
         state.OptionsCities = newOptionsCities.slice();
         state.OptionsAutoModels = newAutoModel.slice();
         state.OptionsAutoColors = newAutoColor.slice();
-
+        state.OptionsCurrenciesRate = newCurrencyRates.slice();
 
         function getData(obj, array) {
           obj.forEach(function (domItem) {
             var newObj = {};
             newObj.value = domItem.value;
-            newObj.label = domItem.value;
+            newObj.label = domItem.innerHTML;
             array.push(newObj);
           });
         }
@@ -626,8 +631,6 @@ class App extends Component {
 
         }
 
-
-
         if (path.indexOf("groupSize") !== -1)
             this.updateVisitorsArray();
         this.validate();
@@ -663,7 +666,8 @@ class App extends Component {
             this.setState(state);
         }
 
-        if (path.indexOf('groupSize') !== -1 || path.indexOf('registration') !== -1 || path.indexOf('numberOfEntries') !== -1)
+
+        if (path.indexOf('groupSize') !== -1 || path.indexOf('registration') !== -1 || path.indexOf('numberOfEntries') !== -1 || path.indexOf('currency') !== -1)
             this.priceCalculate();
 
         if ((path.indexOf('registration') !== -1 || path.indexOf("arrivalDate") !== -1 ||  path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1){
@@ -728,12 +732,18 @@ class App extends Component {
 
         let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
         let defaultRegistration = state.registration.value.value || "NO";
-        let defaultGroupSize = state.groupSize.value || 1;
+        let defaultGroupSize = state.groupSize.value.value || 1;
 
         window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(defaultNumberOfEntries), window.Visas.Russian.RegistrationTypeId.parseFrom(defaultRegistration), defaultGroupSize, (data) => {
-            var totalPrice = parseFloat(data.Total.toFixed(2));
-            state.price = totalPrice;
-            this.setState(state);
+            state.priceInPounds = parseFloat(data.Total.toFixed(2));
+            state.OptionsCurrenciesRate.forEach(item => {
+                if (item.label === state.currency.label){
+                    state.totalPrice = parseFloat(item.value * state.priceInPounds)
+                    this.setState(state);
+                }
+
+            })
+
         });
 
     }
@@ -871,24 +881,7 @@ class App extends Component {
                   state.errors.push({name: "phone", text: "phone", step: 1})
               }
               // if (this.state.purpose ) autoType  autoModel autoColor
-              if (this.state.purpose.value.value === "Auto Tourist"){
-                  if (this.state.autoType.error !== ""){
-                      correct = false;
-                      state.errors.push({name: "autoType", text: "Auto type", step: 1})
-                  }
-                  if (this.state.autoModel.error !== ""){
-                      correct = false;
-                      state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
-                  }
-                  if (this.state.autoColor.error !== ""){
-                      correct = false;
-                      state.errors.push({name: "autoColor", text: "Auto color", step: 1})
-                  }
-                  if (this.state.autoNumber.error !== ""){
-                      correct = false;
-                      state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
-                  }
-              }
+
         }
 
         if (stepIndex === 2) {
@@ -922,6 +915,25 @@ class App extends Component {
                   correct = false;
                   state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " hotel", step: 2})
               }
+            }
+
+            if (this.state.purpose.value.value === "Auto Tourist"){
+                if (this.state.autoType.error !== ""){
+                    correct = false;
+                    state.errors.push({name: "autoType", text: "Auto type", step: 1})
+                }
+                if (this.state.autoModel.error !== ""){
+                    correct = false;
+                    state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
+                }
+                if (this.state.autoColor.error !== ""){
+                    correct = false;
+                    state.errors.push({name: "autoColor", text: "Auto color", step: 1})
+                }
+                if (this.state.autoNumber.error !== ""){
+                    correct = false;
+                    state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
+                }
             }
 
         }
@@ -978,8 +990,10 @@ class App extends Component {
         if (this.state.locations.length > 1) {
             let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
             updateLocations.splice(index, 1);
-            this.setState({locations: updateLocations});
+            this.setState({locations: updateLocations}, () => this.validate());
+
         }
+
     }
     addLocation() {
         if (this.state.locations.length < 10) {
@@ -1094,6 +1108,30 @@ class App extends Component {
                 this.updateError(inputField, "");
             }
         });
+
+        //custom validation
+        //не допускать повторяющихся городов
+        this.state.locations.forEach((item1, index1) => {
+            let error = false;
+            this.state.locations.forEach((item2, index2) => {
+                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value)
+                    this.updateError("locations." + index1 + ".hotel", "You have chosen this hotel somewhere");
+                    error = true;
+            })
+            if (!error)
+                this.updateError("locations." + index1+ ".hotel", "");
+        })
+
+        //trans-siberan не может быть единственной локацией
+        let onlyTransSiberian = true;
+        this.state.locations.forEach((item,index) => {
+            onlyTransSiberian = onlyTransSiberian && this.state.locations[index].city.value.value === "Trans Siberian Railway";
+        })
+
+        if (onlyTransSiberian)
+            this.updateError("locations.0.city", "You must choose at least two unique locations!");
+        else
+            this.updateError("locations.0.city", "");
     }
 
     renderVisitors() {
@@ -1240,9 +1278,6 @@ class App extends Component {
         } else if (this.state.currentStep === 1)
             return (<Step number={1} hidden={this.state.currentStep !== 1}>
                 {this.renderVisitors()}
-                {<div hidden={this.state.purpose.value.value !== "Auto Tourist"}>
-                    {this.renderAuto()}
-                </div>}
             </Step>);
 
         /******2*********/
@@ -1250,7 +1285,9 @@ class App extends Component {
             return (<Step number={2} hidden={this.state.currentStep !== 2}>
                 {this.renderArrivalAndDeparture()}
                 {this.renderLocations()}
-
+                <div hidden={this.state.purpose.value.value !== "Auto Tourist"}>
+                    {this.renderAuto()}
+                </div>
                 <RadioGroup updateField={this.updateField} fieldName="userNeedsNewsletter" error={this.state.userNeedsNewsletter.error} value={this.state.userNeedsNewsletter.value} title="Would you like to join our monthly newsletter list" options={[
                         {
                             value: "1",
@@ -1269,9 +1306,7 @@ class App extends Component {
                             text: "No"
                         }
                     ]} name="userNeedsJoinMailingList"/>
-                {
 
-                }
             </Step>);
         /****3****/
         else if (this.state.currentStep === 3)
@@ -1300,7 +1335,7 @@ class App extends Component {
                             <div className="col-md-6"><b>TOTAL PRICE</b></div>
                             <div className="col-md-6">
                                 <span class="Step__payment-info-currency"><b>{this.state.currency.label.slice(0, 1)}</b></span>
-                                <span class="Step__payment-info-sum-value"><b>{this.state.price.toFixed(2)}</b></span>
+                                <span class="Step__payment-info-sum-value"><b>{this.state.totalPrice.toFixed(2)}</b></span>
                             </div>
                         </div>
                     </div>
@@ -1321,7 +1356,7 @@ class App extends Component {
                 </Step>,
                 /********PAYMENT**********/
 
-                <Step number={4} hidden={this.state.currentStep !== 3 || this.state.userCompleteForm.value !== '1'} price={this.state.price} currency={this.state.currency}>
+                <Step number={4} hidden={this.state.currentStep !== 3 || this.state.userCompleteForm.value !== '1'} price={this.state.totalPrice} currency={this.state.currency}>
                     <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" placeholder="Please enter First name" error={this.state.userFirstName.error}/>
                     <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname" placeholder="Please enter Surname" error={this.state.userSurname.error}/>
                     <div className="row" style={{
@@ -1364,13 +1399,13 @@ class App extends Component {
                     currentStep={this.state.currentStep}
                     currencies={this.state.currencies}
                     currency={this.state.currency}
-                    price={this.state.price}
+                    price={this.state.totalPrice}
                     userCompleteForm ={this.state.userCompleteForm.value}
                 />
 
 
               <div className="App__container container">
-                <Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep} currency={this.state.currency} price={this.state.price}/>
+                <Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep} currency={this.state.currency} price={this.state.totalPrice}/>
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
                       <div className="row py-3">
