@@ -5,7 +5,7 @@ import Select from "react-select";
 import Datetime from "react-datetime";
 import ReactFlagsSelect from "react-flags-select";
 import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import ReactPhoneInput from 'react-phone-input-2';
 import Moment from "moment";
 /*******IMPORT STYLES********/
 import "./Input.css";
@@ -166,8 +166,8 @@ export class Input extends React.Component {
             return (
                 <div className={"Input Select_country " + className}>
                     <label className="Input__label">{label}</label>
-                    <PhoneInput
-                        country="US"
+                    <ReactPhoneInput
+                        defaultCountry="uk"
                         placeholder="+1 234 567 89"
                         onFocus={() => updateCurrentHint(fieldName) }
                         value={value}
@@ -176,7 +176,6 @@ export class Input extends React.Component {
                         }
                         onBlur={e => {
                             updateField(fieldName + ".visited", true);
-
                         }}
                     />
                     {currentHint === fieldName ? <Hint/> : ""}

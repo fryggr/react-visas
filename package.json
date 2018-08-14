@@ -10,6 +10,7 @@
     "react-datetime": "^2.15.0",
     "react-dom": "^16.4.2",
     "react-flags-select": "^1.1.9",
+    "react-phone-input-2": "^2.5.1",
     "react-phone-number-input": "^2.2.1",
     "react-scripts": "1.1.4",
     "react-select": "^2.0.0",

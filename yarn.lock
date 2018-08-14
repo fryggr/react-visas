@@ -5792,7 +5792,7 @@ react-dnd@^5.0.0:
     recompose "^0.27.1"
     shallowequal "^1.0.2"
 
-react-dom@^16.4.2:
+react-dom@^16.4.0, react-dom@^16.4.2:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.2.tgz#4afed569689f2c561d2b8da0b819669c38a0bda4"
   dependencies:
@@ -5833,6 +5833,16 @@ react-modal@^3.4.4:
 react-onclickoutside@^6.5.0:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.7.1.tgz#6a5b5b8b4eae6b776259712c89c8a2b36b17be93"
+
+react-phone-input-2@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-phone-input-2/-/react-phone-input-2-2.5.1.tgz#f8452fa36a7630778c48aa49d7ad50c6b3c12e87"
+  dependencies:
+    classnames "^2.2.5"
+    lodash "^4.17.4"
+    prop-types "^15.6.1"
+    react "^16.4.0"
+    react-dom "^16.4.0"
 
 react-phone-number-input@^2.2.1:
   version "2.2.1"
@@ -5926,7 +5936,7 @@ react-transition-group@^2.2.1:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react@^16.4.2:
+react@^16.4.0, react@^16.4.2:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.4.2.tgz#2cd90154e3a9d9dd8da2991149fdca3c260e129f"
   dependencies:
