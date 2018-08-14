@@ -28,9 +28,18 @@
     align-items: flex-start;
 }
 
+.Step__description_summary {
+    display: block;
+}
+
 .Step__text{
     max-width: 544px;
     color: #353535;
     font-size: 0.85rem;
     line-height: 1.3rem;
+}
+
+.Step__payment-info{
+    border-bottom: 1px solid #cfcccc;
+    border-top: 1px solid #cfcccc;
 }

@@ -6,12 +6,12 @@ import userImg from "./img/user.png";
 import locationImg from "./img/location.png";
 import paymentImg from "./img/payment.png";
 
-
 export const Step = props => {
     let title, text, stepImg;
     if (props.number === 0) {
         title = "Service details";
-        text = "<b>Let’s start with the basics - </b><br/>\
+        text =
+            "<b>Let’s start with the basics - </b><br/>\
 We need to find out first a little about your upcoming visit.";
         stepImg = portfolioImg;
     }
@@ -24,13 +24,19 @@ Just the key details we need to collect from you and your group to proceed with 
     }
     if (props.number === 2) {
         title = "Details about your visit to Russia";
-        text = "<b>Time to tell us about your visit - </b><br/>\
+        text =
+            "<b>Time to tell us about your visit - </b><br/>\
 As well as the dates you’re arriving and departing, list all the cities and hotels you’re planning at staying at during your stay. You can add up to 10 separate locations below by just clicking on the ‘Add another location’ button.";
         stepImg = locationImg;
     }
     if (props.number === 3) {
+        title = "Visa support application order summary";
+    }
+    if (props.number === 4) {
         title = "Payment";
-        text = "<b>Make a secure online payment for your visa support documents.</b>";
+        text =
+            "<b>Make a secure online payment for your visa support documents.</b><br/>\
+        We have sent an email to <b>paul@psbweb.co.uk</b> with details of altrenative payment methods should you prefer not to pay by credit/debit card.";
         stepImg = paymentImg;
     }
     return (
@@ -38,7 +44,10 @@ As well as the dates you’re arriving and departing, list all the cities and ho
             <h3 className="Step__title">{title}</h3>
             <div className="Step__description">
                 <img className="mr-4" src={stepImg} alt="" />
-                <div className="Step__text" dangerouslySetInnerHTML={{ __html: text }} />
+                <div
+                    className="Step__text"
+                    dangerouslySetInnerHTML={{ __html: text }}
+                />
             </div>
             {props.children}
         </div>

@@ -270,14 +270,50 @@ class App extends Component {
                 error: "",
                 visited: false
             },
-            userReadTerms: {
+
+
+            /*************USER'S INPUT STEP 4************/
+            userCompleteForm: {
                 value: "",
                 error: "",
                 visited: false
             },
-
-            /*************USER'S INPUT STEP 4************/
-            userCompleteForm: {
+            userFirstName: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userSurname: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userHouseNumber: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userPostcode: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userCardType: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userCardNumber: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userExpiryDate: {
+                value: "",
+                error: "",
+                visited: false
+            },
+            userCCV: {
                 value: "",
                 error: "",
                 visited: false
@@ -363,6 +399,16 @@ class App extends Component {
                 {
                     value: "",
                     label: ""
+                }
+            ],
+            OptionsCardType: [
+                {
+                    value: "Visa Debit",
+                    label: "Visa Debit"
+                },
+                {
+                    value: "Master Card",
+                    label: "Master Card"
                 }
             ],
 
@@ -693,7 +739,6 @@ class App extends Component {
         if (stepIndex === 2) {
             state.arrivalDate1.visited = true;
             state.departureDate1.visited = true;
-            state.userReadTerms.visited = true;
             if (state.numberOfEntries.value.value === 'Double') {
                 state.arrivalDate2.visited = true;
                 state.departureDate2.visited = true;
@@ -841,10 +886,7 @@ class App extends Component {
                   state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " hotel", step: 2})
               }
             }
-            if (this.state.userReadTerms.error !== ""){
-              correct = false;
-              state.errors.push({name: "userReadTerms", text: "Please Read Terms and Conditions", step: 2})
-            }
+
         }
 
         if (stepIndex === 3){
@@ -936,7 +978,6 @@ class App extends Component {
             arrivalDate2: state.arrivalDate2.value,
             departureDate1: state.departureDate1.value,
             departureDate2: state.departureDate2.value,
-            userReadTerms: state.userReadTerms.value,
             userCompleteForm: state.userCompleteForm.value,
             autoType: state.autoType.value,
             autoModel: state.autoModel.value,
@@ -976,7 +1017,6 @@ class App extends Component {
             arrivalDate2: "required|date",
             departureDate1: "required|date",
             departureDate2: "required|date",
-            userReadTerms: "accepted",
             userCompleteForm: "accepted",
             autoType: "required",
             autoModel: "required",
@@ -1147,6 +1187,9 @@ class App extends Component {
     }
 
     showCurrentStep() {
+
+        /*********1*******/
+
         if (this.state.currentStep === 0) {
             return (<Step number={0} hidden={this.state.currentStep !== 0}>
                 <Input type="select" updateField={this.updateField} fieldName="groupSize" value={this.state.groupSize.value} visited={this.state.groupSize.visited} label="Group Size" error={this.state.groupSize.error} options={this.state.OptionsGroupSize}/>
@@ -1164,6 +1207,8 @@ class App extends Component {
                     {this.renderAuto()}
                 </div>}
             </Step>);
+
+        /******2*********/
         else if (this.state.currentStep === 2)
             return (<Step number={2} hidden={this.state.currentStep !== 2}>
                 {this.renderArrivalAndDeparture()}
@@ -1187,35 +1232,88 @@ class App extends Component {
                             text: "No"
                         }
                     ]} name="userNeedsJoinMailingList"/>
-                <RadioGroup updateField={this.updateField} visited={this.state.userReadTerms.visited} fieldName="userReadTerms" error={this.state.userReadTerms.error} value={this.state.userReadTerms.value} title="<b>I have read and understood the <a style='color:black;text-decoration:underline' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
-                        {
-                            value: "1",
-                            text: "Yes"
-                        }, {
-                            value: "2",
-                            text: "No"
-                        }
-                    ]} name="userReadTerms"/>
+                {
+
+                }
             </Step>);
+        /****3****/
         else if (this.state.currentStep === 3)
-            return (
-                <Step number={3} hidden={this.state.currentStep !== 3}>
-                <Info
-                    text="The visa support document applied for will be valid for processing a visa for the named person to enter Russia on or after  < not specified > and they must leave Russia on or before < not specified >. The visa will allow one entry to and one exit from Russia during this period. It is the applicant’s responsibility to confirm that the visa support document/visa meet their requirements before they process the visa, or travel or use the visa itself.
-                    Please note that once the visa support is issued, no refunds are possible."
-                    data={[new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]}
-                    replaceStr="< not specified >"
-                />
-            <RadioGroup visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable." options={[
-                        {
-                            value: "1",
-                            text: "Yes"
-                        }, {
-                            value: "2",
-                            text: "No"
-                        }
-                    ]} name="userCompleteForm"/>
-            </Step>);
+            return [
+                <Step number={3}>
+                    <div hidden={this.state.userCompleteForm.value !== '1'}>
+                        Thank you <b>PAUL BRADLEY</b>, your Real Russian Tourist Visa Support application has been submitted to our database and is ready for processing.<br/>
+                        Your reference number is <b>SSSD - 13611 - D7326 - PB</b>
+                    </div>
+                    <div className="Step__payment-info mt-4">
+                        <div className="row my-2">
+                            <div className="col-md-6">Single entry visa</div>
+                            <div className="col-md-6">
+                                <span class="Step__payment-info-currency">{this.state.currency.label.slice(0, 1)}</span>
+                                <span class="Step__payment-info-sum-value">15.30</span>
+                            </div>
+                        </div>
+                        <div className="row my-2">
+                            <div className="col-md-6">No registration service needed</div>
+                            <div className="col-md-6">
+                                <span class="Step__payment-info-currency">{this.state.currency.label.slice(0, 1)}</span>
+                                <span class="Step__payment-info-sum-value">0.00</span>
+                            </div>
+                        </div>
+                        <div className="row my-2">
+                            <div className="col-md-6"><b>TOTAL PRICE</b></div>
+                            <div className="col-md-6">
+                                <span class="Step__payment-info-currency"><b>{this.state.currency.label.slice(0, 1)}</b></span>
+                                <span class="Step__payment-info-sum-value"><b>{this.state.price.toFixed(2)}</b></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Info
+                        text="The visa support document applied for will be valid for processing a visa for the named person to enter Russia on or after  < not specified > and they must leave Russia on or before < not specified >. The visa will allow one entry to and one exit from Russia during this period. It is the applicant’s responsibility to confirm that the visa support document/visa meet their requirements before they process the visa, or travel or use the visa itself.
+                        Please note that once the visa support is issued, no refunds are possible."
+                        data={[new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]}
+                        replaceStr="< not specified >"
+                    />
+                    <RadioGroup visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
+                            {
+                                value: "1",
+                                text: "Yes"
+                            }
+                        ]} name="userCompleteForm"/>
+
+                </Step>,
+                /********PAYMENT**********/
+
+                <Step number={4} hidden={this.state.currentStep !== 3 || this.state.userCompleteForm.value !== '1'} price={this.state.price} currency={this.state.currency}>
+                    <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" placeholder="Please enter First name" error={this.state.userFirstName.error}/>
+                    <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname" placeholder="Please enter Surname" error={this.state.userSurname.error}/>
+                    <div className="row" style={{
+                            maxWidth: "655px"
+                        }}>
+                        <div className="col-md-6">
+                            <Input className="mt-4 mr-2" type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" placeholder="Please enter House number/name" error={this.state.userHouseNumber.error}/>
+                        </div>
+                        <div className="col-md-6">
+                            <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" placeholder="Please enter Postcode" error={this.state.userPostcode.error}/>
+                        </div>
+                    </div>
+                    <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>
+                    <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number" placeholder="Card number" error={this.state.userCardNumber.error}/>
+                    <div className="row" style={{
+                            maxWidth: "655px"
+                        }}>
+                        <div className="col-md-6">
+                            <Input className="mt-4" type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" placeholder="" error={this.state.userExpiryDate.error}/>
+                        </div>
+                        <div className="col-md-6">
+                            <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV" placeholder="Please enter CCV code" error={this.state.userCCV.error}/>
+                        </div>
+                    </div>
+
+                </Step>
+
+
+            ];
         }
 
     render() {
