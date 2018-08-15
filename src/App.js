@@ -1356,6 +1356,9 @@ class App extends Component {
                                 text: "No"
                             }
                         ]} name="userCompleteForm"/>
+                    <div className="Step__proceed-payment mt-2">
+                        <b>You can now proceed to payment</b>
+                    </div>
 
                 </Step>,
                 /********PAYMENT**********/
