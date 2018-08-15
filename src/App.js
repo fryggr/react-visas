@@ -13,6 +13,10 @@ import { Info } from "./Components/Info/Info";
 import { Button } from "./Components/Button/Button";
 import { Step } from "./Components/Step/Step";
 import { Sticky } from "./Components/Sticky/Sticky";
+import americanExpress from "./Components/Step/img/american-express.png";
+import mastercard from "./Components/Step/img/mastercard.png";
+import visaDebit from "./Components/Step/img/visa-debit.png";
+import visa from "./Components/Step/img/visa.png";
 import Moment from "moment";
 import _ from 'lodash';
 
@@ -698,6 +702,18 @@ class App extends Component {
             }
         }
 
+    }
+
+    if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
+        if (value.value === "Makhachkala" || value.value === "Pyatigorsk" || value.value === "Vladikavkaz" || value.value === "Magas"){
+            alert('Visa processing for Caucasus cities is 10 days');
+        }
+    }
+
+    if(path.indexOf('registration') !== -1 || path.indexOf('country') !== -1 || path.indexOf('visited') === -1){
+        if(value.value !== 'NO') {
+
+        }
     }
 }
 
@@ -1388,7 +1404,16 @@ class App extends Component {
                             <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV" placeholder="Please enter CCV code" error={this.state.userCCV.error}/>
                         </div>
                     </div>
-
+                    <div className="Step__note mt-4 mt-lg-0">
+                        <b className="Step__color-red">SECURE PAYMENT PROCESSING</b>
+                        <div className="Step__step-note my-3">"Text about how secure payment is Text about how secure payment is Text about how secure payment is"</div>
+                        <div className="d-flex">
+                            <img src={mastercard} alt="Mastercard" className="mr-2"/>
+                            <img src={visa} alt="visa" className="mr-2"/>
+                            <img src={visaDebit} alt="visa-debit" className="mr-2"/>
+                            <img src={americanExpress} alt="american-express"/>
+                        </div>
+                    </div>
                 </Step>
 
 

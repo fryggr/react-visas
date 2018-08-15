@@ -7,6 +7,7 @@
     border-top: 1px solid #cc091d;
     padding-top: 0;
     padding-left: 2rem;
+    position: relative;
 }
 
 .Step__title{
@@ -49,4 +50,25 @@
     padding: 13px 26px 13px 14px;
     max-width: 626px;
     font-size: .9rem;
+}
+
+.Step__color-red{
+    color: #cc091d;
+}
+
+.Step__note{
+    position: absolute;
+    right: -340px;
+    max-width: 314px;
+    top: 0;
+}
+
+.Step__step-note{
+    font-size: 0.85rem;
+}
+
+@media (max-width: 1170px), (max-device-width: 1170px) {
+	.Step__note {
+		display: none !important;
+	}
 }

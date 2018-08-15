@@ -166,6 +166,8 @@ export class Input extends React.Component {
                 <div className={"Input Select_country " + className}>
                     <label className="Input__label">{label}</label>
                     <ReactPhoneInput
+                        preferredCountries={["gb", "fr", "ru", "us"]}
+                        disableAreaCodes={true}
                         defaultCountry="gb"
                         placeholder="+1 234 567 89"
                         onFocus={() => updateCurrentHint(fieldName) }

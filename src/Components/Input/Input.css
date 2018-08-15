@@ -36,7 +36,7 @@
 }
 
 .Input.disabled, .Input.disabled input{
-    background: #ccc;
+    background: #fff;
 }
 
 .Input__error {
