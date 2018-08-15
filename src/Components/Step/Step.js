@@ -42,13 +42,16 @@ As well as the dates you’re arriving and departing, list all the cities and ho
     return (
         <div className="Step" hidden={props.hidden}>
             <h3 className="Step__title">{title}</h3>
+            {typeof stepImg === 'undefined' && typeof text === 'undefined' ? "" :
             <div className="Step__description">
                 <img className="mr-4" src={stepImg} alt="" />
                 <div
                     className="Step__text"
                     dangerouslySetInnerHTML={{ __html: text }}
                 />
+
             </div>
+            }
             {props.children}
         </div>
     );

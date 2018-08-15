@@ -17,15 +17,6 @@ export class Input extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { inFocus: false };
-        this.toggleFocus = this.toggleFocus.bind(this);
-
-    }
-
-    toggleFocus() {
-        this.setState({ inFocus: !this.state.inFocus }, () =>
-            console.log(this.state.inFocus)
-        );
     }
 
     render() {
@@ -41,9 +32,12 @@ export class Input extends React.Component {
             updateField,
             options,
             updateCurrentHint,
-            currentHint
+            currentHint,
         } = { ...this.props };
-        const { inFocus } = { ...this.state };
+
+        let disabled = false;
+        if (typeof this.props.className !== "undefined")
+            disabled = this.props.className.indexOf("disabled") !== -1;
         let className =
             typeof this.props.className !== "undefined"
                 ? this.props.className
@@ -62,6 +56,7 @@ export class Input extends React.Component {
                 <div className={"Input " + className}>
                     <label className="Input__label">{label}</label>
                     <input
+                        disabled={disabled}
                         onFocus={() => updateCurrentHint(fieldName) }
                         onBlur={e => {
                             updateField(fieldName + ".visited", true);
@@ -89,11 +84,14 @@ export class Input extends React.Component {
           const colourStyles = {
             indicatorSeparator: styles => ({ ...indicatorSeparator}),
             menu: styles => ({...styles, position: 'relative', zIndex: "999999"}),
+            dropdownIndicator: styles => ({...styles, background: "url(https://cdn4.iconfinder.com/data/icons/iready-symbols-arrows-vol-1/28/004_038_down_arrow_next_bottom_end_circle1x-512.png) no-repeat center / 13px"})
           };
             return (
                 <div className={"Input Select " + className}>
                     <label className="Input__label">{label}</label>
                     <Select
+                        isDisabled={disabled}
+                        classNamePrefix="react-select"
                         styles={colourStyles}
                         className="Input__field"
                         value={value}
@@ -118,6 +116,7 @@ export class Input extends React.Component {
                 <div className={"Input " + className}>
                     <label className="Input__label">{label}</label>
                     <Datetime
+                        inputProps={{disabled: disabled}}
                         isValidDate={dateValidator}
                         onChange={date =>
                             updateField(fieldName + ".value", date)
@@ -167,7 +166,7 @@ export class Input extends React.Component {
                 <div className={"Input Select_country " + className}>
                     <label className="Input__label">{label}</label>
                     <ReactPhoneInput
-                        defaultCountry="uk"
+                        defaultCountry="gb"
                         placeholder="+1 234 567 89"
                         onFocus={() => updateCurrentHint(fieldName) }
                         value={value}

@@ -35,6 +35,10 @@
     display: block;
 }
 
+.Input.disabled, .Input.disabled input{
+    background: #ccc;
+}
+
 .Input__error {
   position: absolute;
   left: 0px;
@@ -75,6 +79,10 @@
   right: -25px;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.Input .Datepicker .form-control{
+    box-shadow: none;
 }
 
 .react-phone-number-input__input{

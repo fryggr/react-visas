@@ -30,10 +30,11 @@ export class RadioGroup extends React.Component{
                         className="RadioGroup__item-field"
                         type="radio"
                         defaultChecked={this.props.value === item.value}
+                        checked={this.props.value === item.value}
                         name={this.props.name}
                         value={item.value}
                         id={this.id[index]}
-                        onClick={(e) => this.props.updateField(this.props.fieldName + ".value",e.target.value)}
+                        onChange={(e) => this.props.updateField(this.props.fieldName + ".value",e.target.value)}
                       />
                       <label
                         className="RadioGroup__item-label"

@@ -11,12 +11,17 @@
     font-size: 0.8rem;
     line-height: 1;
     text-transform: uppercase;
-    padding: 0.7rem 2.5rem;
+    padding: 0.7rem 2.0rem;
     font-weight: 700;
     color: #fff;
     border: none;
     background-color: #d89c22;
     text-decoration: none;
+}
+
+.Button.disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .Button__text{

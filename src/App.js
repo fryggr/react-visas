@@ -650,6 +650,7 @@ class App extends Component {
               alert("You have errors!");
               state['userCompleteForm'].value = "2";
               state['userCompleteForm'].error = "This field must be accepted."
+              this.setState(state);
             }
             else {
               state['userCompleteForm'].value = value;
@@ -1148,7 +1149,7 @@ class App extends Component {
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".firstName"} value={this.state.visitors[visitorIndex].firstName.value} visited={this.state.visitors[visitorIndex].firstName.visited} label="First name" placeholder="Please enter First name" error={this.state.visitors[visitorIndex].firstName.error}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".middleName"} value={this.state.visitors[visitorIndex].middleName.value} visited={this.state.visitors[visitorIndex].middleName.visited} label="Middle name" placeholder="Please enter Middle name" error={this.state.visitors[visitorIndex].middleName.error}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".surName"} value={this.state.visitors[visitorIndex].surName.value} visited={this.state.visitors[visitorIndex].surName.visited} label="Surname" placeholder="Please enter Surname" error={this.state.visitors[visitorIndex].surName.error}/>
-                <RadioGroup visited={this.state.visitors[visitorIndex].sex.visited} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
+                <RadioGroup className="mb-3" visited={this.state.visitors[visitorIndex].sex.visited} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
                         {
                             value: "Male",
                             text: "Male"
@@ -1312,9 +1313,8 @@ class App extends Component {
         else if (this.state.currentStep === 3)
             return [
                 <Step number={3}>
-                    <div hidden={this.state.userCompleteForm.value !== '1'}>
-                        Thank you <b>PAUL BRADLEY</b>, your Real Russian Tourist Visa Support application has been submitted to our database and is ready for processing.<br/>
-                        Your reference number is <b>SSSD - 13611 - D7326 - PB</b>
+                    <div className="mt-4">
+                        Thank you <b>PAUL BRADLEY</b>, your Real Russian Tourist Visa Support application has been submitted to our database and is ready for processing.
                     </div>
                     <div className="Step__payment-info mt-4">
                         <div className="row my-2">
@@ -1350,35 +1350,39 @@ class App extends Component {
                             {
                                 value: "1",
                                 text: "Yes"
+                            },
+                            {
+                                value: "2",
+                                text: "No"
                             }
                         ]} name="userCompleteForm"/>
 
                 </Step>,
                 /********PAYMENT**********/
 
-                <Step number={4} hidden={this.state.currentStep !== 3 || this.state.userCompleteForm.value !== '1'} price={this.state.totalPrice} currency={this.state.currency}>
-                    <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" placeholder="Please enter First name" error={this.state.userFirstName.error}/>
-                    <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname" placeholder="Please enter Surname" error={this.state.userSurname.error}/>
+                <Step number={4} price={this.state.totalPrice} currency={this.state.currency}>
+                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" placeholder="Please enter First name" error={this.state.userFirstName.error}/>
+                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname" placeholder="Please enter Surname" error={this.state.userSurname.error}/>
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input className="mt-4 mr-2" type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" placeholder="Please enter House number/name" error={this.state.userHouseNumber.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 mr-2 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" placeholder="Please enter House number/name" error={this.state.userHouseNumber.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" placeholder="Please enter Postcode" error={this.state.userPostcode.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" placeholder="Please enter Postcode" error={this.state.userPostcode.error}/>
                         </div>
                     </div>
-                    <Input type="select" className="mt-4" updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>
-                    <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number" placeholder="Card number" error={this.state.userCardNumber.error}/>
+                    <Input updateCurrentHint={this.updateCurrentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>
+                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number" placeholder="Card number" error={this.state.userCardNumber.error}/>
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input className="mt-4" type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" placeholder="" error={this.state.userExpiryDate.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" placeholder="" error={this.state.userExpiryDate.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input className="mt-4" type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV" placeholder="Please enter CCV code" error={this.state.userCCV.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV" placeholder="Please enter CCV code" error={this.state.userCCV.error}/>
                         </div>
                     </div>
 
@@ -1464,6 +1468,18 @@ class App extends Component {
                               label="Next step >"
                           />
                       </div>
+                      <div className={
+                              ((this.state.currentStep === 3 && this.state.userCompleteForm.value !== "1") ? "col-sm-3 d-block" : (this.state.currentStep === 3 && this.state.userCompleteForm.value == "1") ? "col-sm-6 d-block" : "d-none")
+                          }>
+                          <Button
+                              className={
+                                  "Button_red align-self-md-end align-self-center " +
+                                  (this.state.userCompleteForm.value !== "1" ? "disabled" : "")
+                              }
+                              label="Make payment"
+                          />
+                      </div>
+
                   </div>
               </div>
         </div>

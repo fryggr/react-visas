@@ -35,6 +35,20 @@
   user-select: none;
 }
 
+.Select_country .form-control{
+    border: none!important;
+    box-shadow: none!important;
+}
+
+.Select_country .flag-dropdown{
+    border: none!important;
+    background-color: transparent!important;
+}
+
+.Select_country .flag-dropdown:hover{
+    background-color: transparent;
+}
+
 .Select_country .selected--flag--option, .Select_country .country-label {
   font-size: 1.0rem !important;
   padding: 0px !important;
@@ -60,7 +74,7 @@
   background: url(https://cdn4.iconfinder.com/data/icons/iready-symbols-arrows-vol-1/28/004_038_down_arrow_next_bottom_end_circle1x-512.png) no-repeat center / 13px;
   width: 16px;
   height: 16px;
-  margin-right: 19px;
+  margin-right: 9px;
   margin-top: 7px;
 }
 
@@ -95,4 +109,12 @@
 
 .react-phone-number-input__icon>img {
   position: absolute;
+}
+
+.react-select__dropdown-indicator svg{
+    display: none;
+}
+
+.react-select__control--is-disabled{
+    background: #ccc !important;
 }
