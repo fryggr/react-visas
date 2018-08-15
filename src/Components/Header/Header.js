@@ -23,7 +23,7 @@ export const Header = props => {
                 <div className="col-lg-5">
                     <div className="container">
                         <div className="row align-items-center flex-column align-items-md-end flex-md-row">
-                            <div className="mr-1 mr-sm-4">
+                            <div className="mr-1 mr-sm-4 mt-3">
                                 <label>Currency</label>
                                 <Select
                                     className="Select_currency"
@@ -32,7 +32,7 @@ export const Header = props => {
                                     options={props.currencies}
                                 />
                             </div>
-                            <div>
+                            <div className="mt-3">
                                 <label>Language</label>
                                 <ReactFlagsSelect
                                     className="Select_language"

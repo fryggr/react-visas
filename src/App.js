@@ -710,11 +710,17 @@ class App extends Component {
         }
     }
 
-    if(path.indexOf('registration') !== -1 || path.indexOf('country') !== -1 || path.indexOf('visited') === -1){
-        if(value.value !== 'NO') {
+    if((path.indexOf('registration') !== -1 || path.indexOf('country') !== -1) && path.indexOf('visited') === -1){
+        let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( this.state.countryApplyIn.value)
+        if (this.state.registration.value != "NO"){
+            if (country === "Malaysia" || country === "Singapore") {
 
+                alert(country + " can't register in Saint Petersburg");
+            }
         }
     }
+
+
 }
 
     priceCalculate(){
@@ -791,12 +797,7 @@ class App extends Component {
 
             state.email.visited = true;
             state.phone.visited = true;
-            if (this.state.purpose.value.value === "Auto Tourist"){
-                state.autoType.visited = true;
-                state.autoModel.visited = true;
-                state.autoColor.visited = true;
-                state.autoNumber.visited = true;
-            }
+
 
 
         }
@@ -806,6 +807,13 @@ class App extends Component {
             if (state.numberOfEntries.value.value === 'Double entry visa') {
                 state.arrivalDate2.visited = true;
                 state.departureDate2.visited = true;
+            }
+
+            if (this.state.purpose.value.value === "Auto Tourist"){
+                state.autoType.visited = true;
+                state.autoModel.visited = true;
+                state.autoColor.visited = true;
+                state.autoNumber.visited = true;
             }
 
             for (let i = 0; i < this.state.locations.length; i++) {
