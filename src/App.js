@@ -13,15 +13,18 @@ import { Info } from "./Components/Info/Info";
 import { Button } from "./Components/Button/Button";
 import { Step } from "./Components/Step/Step";
 import { Sticky } from "./Components/Sticky/Sticky";
+import Moment from "moment";
+import _ from 'lodash';
+import visitorTemplate from './utils/visitorTemplate';
+import state from './utils/state';
+/**********HELPERS FUNCTIONS**************/
+import daysBetween from './utils/daysBetweenDates';
+
+/**********IMAGES*******/
 import americanExpress from "./Components/Step/img/american-express.png";
 import mastercard from "./Components/Step/img/mastercard.png";
 import visaDebit from "./Components/Step/img/visa-debit.png";
 import visa from "./Components/Step/img/visa.png";
-import Moment from "moment";
-import _ from 'lodash';
-
-/**********HELPERS FUNCTIONS**************/
-import daysBetween from './utils/daysBetweenDates';
 
 /************FOR VALIDATION***********/
 let Validator = require("validatorjs");
@@ -30,400 +33,10 @@ const plugins = {
 };
 
 
-/*************FOR ADDING NEW VISITORS WHEN GROUP SIZE CHANGE***************/
-let visitorTemplate = {
-    firstName: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    middleName: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    surName: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    sex: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    birthDate: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    citizenship: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    passportNumber: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    passportIssued: {
-        value: "",
-        error: "",
-        visited: false
-    },
-    passportExpired: {
-        value: "",
-        error: "",
-        visited: false
-    }
-};
-
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            currentHint: "",
-            currentStep: 0,
-            priceInPounds: 15.4,
-            totalPrice: 0,
-            currency: {
-                value: "gbp",
-                label: "£ - GBP"
-            },
-            currencies: [
-                {
-                    value: "gbp",
-                    label: "£ - GBP"
-                }, {
-                    value: "usd",
-                    label: "$ - USD"
-                }, {
-                    value: "eur",
-                    label: "€ - EUR"
-                }
-            ],
-
-            /********THIS DATA FOR STEPSNAVIGATION COMPONENT**********/
-            steps: [
-                {
-                    stepName: "service details",
-                    visited: false
-                }, {
-                    stepName: "personal details",
-                    visited: false
-                }, {
-                    stepName: "your visit",
-                    visited: false
-                }, {
-                    stepName: "payment",
-                    visited: false
-                }
-            ],
-
-            /*************USER'S INPUT STEP 1************/
-            groupSize: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            numberOfEntries: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            purpose: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            countryApplyIn: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            registration: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            delivery: {
-                value: "",
-                error: "",
-                visited: false
-            },
-
-            /*************USER'S INPUT STEP 2************/
-            visitors: [
-                // {
-                //     firstName: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     middleName: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     surName: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     sex: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     birthDate: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     citizenship: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     passportNumber: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     passportIssued: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     },
-                //     passportExpired: {
-                //         value: "",
-                //         error: "",
-                //         visited: false
-                //     }
-                // }
-            ],
-            email: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            phone: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            autoType:{
-                value: "",
-                error: "",
-                visited: false
-            },
-            autoModel:{
-                value: "",
-                error: "",
-                visited: false
-            },
-            autoColor:{
-                value: "",
-                error: "",
-                visited: false
-            },
-            autoNumber:{
-                value: "",
-                error: "",
-                visited: false
-            },
-
-            /*************USER'S INPUT STEP 3************/
-            arrivalDate1: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            arrivalDate2: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            departureDate1: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            departureDate2: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            locations: [
-                {
-                    city: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    },
-                    hotel: {
-                        value: "",
-                        error: "",
-                        visited: false
-                    }
-                }
-            ],
-            userNeedsNewsletter: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userNeedsJoinMailingList: {
-                value: "",
-                error: "",
-                visited: false
-            },
-
-
-            /*************USER'S INPUT STEP 4************/
-            userCompleteForm: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userFirstName: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userSurname: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userHouseNumber: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userPostcode: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userCardType: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userCardNumber: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userExpiryDate: {
-                value: "",
-                error: "",
-                visited: false
-            },
-            userCCV: {
-                value: "",
-                error: "",
-                visited: false
-            },
-
-            /****ERRORS****/
-            errors: [],
-
-            /*******DATA FROM SERVER**********/
-            OptionsGroupSize: [
-                {
-                    value: "1",
-                    label: "1"
-                }, {
-                    value: "2",
-                    label: "2"
-                }, {
-                    value: "3",
-                    label: "3"
-                }
-            ],
-            OptionsNumberOfEntries: [
-                {
-                    value: "Single",
-                    label: "Single"
-                }, {
-                    value: "Double",
-                    label: "Double"
-                }
-            ],
-            OptionsPurpose: [
-                {
-                    value: "1",
-                    label: "Tourist"
-                }, {
-                    value: "2",
-                    label: "Auto"
-                }
-            ],
-            OptionsRegistration: [
-                {
-                    value: "1",
-                    label: "No registration services needed"
-                }, {
-                    value: "2",
-                    label: "Registration in Moscow"
-                }
-            ],
-            OptionsDelivery: [
-                {
-                    value: "1",
-                    label: "Email"
-                }, {
-                    value: "2",
-                    label: "Another option"
-                }
-            ],
-            OptionsCities: [
-                {
-                    value: "1",
-                    label: "Moscow"
-                }, {
-                    value: "2",
-                    label: "Magadan"
-                }
-            ],
-            OptionsHotels: [
-                {
-                    value: "1",
-                    label: "Vzlyot"
-                }, {
-                    value: "2",
-                    label: "Park inn"
-                }
-            ],
-            OptionsAutoModels: [
-                {
-                    value: "",
-                    label: ""
-                }
-            ],
-            OptionsAutoColors: [
-                {
-                    value: "",
-                    label: ""
-                }
-            ],
-            OptionsCardType: [
-                {
-                    value: "Visa Debit",
-                    label: "Visa Debit"
-                },
-                {
-                    value: "Master Card",
-                    label: "Master Card"
-                }
-            ],
-
-            countryApplyInNotesText: "",
-            countryApplyInFullName: ""
-        };
+        this.state = state;
 
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
@@ -444,6 +57,11 @@ class App extends Component {
         this.priceCalculate = this.priceCalculate.bind(this);
         this.updateCurrentHint = this.updateCurrentHint.bind(this);
     }
+
+    componentWillMount(){
+      this.getDataFromServer()
+    }
+
 
     updateCurrentHint(fieldName){
         this.setState({currentHint: fieldName})
@@ -483,7 +101,6 @@ class App extends Component {
         getData(autoColor, newAutoColor);
         getData(autoColor, newAutoColor);
         getData(currencyRates, newCurrencyRates);
-        console.log(newCurrencyRates);
         state.OptionsGroupSize = newGroup.slice();
         state.OptionsPurpose = newVisitPurpose.slice();
         state.OptionsNumberOfEntries = newEntriesNumber.slice();
@@ -513,9 +130,6 @@ class App extends Component {
         }
     }
 
-    componentWillMount(){
-      this.getDataFromServer()
-    }
 
     getRestrictForDate(datePickerName) {
         let state = this.state;
@@ -596,7 +210,6 @@ class App extends Component {
         }
     }
 
-    // METHODS
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
