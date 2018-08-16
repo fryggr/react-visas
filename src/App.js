@@ -611,16 +611,8 @@ class App extends Component {
     }
 
     updateError(path, value) {
-        //generate code like [path][path]
-        let arr = path.split(".");
-        let code = "";
-        arr.forEach(item => {
-            code += "['" + item + "']";
-        });
-
-        //updateState
         let state = this.state;
-        eval("state" + code + ".error=value");
+        _.set(state, path + ".error", value);
         this.setState(state);
     }
 
@@ -629,10 +621,9 @@ class App extends Component {
             let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
             updateLocations.splice(index, 1);
             this.setState({locations: updateLocations}, () => this.validate());
-
         }
-
     }
+
     addLocation() {
         if (this.state.locations.length < 10) {
             let updateLocations = JSON.parse(JSON.stringify(this.state.locations));
