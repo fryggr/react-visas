@@ -777,7 +777,7 @@ class App extends Component {
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".firstName"} value={this.state.visitors[visitorIndex].firstName.value} visited={this.state.visitors[visitorIndex].firstName.visited} label="First name" placeholder="Please enter First name" error={this.state.visitors[visitorIndex].firstName.error}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".middleName"} value={this.state.visitors[visitorIndex].middleName.value} visited={this.state.visitors[visitorIndex].middleName.visited} label="Middle name" placeholder="Please enter Middle name" error={this.state.visitors[visitorIndex].middleName.error}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".surName"} value={this.state.visitors[visitorIndex].surName.value} visited={this.state.visitors[visitorIndex].surName.visited} label="Surname" placeholder="Please enter Surname" error={this.state.visitors[visitorIndex].surName.error}/>
-                <RadioGroup className="mb-3" visited={this.state.visitors[visitorIndex].sex.visited} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
+                <RadioGroup className="mb-3" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
                         {
                             value: "Male",
                             text: "Male"
@@ -785,7 +785,7 @@ class App extends Component {
                             value: "Female",
                             text: "Female"
                         }
-                    ]} name="sex"/>
+                    ]} name="sex" />
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".birthDate"} value={this.state.visitors[visitorIndex].birthDate.value} visited={this.state.visitors[visitorIndex].birthDate.visited} label="Date of birth" placeholder="" error={this.state.visitors[visitorIndex].birthDate.error}/>
                 <div className="row" style={{
                         maxWidth: "655px"
@@ -896,7 +896,6 @@ class App extends Component {
 
         if (this.state.currentStep === 0) {
             return (<Step number={0} hidden={this.state.currentStep !== 0}>
-                <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="phone" className="mt-4" updateField={this.updateField} fieldName="phone" value={this.state.phone.value} visited={this.state.phone.visited} label="Telephone" error={this.state.phone.error} enableLongNumber={true}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" updateField={this.updateField} fieldName="groupSize" value={this.state.groupSize.value} visited={this.state.groupSize.visited} label="Group Size" error={this.state.groupSize.error} options={this.state.OptionsGroupSize}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="numberOfEntries" value={this.state.numberOfEntries.value} visited={this.state.numberOfEntries.visited} label="Number of entries" error={this.state.numberOfEntries.error} options={this.state.OptionsNumberOfEntries}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="purpose" value={this.state.purpose.value} visited={this.state.purpose.visited} label="Purpose of visit" error={this.state.purpose.error} options={this.state.OptionsPurpose}/>

@@ -18,6 +18,7 @@ export class RadioGroup extends React.Component{
     }
 
     render(){
+        console.log('RadioGroup RENDER. props = ', this.props);
         let className = typeof this.props.className !== "undefined" ? this.props.className : "";
         return (
             <div className={"RadioGroup " + className}>
@@ -30,11 +31,10 @@ export class RadioGroup extends React.Component{
                         className="RadioGroup__item-field"
                         type="radio"
                         defaultChecked={this.props.value === item.value}
-                        checked={this.props.value === item.value}
                         name={this.props.name}
                         value={item.value}
                         id={this.id[index]}
-                        onChange={(e) => this.props.updateField(this.props.fieldName + ".value",e.target.value)}
+                        onChange={(e) => {console.log("SEX fieldName = ",this.props.fieldName, " value = ", e.target.value );this.props.updateField(this.props.fieldName + ".value",e.target.value)}}
                       />
                       <label
                         className="RadioGroup__item-label"
