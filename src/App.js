@@ -892,11 +892,14 @@ class App extends Component {
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={state.locations[locationIndex].city.value} fieldName={"locations." + locationIndex + ".city"} visited={state.locations[locationIndex].city.visited} label="City" error={state.locations[locationIndex].city.error} options={state.OptionsCities}/>
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={state.locations[locationIndex].hotel.value} fieldName={"locations." + locationIndex + ".hotel"} visited={state.locations[locationIndex].hotel.visited} label="Hotel" error={state.locations[locationIndex].hotel.error} options={state.OptionsHotels}/>
                     </ToggleTab>,
-                    <Button className="Button_red-label ml-auto mr-5 mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (
-                        locationIndex + 1)}/>
+                    <div>
+                    {state.locations.length > 1 ?
+                        <Button className="Button_red-label ml-auto mr-5 mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)}/> : ""
+                    }
+                    </div>
                 ];
             }),
-            <Button className="Button_red-border mr-auto" handleClick={() => this.addLocation()} label={"+add another location"}/>
+            <Button className="Button_red-border mr-auto mt-3" handleClick={() => this.addLocation()} label={"+add another location"}/>
         ];
     }
 
