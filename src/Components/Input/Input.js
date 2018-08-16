@@ -20,7 +20,7 @@ export class Input extends React.Component {
     }
 
     render() {
-        const {
+        let {
             type,
             label,
             fieldName,
@@ -33,7 +33,12 @@ export class Input extends React.Component {
             options,
             updateCurrentHint,
             currentHint,
+            viewDate
         } = { ...this.props };
+
+
+        if (typeof viewDate === 'undefined')
+            viewDate = new Date();
 
         let disabled = false;
         if (typeof this.props.className !== "undefined")
@@ -124,6 +129,7 @@ export class Input extends React.Component {
                         onBlur={date =>
                             updateField(fieldName + ".visited", true)
                         }
+                        viewDate={viewDate}
                         input={true}
                         closeOnSelect={true}
                         timeFormat={false}

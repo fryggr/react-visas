@@ -30,7 +30,7 @@ export class RadioGroup extends React.Component{
                       <input
                         className="RadioGroup__item-field"
                         type="radio"
-                        defaultChecked={this.props.value === item.value}
+                        checked={this.props.value === item.value}
                         name={this.props.name}
                         value={item.value}
                         id={this.id[index]}
