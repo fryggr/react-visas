@@ -1292,6 +1292,7 @@ class App extends Component {
 
         if (this.state.currentStep === 0) {
             return (<Step number={0} hidden={this.state.currentStep !== 0}>
+                <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="phone" className="mt-4" updateField={this.updateField} fieldName="phone" value={this.state.phone.value} visited={this.state.phone.visited} label="Telephone" error={this.state.phone.error} enableLongNumber={true}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" updateField={this.updateField} fieldName="groupSize" value={this.state.groupSize.value} visited={this.state.groupSize.visited} label="Group Size" error={this.state.groupSize.error} options={this.state.OptionsGroupSize}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="numberOfEntries" value={this.state.numberOfEntries.value} visited={this.state.numberOfEntries.visited} label="Number of entries" error={this.state.numberOfEntries.error} options={this.state.OptionsNumberOfEntries}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="purpose" value={this.state.purpose.value} visited={this.state.purpose.visited} label="Purpose of visit" error={this.state.purpose.error} options={this.state.OptionsPurpose}/>
@@ -1388,28 +1389,28 @@ class App extends Component {
                 /********PAYMENT**********/
 
                 <Step number={4} price={this.state.totalPrice} currency={this.state.currency}>
-                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" placeholder="Please enter First name" error={this.state.userFirstName.error}/>
-                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname" placeholder="Please enter Surname" error={this.state.userSurname.error}/>
+                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name"  error={this.state.userFirstName.error}/>
+                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 mr-2 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" placeholder="Please enter House number/name" error={this.state.userHouseNumber.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 mr-2 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" error={this.state.userHouseNumber.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" placeholder="Please enter Postcode" error={this.state.userPostcode.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" error={this.state.userPostcode.error}/>
                         </div>
                     </div>
                     <Input updateCurrentHint={this.updateCurrentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>
-                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number" placeholder="Card number" error={this.state.userCardNumber.error}/>
+                    <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number"  error={this.state.userCardNumber.error}/>
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" placeholder="" error={this.state.userExpiryDate.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" error={this.state.userExpiryDate.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV" placeholder="Please enter CCV code" error={this.state.userCCV.error}/>
+                            <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV"  error={this.state.userCCV.error}/>
                         </div>
                     </div>
                     <div className="Step__note mt-4 mt-lg-0">

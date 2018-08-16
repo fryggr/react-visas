@@ -37,7 +37,7 @@ export const Header = props => {
                                 <ReactFlagsSelect
                                     className="Select_language"
                                     countries={["GB", "RU"]}
-                                    customLabels={{"RU": "Русский"}}
+                                    customLabels={{"RU": "Русский", "GB": "English"}}
                                     defaultCountry="GB"
                                     placeholder="Select Language"
                                     showSelectedLabel={true}
