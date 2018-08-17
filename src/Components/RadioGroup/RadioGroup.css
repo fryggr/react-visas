@@ -1,5 +1,6 @@
 .RadioGroup{
   max-width: 625px;
+  position: relative;
 }
 
 .RadioGroup__title{

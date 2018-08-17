@@ -9,6 +9,11 @@
   padding: 0.7rem 0 0 1rem;
 }
 
+.Input.Input_half .hint{
+    right: -770px;
+}
+
+
 .Input.correct {
   border: 1px solid #8ac43f;
 }

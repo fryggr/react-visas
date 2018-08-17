@@ -780,7 +780,7 @@ class App extends Component {
 
                 <div className="row align-items-center" style={{"maxWidth": "655px", "marginTop": "10px"}}>
                     <div className="col-md-6">
-                        <RadioGroup className="mb-3" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
+                        <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className="mb-3" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
                                 {
                                     value: "Male",
                                     text: "Male"
@@ -835,7 +835,7 @@ class App extends Component {
 
     renderAuto(){
         return [
-            <RadioGroup updateField={this.updateField} fieldName="autoType" error={this.state.autoType.error} value={this.state.autoType.value} title="Vehicle type" options={[
+            <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} updateField={this.updateField} fieldName="autoType" error={this.state.autoType.error} value={this.state.autoType.value} title="Vehicle type" options={[
                     {
                         value: "car",
                         text: "Car"
@@ -862,7 +862,7 @@ class App extends Component {
                 }}>
                 <div className="col-md-6">
                     <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} dateValidator={this.getRestrictForDate("arrivalDate" + (
-                        inputIndex + 1))} type="date" className="mt-4 mr-2" updateField={this.updateField} fieldName={"arrivalDate" + (
+                        inputIndex + 1))} type="date" className={"mt-4 mr-2 " + (inputIndex === 0 ? "Input_half" : "")}  updateField={this.updateField} fieldName={"arrivalDate" + (
                         inputIndex + 1)} value={this.state["arrivalDate" + (
                             inputIndex + 1)].value} visited={this.state["arrivalDate" + (
                             inputIndex + 1)].visited} label={"Entry " + (
@@ -930,7 +930,7 @@ class App extends Component {
                 <div hidden={this.state.purpose.value.value !== "Auto Tourist"}>
                     {this.renderAuto()}
                 </div>
-                <RadioGroup updateField={this.updateField} fieldName="userNeedsNewsletter" error={this.state.userNeedsNewsletter.error} value={this.state.userNeedsNewsletter.value} title="Would you like to join our monthly newsletter list" options={[
+                <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} updateField={this.updateField} fieldName="userNeedsNewsletter" error={this.state.userNeedsNewsletter.error} value={this.state.userNeedsNewsletter.value} title="Would you like to join our monthly newsletter list" options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -939,7 +939,7 @@ class App extends Component {
                             text: "No"
                         }
                     ]} name="userNeedsNewsletter"/>
-                <RadioGroup updateField={this.updateField} fieldName="userNeedsJoinMailingList" error={this.state.userNeedsJoinMailingList.error} value={this.state.userNeedsJoinMailingList.value} title="Would you like to join our mailing list for special offers, news and information" options={[
+                <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} updateField={this.updateField} fieldName="userNeedsJoinMailingList" error={this.state.userNeedsJoinMailingList.error} value={this.state.userNeedsJoinMailingList.value} title="Would you like to join our mailing list for special offers, news and information" options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -987,7 +987,7 @@ class App extends Component {
                         data={[new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]}
                         replaceStr="< not specified >"
                     />
-                <RadioGroup visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
+                <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
                             {
                                 value: "1",
                                 text: "Yes"
