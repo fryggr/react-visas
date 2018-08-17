@@ -483,101 +483,101 @@ class App extends Component {
         let state = this.state;
         let correct = true;
         if (stepIndex === 1) {
-          state.errors = state.errors.filter(item => item.step !== 0);
+          state.errors = state.errors.filter(item => item.step !== 1);
           if (state.groupSize.error !== ""){
             correct = false;
-            state.errors.push({name:"groupSize" ,text: "Group Size", step: 0})
+            state.errors.push({name:"groupSize" ,text: "Group Size", step: 1})
           }
           if (state.numberOfEntries.error !== ""){
             correct = false;
-            state.errors.push({name:"numberOfEntries" ,text: "Number of Entries", step: 0})
+            state.errors.push({name:"numberOfEntries" ,text: "Number of Entries", step: 1})
           }
           if (state.purpose.error !== ""){
             correct = false;
-            state.errors.push({name:"purpose" ,text: "Purpose of Visit", step: 0})
+            state.errors.push({name:"purpose" ,text: "Purpose of Visit", step: 1})
           }
           if (state.registration.error !== ""){
             correct = false;
-            state.errors.push({name:"registration" ,text: "Registration", step: 0})
+            state.errors.push({name:"registration" ,text: "Registration", step: 1})
           }
           if (state.countryApplyIn.error !== ""){
             correct = false;
-            state.errors.push({name:"countryApplyIn" ,text: "Country Apply In", step: 0})
+            state.errors.push({name:"countryApplyIn" ,text: "Country Apply In", step: 1})
           }
           if (state.delivery.error !== ""){
             correct = false;
-            state.errors.push({name:"delivery" ,text: "Delivery", step: 0})
+            state.errors.push({name:"delivery" ,text: "Delivery", step: 1})
           }
         }
         if (stepIndex === 2) {
-          state.errors = state.errors.filter(item => item.step !== 1);
+          state.errors = state.errors.filter(item => item.step !== 2);
             for (let i = 0; i < this.state.visitors.length; i++){
                 if (this.state.visitors[i].firstName.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".firstName",text: "Visitor's " + (i + 1) + " First name", step: 1})
+                  state.errors.push({name: "visitors." + i + ".firstName",text: "Visitor's " + (i + 1) + " First name", step: 2})
                 }
                 if (this.state.visitors[i].middleName.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".middleName",text: "Visitor's " + (i + 1) + " Middle name", step: 1})
+                  state.errors.push({name: "visitors." + i + ".middleName",text: "Visitor's " + (i + 1) + " Middle name", step: 2})
                 }
                 if (this.state.visitors[i].surName.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".surName",text: "Visitor's " + (i + 1) + " Surname", step: 1})
+                  state.errors.push({name: "visitors." + i + ".surName",text: "Visitor's " + (i + 1) + " Surname", step: 2})
                 }
                 if (this.state.visitors[i].sex.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".sex",text: "Visitor's " + (i + 1) + " Gender", step: 1})
+                  state.errors.push({name: "visitors." + i + ".sex",text: "Visitor's " + (i + 1) + " Gender", step: 2})
                 }
                 if (this.state.visitors[i].birthDate.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".birthDate",text: "Visitor's " + (i + 1) + " Birth date", step: 1})
+                  state.errors.push({name: "visitors." + i + ".birthDate",text: "Visitor's " + (i + 1) + " Birth date", step: 2})
                 }
                 if (this.state.visitors[i].citizenship.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".citizenship",text: "Visitor's " + (i + 1) + " Citizenship", step: 1})
+                  state.errors.push({name: "visitors." + i + ".citizenship",text: "Visitor's " + (i + 1) + " Citizenship", step: 2})
                 }
                 if (this.state.visitors[i].passportNumber.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".passportNumber",text: "Visitor's " + (i + 1) + " Passport number", step: 1})
+                  state.errors.push({name: "visitors." + i + ".passportNumber",text: "Visitor's " + (i + 1) + " Passport number", step: 2})
                 }
                 if (this.state.visitors[i].passportIssued.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".passportIssued",text: "Visitor's " + (i + 1) + " Date passport issued", step: 1})
+                  state.errors.push({name: "visitors." + i + ".passportIssued",text: "Visitor's " + (i + 1) + " Date passport issued", step: 2})
                 }
                 if (this.state.visitors[i].passportExpired.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".passportExpired",text: "Visitor's " + (i + 1) + " Date passport expired", step: 1})
+                  state.errors.push({name: "visitors." + i + ".passportExpired",text: "Visitor's " + (i + 1) + " Date passport expired", step: 2})
                 }            }
               if (this.state.email.error !== ""){
                   correct = false;
-                  state.errors.push({name: "email", text: "email", step: 1})
+                  state.errors.push({name: "email", text: "email", step: 2})
               }
               if (this.state.phone.error !== ""){
                   correct = false;
-                  state.errors.push({name: "phone", text: "phone", step: 1})
+                  state.errors.push({name: "phone", text: "phone", step: 2})
               }
               // if (this.state.purpose ) autoType  autoModel autoColor
 
         }
 
         if (stepIndex === 3) {
-          state.errors = state.errors.filter(item => item.step !== 2);
+          state.errors = state.errors.filter(item => item.step !== 3);
             if (this.state.arrivalDate1.error !== ""){
               correct = false;
-                state.errors.push({name: "arrivalDate1", text: "Entry 1 Arrival Date", step: 2})
+                state.errors.push({name: "arrivalDate1", text: "Entry 1 Arrival Date", step: 3})
             }
             if (this.state.departureDate1.error !== ""){
               correct = false;
-                state.errors.push({name: "departureDate1", text: "Entry 1 Departure Date", step: 2})
+                state.errors.push({name: "departureDate1", text: "Entry 1 Departure Date", step: 3})
             }
             if (state.numberOfEntries.value.value === 'Double'){
               if (this.state.arrivalDate2.error !== ""){
                 correct = false;
-                  state.errors.push({name: "arrivalDate2", text: "Entry 2 Arrival Date", step: 2})
+                  state.errors.push({name: "arrivalDate2", text: "Entry 2 Arrival Date", step: 3})
               }
               if (this.state.departureDate2.error !== ""){
                 correct = false;
-                  state.errors.push({name: "departureDate2", text: "Entry 2 Departure Date", step: 2})
+                  state.errors.push({name: "departureDate2", text: "Entry 2 Departure Date", step: 3})
               }
             }
 
@@ -585,30 +585,30 @@ class App extends Component {
             for (let i = 0; i < this.state.locations.length; i++){
               if (this.state.locations[i].city.error !== ""){
                   correct = false;
-                  state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " city", step: 2})
+                  state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " city", step: 3})
               }
               if (this.state.locations[i].hotel.error !== ""){
                   correct = false;
-                  state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " hotel", step: 2})
+                  state.errors.push({name: "locations." + i + ".city", text: "Location's " + (i + 1) + " hotel", step: 3})
               }
             }
 
             if (this.state.purpose.value.value === "Auto Tourist"){
                 if (this.state.autoType.error !== ""){
                     correct = false;
-                    state.errors.push({name: "autoType", text: "Auto type", step: 1})
+                    state.errors.push({name: "autoType", text: "Auto type", step: 3})
                 }
                 if (this.state.autoModel.error !== ""){
                     correct = false;
-                    state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
+                    state.errors.push({name: "autoModel", text: "Vechicle make", step: 3})
                 }
                 if (this.state.autoColor.error !== ""){
                     correct = false;
-                    state.errors.push({name: "autoColor", text: "Auto color", step: 1})
+                    state.errors.push({name: "autoColor", text: "Auto color", step: 3})
                 }
                 if (this.state.autoNumber.error !== ""){
                     correct = false;
-                    state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
+                    state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 3})
                 }
             }
 
@@ -618,7 +618,7 @@ class App extends Component {
           state.errors = state.errors.filter(item => item.step !== 3);
             if (this.state.userCompleteForm.error !== ""){
               correct = false;
-              state.errors.push({name: "userCompleteForm", text: "Please complete form", step: 3})
+              state.errors.push({name: "userCompleteForm", text: "Please complete form", step: 4})
             }
         }
         //remove duplicates
@@ -822,7 +822,7 @@ class App extends Component {
 
                 <div className="row align-items-center" style={{"maxWidth": "655px", "marginTop": "10px"}}>
                     <div className="col-md-6">
-                        <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className="mb-3" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
+                        <RadioGroup updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className="mb-3 Input_half" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
                                 {
                                     value: "Male",
                                     text: "Male"
@@ -854,7 +854,7 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-md-6">
-                        <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" className="mt-4 mr-2" dateValidator={this.getRestrictForDate("passportIssued")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportIssued"} value={this.state.visitors[visitorIndex].passportIssued.value} visited={this.state.visitors[visitorIndex].passportIssued.visited} label="Date passport issued" placeholder="" error={this.state.visitors[visitorIndex].passportIssued.error}/>
+                        <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" className="mt-4 mr-2 Input_half" dateValidator={this.getRestrictForDate("passportIssued")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportIssued"} value={this.state.visitors[visitorIndex].passportIssued.value} visited={this.state.visitors[visitorIndex].passportIssued.visited} label="Date passport issued" placeholder="" error={this.state.visitors[visitorIndex].passportIssued.error}/>
                     </div>
 
                     <div className="col-md-6">

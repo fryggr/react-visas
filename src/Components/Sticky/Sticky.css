@@ -8,7 +8,7 @@
   border-top: 1px solid #cc091d;
   border-bottom: 1px solid #cc091d;
   align-items: center;
-  z-index: 1000;
+  z-index: 14;
 }
 
 .Sticky__error-img{
