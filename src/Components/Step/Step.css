@@ -71,6 +71,46 @@
     font-size: 0.85rem;
 }
 
+.Step-intro{
+    margin-bottom: -32px;
+}
+
+.Step_intro{
+    max-width: none;
+}
+
+.Step__need-body{
+    align-items: center;
+}
+
+.Step__need-title {
+    color: #cc091d;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.Step__need-list ul{
+    list-style-image: url(img/check.png);
+    font-size: .9rem;
+    line-height: 32px;
+}
+
+.Step__text_red{
+    color: #cc091d;
+    font-weight: 700;
+}
+
+.Step__intro-text{
+    font-size: 0.8rem;
+}
+
+.Step__intro-img{
+    background: url(img/bg-intro.jpg) no-repeat;
+    width: calc(100% + 30px);
+    height: 153px;
+    margin-left: -15px;
+}
+
 @media (max-width: 1170px), (max-device-width: 1170px) {
 	.Step__note {
 		display: none !important;

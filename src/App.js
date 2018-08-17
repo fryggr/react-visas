@@ -25,6 +25,7 @@ import americanExpress from "./Components/Step/img/american-express.png";
 import mastercard from "./Components/Step/img/mastercard.png";
 import visaDebit from "./Components/Step/img/visa-debit.png";
 import visa from "./Components/Step/img/visa.png";
+import clocksImg from "./Components/Step/img/clocks.png";
 
 /************FOR VALIDATION***********/
 let Validator = require("validatorjs");
@@ -220,6 +221,7 @@ class App extends Component {
         let visitedStepIndex;
         if (path.indexOf("currentStep") !== -1) {
             visitedStepIndex = this.state.currentStep;
+            console.log(visitedStepIndex);
             state.steps[visitedStepIndex].visited = true;
             //make fields of visited steps visited
             this.makeFieldsVisited(visitedStepIndex);
@@ -243,8 +245,12 @@ class App extends Component {
                 })
                 let locationIndex = path.split(".")[1];
                 state.locations[locationIndex].hotel.value = {};
+                if (state.locations[locationIndex].hotel.visited)
+                    state.locations[locationIndex].hotel.error = "This field is required";
                 this.setState(state);
             });
+
+
 
         }
 
@@ -256,14 +262,16 @@ class App extends Component {
         //проверяем, заполнил ли пользователь все предыдущие поля
         if (path.indexOf("userCompleteForm") !== -1 && value === "1"){
             let state = this.state;
-            this.makeFieldsVisited(0);
             this.makeFieldsVisited(1);
             this.makeFieldsVisited(2);
+            this.makeFieldsVisited(3);
+            this.makeFieldsVisited(4);
             this.validate();
-            state['steps'][0].correct = this.checkIsStepCorrect(0);
             state['steps'][1].correct = this.checkIsStepCorrect(1);
             state['steps'][2].correct = this.checkIsStepCorrect(2);
-            if (!state['steps'][0].correct || !state['steps'][1].correct || !state['steps'][2].correct){
+            state['steps'][3].correct = this.checkIsStepCorrect(3);
+            state['steps'][4].correct = this.checkIsStepCorrect(4);
+            if (!state['steps'][1].correct || !state['steps'][2].correct || !state['steps'][3].correct){
               alert("You have errors!");
               state['userCompleteForm'].value = "2";
               state['userCompleteForm'].error = "This field must be accepted."
@@ -333,6 +341,36 @@ class App extends Component {
         }
     }
 
+    if (path.indexOf('purpose') !== -1 && path.indexOf('visited') === -1 && value.value === "Auto Tourist"){
+        if (this.state.arrivalDate1.visited){
+            state.autoType.visited = true;
+            state.autoModel.visited = true;
+            state.autoColor.visited = true;
+            state.autoNumber.visited = true;
+            let step3Correct = true;
+            if (this.state.autoType.error !== ""){
+                step3Correct = false;
+                state.errors.push({name: "autoType", text: "Auto type", step: 1})
+            }
+            if (this.state.autoModel.error !== ""){
+                step3Correct = false;
+                state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
+            }
+            if (this.state.autoColor.error !== ""){
+                step3Correct = false;
+                state.errors.push({name: "autoColor", text: "Auto color", step: 1})
+            }
+            if (this.state.autoNumber.error !== ""){
+                step3Correct = false;
+                state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
+            }
+
+            state.steps[2].correct = step3Correct;
+            this.setState(state);
+
+        }
+    }
+
 
 }
 
@@ -386,7 +424,7 @@ class App extends Component {
 
     makeFieldsVisited(stepIndex) {
         let state = this.state;
-        if (stepIndex === 0) {
+        if (stepIndex === 1) {
             state.groupSize.visited = true;
             state.numberOfEntries.visited = true;
             state.purpose.visited = true;
@@ -395,7 +433,7 @@ class App extends Component {
             state.countryApplyIn.visited = true;
             state.delivery.visited = true;
         }
-        if (stepIndex === 1) {
+        if (stepIndex === 2) {
             for (let i = 0; i < this.state.visitors.length; i++) {
                 state.visitors[i].firstName.visited = true;
                 state.visitors[i].middleName.visited = true;
@@ -414,7 +452,7 @@ class App extends Component {
 
 
         }
-        if (stepIndex === 2) {
+        if (stepIndex === 3) {
             state.arrivalDate1.visited = true;
             state.departureDate1.visited = true;
             if (state.numberOfEntries.value.value === 'Double entry visa') {
@@ -434,7 +472,7 @@ class App extends Component {
                 this.state.locations[i].hotel.visited = true;
             }
         }
-        if (stepIndex === 3) {
+        if (stepIndex === 4) {
           this.state.userCompleteForm.visited = true;
         }
 
@@ -444,7 +482,7 @@ class App extends Component {
     checkIsStepCorrect(stepIndex) {
         let state = this.state;
         let correct = true;
-        if (stepIndex === 0) {
+        if (stepIndex === 1) {
           state.errors = state.errors.filter(item => item.step !== 0);
           if (state.groupSize.error !== ""){
             correct = false;
@@ -471,7 +509,7 @@ class App extends Component {
             state.errors.push({name:"delivery" ,text: "Delivery", step: 0})
           }
         }
-        if (stepIndex === 1) {
+        if (stepIndex === 2) {
           state.errors = state.errors.filter(item => item.step !== 1);
             for (let i = 0; i < this.state.visitors.length; i++){
                 if (this.state.visitors[i].firstName.error !== ""){
@@ -522,7 +560,7 @@ class App extends Component {
 
         }
 
-        if (stepIndex === 2) {
+        if (stepIndex === 3) {
           state.errors = state.errors.filter(item => item.step !== 2);
             if (this.state.arrivalDate1.error !== ""){
               correct = false;
@@ -576,7 +614,7 @@ class App extends Component {
 
         }
 
-        if (stepIndex === 3){
+        if (stepIndex === 4){
           state.errors = state.errors.filter(item => item.step !== 3);
             if (this.state.userCompleteForm.error !== ""){
               correct = false;
@@ -743,11 +781,13 @@ class App extends Component {
         this.state.locations.forEach((item1, index1) => {
             let error = false;
             this.state.locations.forEach((item2, index2) => {
-                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value)
+                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value){
                     this.updateError("locations." + index1 + ".hotel", "You have chosen this hotel somewhere");
                     error = true;
+                }
+
             })
-            if (!error)
+            if (!error &&  this.state.locations[index1].error === "")
                 this.updateError("locations." + index1+ ".hotel", "");
         })
 
@@ -759,8 +799,10 @@ class App extends Component {
 
         if (onlyTransSiberian)
             this.updateError("locations.0.city", "You must choose at least two unique locations!");
-        else
+        else if (typeof this.state.locations[0].city.value.value !== "undefined")
             this.updateError("locations.0.city", "");
+
+
     }
 
     renderVisitors() {
@@ -905,10 +947,66 @@ class App extends Component {
 
     showCurrentStep() {
 
+        /**************INTRO************/
+        if (this.state.currentStep === 0) {
+            return (
+                <div className="Step-intro pt-4 mt-5">
+                    <div className="Step Step_intro">
+                        <div className="Step__need">
+                            <h4 className="Step__need-title my-3">You will need to hand:</h4>
+                            <div className="Step__need-body row">
+                                <div className="Step__need-list col-md-3">
+                                    <ul>
+                                        <li>Passports</li>
+                                        <li>Your group’s personal details</li>
+                                        <li>Your proposed travel dates</li>
+                                    </ul>
+                                </div>
+                                <div className="Step__need-list col-md-4">
+                                    <ul>
+                                        <li>Passports</li>
+                                        <li>Your group’s personal details</li>
+                                        <li>Your proposed travel dates</li>
+                                    </ul>
+                                </div>
+                                <div className="Step__description col-md-4">
+                                    <img className="mr-4" src={clocksImg} alt="" />
+                                    <div className="Step__text"><b>You will need approximately</b> <span className="Step__text_red">20 minutes</span> to complete this application</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className="row py-4 px-5 my-4">
+                        <div className="d-flex col-md-6 flex-column flex-md-row col-md-7">
+                            <Button
+                                label="retrieve saved application"
+                                className="mr-3"
+                                text="LOAD a previously saved existing application."
+                            />
+                            <Button
+                                handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
+                                className="Button_red"
+                                label="NEXT STEP >"
+                                text="START a new application."
+                            />
+                        </div>
+                        <div className="Step__intro-text ml-auto col-md-5">
+                            <b>With our simple step by step process</b>, you can see exactly how far through you are - along with if you have successfully completed a section, or are still missing some information.
+                        </div>
+                    </div>
+
+                    <div className="Step__intro-img"></div>
+
+                </div>
+            )
+        }
+
         /*********1*******/
 
-        if (this.state.currentStep === 0) {
-            return (<Step number={0} hidden={this.state.currentStep !== 0}>
+        if (this.state.currentStep === 1) {
+            return (<Step number={1} hidden={this.state.currentStep !== 1}>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" updateField={this.updateField} fieldName="groupSize" value={this.state.groupSize.value} visited={this.state.groupSize.visited} label="Group Size" error={this.state.groupSize.error} options={this.state.OptionsGroupSize}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="numberOfEntries" value={this.state.numberOfEntries.value} visited={this.state.numberOfEntries.visited} label="Number of entries" error={this.state.numberOfEntries.error} options={this.state.OptionsNumberOfEntries}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="purpose" value={this.state.purpose.value} visited={this.state.purpose.visited} label="Purpose of visit" error={this.state.purpose.error} options={this.state.OptionsPurpose}/>
@@ -917,14 +1015,14 @@ class App extends Component {
                 {this.state.countryApplyInNotesText !== "" ? <Info text={this.state.countryApplyInNotesText} data={[this.state.countryApplyInFullName]} replaceStr="{Country}"/> : ""}
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="delivery" value={this.state.delivery.value} visited={this.state.delivery.visited} label="Delivery option" error={this.state.delivery.error} options={this.state.OptionsDelivery}/>
             </Step>);
-        } else if (this.state.currentStep === 1)
-            return (<Step number={1} hidden={this.state.currentStep !== 1}>
+        } else if (this.state.currentStep === 2)
+            return (<Step number={2} hidden={this.state.currentStep !== 2}>
                 {this.renderVisitors()}
             </Step>);
 
         /******2*********/
-        else if (this.state.currentStep === 2)
-            return (<Step number={2} hidden={this.state.currentStep !== 2}>
+        else if (this.state.currentStep === 3)
+            return (<Step number={3} hidden={this.state.currentStep !== 3}>
                 {this.renderArrivalAndDeparture()}
                 {this.renderLocations()}
                 <div hidden={this.state.purpose.value.value !== "Auto Tourist"}>
@@ -951,9 +1049,9 @@ class App extends Component {
 
             </Step>);
         /****3****/
-        else if (this.state.currentStep === 3)
+        else if (this.state.currentStep === 4)
             return [
-                <Step number={3}>
+                <Step number={4}>
                     <div className="mt-4">
                         Thank you <b>PAUL BRADLEY</b>, your Real Russian Tourist Visa Support application has been submitted to our database and is ready for processing.
                     </div>
@@ -1007,7 +1105,7 @@ class App extends Component {
                 </Step>,
                 /********PAYMENT**********/
 
-                <Step number={4} price={this.state.totalPrice} currency={this.state.currency}>
+                <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
                     <Input updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" error={this.state.userFirstName.error}/>
                     <Input updateCurrentHint={this.updateCurrentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>
                     <div className="row" style={{
@@ -1042,7 +1140,7 @@ class App extends Component {
                             <img src={americanExpress} alt="american-express"/>
                         </div>
                     </div>
-                </Step>
+                </Step>,
 
 
             ];
@@ -1053,37 +1151,30 @@ class App extends Component {
         return (
             <div className="App text-center text-md-left mb-5">
 
+
                 <Header
-                    updateField={this.updateField}
-                    steps={this.state.steps}
-                    currentStep={this.state.currentStep}
-                    currencies={this.state.currencies}
-                    currency={this.state.currency}
-                    price={this.state.totalPrice}
-                    userCompleteForm ={this.state.userCompleteForm.value}
+                updateField={this.updateField}
+                steps={this.state.steps}
+                currentStep={this.state.currentStep}
+                currencies={this.state.currencies}
+                currency={this.state.currency}
+                price={this.state.totalPrice}
+                userCompleteForm ={this.state.userCompleteForm.value}
                 />
+
+
 
 
               <div className="App__container container">
                 <Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep} currency={this.state.currency} price={this.state.totalPrice}/>
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
-                      <div className="row py-3">
+                      <div className="row py-3" hidden={this.state.currentStep === 0}>
                           <div className="d-flex col-md-6 flex-column flex-md-row">
                               <Button
                                   label="retrieve saved application"
-                                  className={
-                                      "mr-3 " + (
-                                          this.state.currentStep !== 0
-                                          ? "d-none"
-                                          : "d-block")
-                                      }
-                                  text={
-                                      (
-                                          this.state.currentStep !== 0
-                                          ? ""
-                                          : "CONTINUE a saved existing application")
-                                      }
+                                  className="mr-3"
+                                  text="CONTINUE a saved existing application"
                               />
                               <Button
                                   label="save progress"
@@ -1102,8 +1193,8 @@ class App extends Component {
                   <div className="row" style={{
                           maxWidth: "710px"
                       }}>
-                      <div className="col-sm-6">
-                          <Button className="align-self-md-start align-self-center" label="Save progress"/>
+                      <div className="col-sm-6" hidden={this.state.currentStep === 0}>
+                          <Button className="align-self-md-start align-self-center" label="Save progress" />
                       </div>
 
                       <div className={
@@ -1116,7 +1207,7 @@ class App extends Component {
                           />
                       </div>
                       <div className={
-                              ((this.state.currentStep === 0) ? "col-sm-6 d-block" : (this.state.currentStep !== 3) ? "col-sm-3 d-block"  : "d-none")
+                              ((this.state.currentStep === 1) ? "col-sm-3 d-block" : (this.state.currentStep !== 4 && this.state.currentStep !== 0) ? "col-sm-3 d-block"  : "d-none")
                           }>
                           <Button
                               handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
@@ -1125,7 +1216,7 @@ class App extends Component {
                           />
                       </div>
                       <div className={
-                              ((this.state.currentStep === 3 && this.state.userCompleteForm.value !== "1") ? "col-sm-3 d-block" : (this.state.currentStep === 3 && this.state.userCompleteForm.value == "1") ? "col-sm-6 d-block" : "d-none")
+                              ((this.state.currentStep === 4 && this.state.userCompleteForm.value !== "1") ? "col-sm-3 d-block" : (this.state.currentStep === 4 && this.state.userCompleteForm.value == "1") ? "col-sm-6 d-block" : "d-none")
                           }>
                           <Button
                               className={

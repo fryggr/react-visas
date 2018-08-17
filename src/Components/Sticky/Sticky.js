@@ -35,12 +35,7 @@ export const Sticky = (props) => {
                     <div className="d-flex col-md-6 flex-column flex-md-row justify-content-end align-items-center">
                         <Button
                             label="retrieve saved application"
-                            className={
-                                "mr-3 " + (
-                                    props.currentStep !== 0
-                                    ? "d-none"
-                                    : "d-block")
-                                }
+                            className="mr-3"
                             text=""
                         />
                         <Button

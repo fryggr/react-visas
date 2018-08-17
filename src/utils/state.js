@@ -1,198 +1,206 @@
 export default {
-    currentHint: "",
+    currentHint: '',
     currentStep: 0,
     priceInPounds: 15.4,
     totalPrice: 0,
     currency: {
-        value: "gbp",
-        label: "£ - GBP"
+        value: 'gbp',
+        label: '£ - GBP'
     },
     currencies: [
         {
-            value: "gbp",
-            label: "£ - GBP"
-        }, {
-            value: "usd",
-            label: "$ - USD"
-        }, {
-            value: "eur",
-            label: "€ - EUR"
+            value: 'gbp',
+            label: '£ - GBP'
+        },
+        {
+            value: 'usd',
+            label: '$ - USD'
+        },
+        {
+            value: 'eur',
+            label: '€ - EUR'
         }
     ],
 
     /********THIS DATA FOR STEPSNAVIGATION COMPONENT**********/
     steps: [
         {
-            stepName: "service details",
+            stepName: 'introduction',
             visited: false
-        }, {
-            stepName: "personal details",
+        },
+        {
+            stepName: 'service details',
             visited: false
-        }, {
-            stepName: "your visit",
+        },
+        {
+            stepName: 'personal details',
             visited: false
-        }, {
-            stepName: "payment",
+        },
+        {
+            stepName: 'your visit',
+            visited: false
+        },
+        {
+            stepName: 'payment',
             visited: false
         }
     ],
 
     /*************USER'S INPUT STEP 1************/
     groupSize: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     numberOfEntries: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     purpose: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     countryApplyIn: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     registration: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     delivery: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
 
     /*************USER'S INPUT STEP 2************/
     visitors: [],
     email: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     phone: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
-    autoType:{
-        value: "",
-        error: "",
+    autoType: {
+        value: '',
+        error: '',
         visited: false
     },
-    autoModel:{
-        value: "",
-        error: "",
+    autoModel: {
+        value: '',
+        error: '',
         visited: false
     },
-    autoColor:{
-        value: "",
-        error: "",
+    autoColor: {
+        value: '',
+        error: '',
         visited: false
     },
-    autoNumber:{
-        value: "",
-        error: "",
+    autoNumber: {
+        value: '',
+        error: '',
         visited: false
     },
 
     /*************USER'S INPUT STEP 3************/
     arrivalDate1: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     arrivalDate2: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     departureDate1: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     departureDate2: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     locations: [
         {
             city: {
-                value: "",
-                error: "",
+                value: '',
+                error: '',
                 visited: false
             },
             hotel: {
-                value: "",
-                error: "",
+                value: '',
+                error: '',
                 visited: false
             }
         }
     ],
     userNeedsNewsletter: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userNeedsJoinMailingList: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
-
 
     /*************USER'S INPUT STEP 4************/
     userCompleteForm: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userFirstName: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userSurname: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userHouseNumber: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userPostcode: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userCardType: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userCardNumber: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userExpiryDate: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
     userCCV: {
-        value: "",
-        error: "",
+        value: '',
+        error: '',
         visited: false
     },
 
@@ -202,93 +210,101 @@ export default {
     /*******DATA FROM SERVER**********/
     OptionsGroupSize: [
         {
-            value: "1",
-            label: "1"
-        }, {
-            value: "2",
-            label: "2"
-        }, {
-            value: "3",
-            label: "3"
+            value: '1',
+            label: '1'
+        },
+        {
+            value: '2',
+            label: '2'
+        },
+        {
+            value: '3',
+            label: '3'
         }
     ],
     OptionsNumberOfEntries: [
         {
-            value: "Single",
-            label: "Single"
-        }, {
-            value: "Double",
-            label: "Double"
+            value: 'Single',
+            label: 'Single'
+        },
+        {
+            value: 'Double',
+            label: 'Double'
         }
     ],
     OptionsPurpose: [
         {
-            value: "1",
-            label: "Tourist"
-        }, {
-            value: "2",
-            label: "Auto"
+            value: '1',
+            label: 'Tourist'
+        },
+        {
+            value: '2',
+            label: 'Auto'
         }
     ],
     OptionsRegistration: [
         {
-            value: "1",
-            label: "No registration services needed"
-        }, {
-            value: "2",
-            label: "Registration in Moscow"
+            value: '1',
+            label: 'No registration services needed'
+        },
+        {
+            value: '2',
+            label: 'Registration in Moscow'
         }
     ],
     OptionsDelivery: [
         {
-            value: "1",
-            label: "Email"
-        }, {
-            value: "2",
-            label: "Another option"
+            value: '1',
+            label: 'Email'
+        },
+        {
+            value: '2',
+            label: 'Another option'
         }
     ],
     OptionsCities: [
         {
-            value: "1",
-            label: "Moscow"
-        }, {
-            value: "2",
-            label: "Magadan"
+            value: '1',
+            label: 'Moscow'
+        },
+        {
+            value: '2',
+            label: 'Magadan'
         }
     ],
     OptionsHotels: [
         {
-            value: "1",
-            label: "Vzlyot"
-        }, {
-            value: "2",
-            label: "Park inn"
+            value: '1',
+            label: 'Vzlyot'
+        },
+        {
+            value: '2',
+            label: 'Park inn'
         }
     ],
     OptionsAutoModels: [
         {
-            value: "",
-            label: ""
+            value: '',
+            label: ''
         }
     ],
     OptionsAutoColors: [
         {
-            value: "",
-            label: ""
+            value: '',
+            label: ''
         }
     ],
     OptionsCardType: [
         {
-            value: "Visa Debit",
-            label: "Visa Debit"
+            value: 'Visa Debit',
+            label: 'Visa Debit'
         },
         {
-            value: "Master Card",
-            label: "Master Card"
+            value: 'Master Card',
+            label: 'Master Card'
         }
     ],
 
-    countryApplyInNotesText: "",
-    countryApplyInFullName: ""
+    countryApplyInNotesText: '',
+    countryApplyInFullName: ''
 };
