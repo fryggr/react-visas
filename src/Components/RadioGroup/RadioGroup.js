@@ -1,6 +1,6 @@
 import React from "react";
 import "./RadioGroup.css";
-
+import { Hint } from './../Hint/Hint'
 import newId from './../../utils/newid.js';
 
 
@@ -18,10 +18,9 @@ export class RadioGroup extends React.Component{
     }
 
     render(){
-        console.log('RadioGroup RENDER. props = ', this.props);
         let className = typeof this.props.className !== "undefined" ? this.props.className : "";
         return (
-            <div className={"RadioGroup " + className}>
+            <div onMouseOver={() => this.props.updateCurrentHint(this.props.fieldName)}className={"RadioGroup " + className}>
               <div className="RadioGroup__title" dangerouslySetInnerHTML={{ __html: this.props.title }}></div>
               <div className="RadioGroup__wrapper justify-content-center justify-content-md-start">
                 {this.props.options.map((item, index) => {
@@ -47,6 +46,7 @@ export class RadioGroup extends React.Component{
                 })}
               </div>
               <div className="RadioGroup__error">{(this.props.visited ? this.props.error : "")}</div>
+              {this.props.currentHint === this.props.fieldName ? <Hint/> : ""}
             </div>
         )
     }

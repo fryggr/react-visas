@@ -118,16 +118,22 @@ export class Input extends React.Component {
             );
         } else if (type === "date") {
             return (
-                <div className={"Input " + className}>
+                <div className={"Input " + className} >
                     <label className="Input__label">{label}</label>
                     <Datetime
                         inputProps={{disabled: disabled}}
                         isValidDate={dateValidator}
-                        onChange={date =>
+                        open={currentHint === fieldName}
+                        onFocus={() => updateCurrentHint(fieldName)}
+                        onChange={date =>{
                             updateField(fieldName + ".value", date)
+                            updateCurrentHint("")
+                            }
                         }
-                        onBlur={date =>
+                        onBlur={date =>{
                             updateField(fieldName + ".visited", true)
+                            updateCurrentHint("")
+                            }
                         }
                         viewDate={viewDate}
                         input={true}
