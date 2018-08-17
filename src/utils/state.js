@@ -209,78 +209,25 @@ export default {
 
     /*******DATA FROM SERVER**********/
     OptionsGroupSize: [
-        {
-            value: '1',
-            label: '1'
-        },
-        {
-            value: '2',
-            label: '2'
-        },
-        {
-            value: '3',
-            label: '3'
-        }
+
     ],
     OptionsNumberOfEntries: [
-        {
-            value: 'Single',
-            label: 'Single'
-        },
-        {
-            value: 'Double',
-            label: 'Double'
-        }
+
     ],
     OptionsPurpose: [
-        {
-            value: '1',
-            label: 'Tourist'
-        },
-        {
-            value: '2',
-            label: 'Auto'
-        }
+
     ],
     OptionsRegistration: [
-        {
-            value: '1',
-            label: 'No registration services needed'
-        },
-        {
-            value: '2',
-            label: 'Registration in Moscow'
-        }
+
     ],
     OptionsDelivery: [
-        {
-            value: '1',
-            label: 'Email'
-        },
-        {
-            value: '2',
-            label: 'Another option'
-        }
+
     ],
     OptionsCities: [
-        {
-            value: '1',
-            label: 'Moscow'
-        },
-        {
-            value: '2',
-            label: 'Magadan'
-        }
+
     ],
     OptionsHotels: [
-        {
-            value: '1',
-            label: 'Vzlyot'
-        },
-        {
-            value: '2',
-            label: 'Park inn'
-        }
+
     ],
     OptionsAutoModels: [
         {
