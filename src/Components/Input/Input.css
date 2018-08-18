@@ -1,3 +1,20 @@
+.Input-wrapper{
+  position: relative;
+}
+
+.Input-wrapper__inFocus{
+  position: absolute;
+  width: 110%;
+  height: 105px;
+  background: #fff3c2;
+  top: -13px;
+  left: -5%;
+}
+
+.Input-wrapper__inFocus + .Input{
+  border: 1px solid #da9e0f !important;
+}
+
 .Input {
   display: flex !important;
   flex-direction: column;
@@ -54,6 +71,7 @@
   color: #cc091d;
   font-size: 0.8rem;
   line-height: 1.3rem;
+  z-index: 1;
 }
 
 .Input.correct::after {
@@ -64,6 +82,7 @@
   background: url('./img/ok.png') no-repeat center / contain;
   right: -30px;
   top: 50%;
+  z-index: 1;
   transform: translateY(-50%);
 }
 
@@ -83,7 +102,7 @@
   font-size: 25px;
   font-weight: 700;
   right: -25px;
-  top: 50%;
+  top: 40px;
   transform: translateY(-50%);
 }
 
@@ -94,6 +113,13 @@
 .react-phone-number-input__input{
     border-bottom: 0px !important;
 }
+
+@media (max-width: 1170px), (max-device-width: 1170px) {
+	.Input-wrapper__inFocus {
+		display: none !important;
+	}
+}
+
 
 @media (max-width:767px),(max-device-width:767px) {
     .Input{
