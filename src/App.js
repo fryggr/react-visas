@@ -38,7 +38,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = state;
-
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
         this.updateError = this.updateError.bind(this);
@@ -825,7 +824,7 @@ class App extends Component {
                                     value: "Female",
                                     text: "Female"
                                 }
-                            ]} name="sex" />
+                            ]} name={"visitors." + visitorIndex + ".sex"} />
                     </div>
                     <div className="col-md-6">
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".birthDate"} value={this.state.visitors[visitorIndex].birthDate.value} viewDate={new Date().setFullYear(new Date().getFullYear() - 40)} visited={this.state.visitors[visitorIndex].birthDate.visited} label="Date of birth" placeholder="" error={this.state.visitors[visitorIndex].birthDate.error}/>
