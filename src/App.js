@@ -57,6 +57,7 @@ class App extends Component {
         this.renderAuto = this.renderAuto.bind(this);
         this.priceCalculate = this.priceCalculate.bind(this);
         this.updateCurrentHint = this.updateCurrentHint.bind(this);
+        this.validateVisitedStep = this.validateVisitedStep.bind(this);
     }
 
     componentWillMount(){
@@ -211,29 +212,32 @@ class App extends Component {
         }
     }
 
+    validateVisitedStep(path){
+      //make currentStep visited
+      let visitedStepIndex;
+      if (path.indexOf("currentStep") !== -1) {
+          visitedStepIndex = this.state.currentStep;
+          state.steps[visitedStepIndex].visited = true;
+          //make fields of visited steps visited
+          this.makeFieldsVisited(visitedStepIndex);
+          this.validate();
+          if (!this.checkIsStepCorrect(visitedStepIndex)) {
+              state.steps[visitedStepIndex].correct = false;
+          } else {
+              state.steps[visitedStepIndex].correct = true;
+          }
+          this.setState(state);
+      }
+    }
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
         let state = this.state;
 
-        //updateState
-        //make currentStep visited
-        let visitedStepIndex;
-        if (path.indexOf("currentStep") !== -1) {
-            visitedStepIndex = this.state.currentStep;
-            console.log(visitedStepIndex);
-            state.steps[visitedStepIndex].visited = true;
-            //make fields of visited steps visited
-            this.makeFieldsVisited(visitedStepIndex);
-            this.validate();
-            if (!this.checkIsStepCorrect(visitedStepIndex)) {
-                state.steps[visitedStepIndex].correct = false;
-            } else {
-                state.steps[visitedStepIndex].correct = true;
-            }
-            this.setState(state);
-        }
+        this.validateVisitedStep(path);
 
+
+        //updateState
         _.set(state, path, value);
         this.setState(state);
 
@@ -249,9 +253,6 @@ class App extends Component {
                     state.locations[locationIndex].hotel.error = "This field is required";
                 this.setState(state);
             });
-
-
-
         }
 
         if (path.indexOf("groupSize") !== -1)
@@ -468,12 +469,12 @@ class App extends Component {
             }
 
             for (let i = 0; i < this.state.locations.length; i++) {
-                this.state.locations[i].city.visited = true;
-                this.state.locations[i].hotel.visited = true;
+                state.locations[i].city.visited = true;
+                state.locations[i].hotel.visited = true;
             }
         }
         if (stepIndex === 4) {
-          this.state.userCompleteForm.visited = true;
+          state.userCompleteForm.visited = true;
         }
 
         this.setState(state);

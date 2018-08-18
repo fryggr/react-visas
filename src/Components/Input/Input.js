@@ -6,7 +6,6 @@ import Datetime from "react-datetime";
 import ReactFlagsSelect from "react-flags-select";
 import "react-phone-number-input/style.css";
 import ReactPhoneInput from "react-phone-input-2";
-import Moment from "moment";
 /*******IMPORT STYLES********/
 import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";

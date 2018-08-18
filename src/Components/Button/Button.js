@@ -9,7 +9,7 @@ export const Button = (props) => {
             <button type={props.type} className={"Button " + className} onClick={props.handleClick}>{props.label}</button>
             <div className={
                 "Button__text " + (
-                    props.text == ""
+                    props.text === ""
                     ? "d-none"
                     : "d-block")
                 }>{props.text}</div>
