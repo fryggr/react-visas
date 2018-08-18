@@ -58,6 +58,7 @@ class App extends Component {
         this.priceCalculate = this.priceCalculate.bind(this);
         this.updateCurrentHint = this.updateCurrentHint.bind(this);
         this.validateVisitedStep = this.validateVisitedStep.bind(this);
+        this.customValidation = this.customValidation.bind(this);
     }
 
     componentWillMount(){
@@ -230,6 +231,130 @@ class App extends Component {
       }
     }
 
+    customValidation(path, value) {
+     if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
+       window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, data => {
+         state.OptionsHotels = [];
+         data.forEach(hotel => {
+           state.OptionsHotels.push({
+             value: hotel.hotelName,
+             label: hotel.hotelName
+           });
+         });
+         let locationIndex = path.split(".")[1];
+         state.locations[locationIndex].hotel.value = {};
+         if (state.locations[locationIndex].hotel.visited) state.locations[locationIndex].hotel.error = "This field is required";
+         this.setState(state);
+       });
+     }
+
+     if (path.indexOf("groupSize") !== -1) this.updateVisitorsArray();
+     this.validate();
+
+     //проверяем, заполнил ли пользователь все предыдущие поля
+     if (path.indexOf("userCompleteForm") !== -1 && value === "1") {
+       let state = this.state;
+       this.makeFieldsVisited(1);
+       this.makeFieldsVisited(2);
+       this.makeFieldsVisited(3);
+       this.makeFieldsVisited(4);
+       this.validate();
+       state["steps"][1].correct = this.checkIsStepCorrect(1);
+       state["steps"][2].correct = this.checkIsStepCorrect(2);
+       state["steps"][3].correct = this.checkIsStepCorrect(3);
+       state["steps"][4].correct = this.checkIsStepCorrect(4);
+       if (!state["steps"][1].correct || !state["steps"][2].correct || !state["steps"][3].correct) {
+         alert("You have errors!");
+         state["userCompleteForm"].value = "2";
+         state["userCompleteForm"].error = "This field must be accepted.";
+         this.setState(state);
+       } else {
+         state["userCompleteForm"].value = value;
+         this.setState(state);
+       }
+     }
+
+     if (path.indexOf("countryApplyIn") !== -1 && path.indexOf("visited") === -1) {
+       let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
+       let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
+       state.countryApplyInNotesText = text;
+       state.countryApplyInFullName = country;
+       this.setState(state);
+     }
+
+     if (path.indexOf("groupSize") !== -1 || path.indexOf("registration") !== -1 || path.indexOf("numberOfEntries") !== -1 || path.indexOf("currency") !== -1)
+       this.priceCalculate();
+
+     if ((path.indexOf("registration") !== -1 || path.indexOf("arrivalDate") !== -1 || path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1) {
+       //если регистрация выбрана
+       if (typeof this.state.registration.value.value !== "undefined") {
+         //если регистрация нужна
+         if (this.state.registration.value.value !== "NO") {
+           //ДЛЯ ПЕРВОЙ ДАТЫ
+           if (typeof this.state.arrivalDate1.value === "object" && typeof this.state.departureDate1.value === "object") {
+             //если между датами меньше 7 дней
+             if (daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) {
+               //вывести alert о том, что регистрация необязательна
+               alert("Your tourney less than 7 days, registration is not required");
+             }
+             //ДЛЯ ВТООРОЙ ДАТЫ
+             if (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object") {
+               //если между датами меньше 7 дней
+               if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7) {
+                 //вывести alert о том, что регистрация необязательна
+                 alert("Your tourney less than 7 days, registration is not required");
+               }
+             }
+           }
+         }
+       }
+     }
+
+     if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
+       if (value.value === "Makhachkala" || value.value === "Pyatigorsk" || value.value === "Vladikavkaz" || value.value === "Magas") {
+         alert("Visa processing for Caucasus cities is 10 days");
+       }
+     }
+
+     if ((path.indexOf("registration") !== -1 || path.indexOf("country") !== -1) && path.indexOf("visited") === -1) {
+       let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(this.state.countryApplyIn.value);
+       if (this.state.registration.value != "NO") {
+         if (country === "Malaysia" || country === "Singapore") {
+           alert(country + " can't register in Saint Petersburg");
+         }
+       }
+     }
+
+     if (path.indexOf("purpose") !== -1 && path.indexOf("visited") === -1 && value.value === "Auto Tourist") {
+       if (this.state.arrivalDate1.visited) {
+         state.autoType.visited = true;
+         state.autoModel.visited = true;
+         state.autoColor.visited = true;
+         state.autoNumber.visited = true;
+         let step3Correct = true;
+         if (this.state.autoType.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoType", text: "Auto type", step: 1 });
+         }
+         if (this.state.autoModel.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoModel", text: "Vechicle make", step: 1 });
+         }
+         if (this.state.autoColor.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoColor", text: "Auto color", step: 1 });
+         }
+         if (this.state.autoNumber.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoNumber", text: "Licence Plate number", step: 1 });
+         }
+
+         state.steps[2].correct = step3Correct;
+         this.setState(state);
+       }
+     }
+   }
+
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
         let state = this.state;
@@ -240,138 +365,7 @@ class App extends Component {
         //updateState
         _.set(state, path, value);
         this.setState(state);
-
-        if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
-            window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
-                state.OptionsHotels = [];
-                data.forEach(hotel => {
-                    state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
-                })
-                let locationIndex = path.split(".")[1];
-                state.locations[locationIndex].hotel.value = {};
-                if (state.locations[locationIndex].hotel.visited)
-                    state.locations[locationIndex].hotel.error = "This field is required";
-                this.setState(state);
-            });
-        }
-
-        if (path.indexOf("groupSize") !== -1)
-            this.updateVisitorsArray();
-        this.validate();
-
-
-        //проверяем, заполнил ли пользователь все предыдущие поля
-        if (path.indexOf("userCompleteForm") !== -1 && value === "1"){
-            let state = this.state;
-            this.makeFieldsVisited(1);
-            this.makeFieldsVisited(2);
-            this.makeFieldsVisited(3);
-            this.makeFieldsVisited(4);
-            this.validate();
-            state['steps'][1].correct = this.checkIsStepCorrect(1);
-            state['steps'][2].correct = this.checkIsStepCorrect(2);
-            state['steps'][3].correct = this.checkIsStepCorrect(3);
-            state['steps'][4].correct = this.checkIsStepCorrect(4);
-            if (!state['steps'][1].correct || !state['steps'][2].correct || !state['steps'][3].correct){
-              alert("You have errors!");
-              state['userCompleteForm'].value = "2";
-              state['userCompleteForm'].error = "This field must be accepted."
-              this.setState(state);
-            }
-            else {
-              state['userCompleteForm'].value = value;
-              this.setState(state);
-            }
-
-        }
-
-        if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
-            let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
-            let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
-            state.countryApplyInNotesText = text;
-            state.countryApplyInFullName = country;
-            this.setState(state);
-        }
-
-
-        if (path.indexOf('groupSize') !== -1 || path.indexOf('registration') !== -1 || path.indexOf('numberOfEntries') !== -1 || path.indexOf('currency') !== -1)
-            this.priceCalculate();
-
-        if ((path.indexOf('registration') !== -1 || path.indexOf("arrivalDate") !== -1 ||  path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1){
-            //если регистрация выбрана
-            if (typeof this.state.registration.value.value !== 'undefined'){
-                //если регистрация нужна
-                if (this.state.registration.value.value !== 'NO'){
-                    //ДЛЯ ПЕРВОЙ ДАТЫ
-                    if (typeof this.state.arrivalDate1.value === 'object' && typeof this.state.departureDate1.value === 'object'){
-                        //если между датами меньше 7 дней
-                        if (daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7){
-                            //вывести alert о том, что регистрация необязательна
-                            alert('Your tourney less than 7 days, registration is not required');
-                        }
-                    //ДЛЯ ВТООРОЙ ДАТЫ
-                    if (typeof this.state.arrivalDate2.value === 'object' && typeof this.state.departureDate2.value === 'object'){
-                        //если между датами меньше 7 дней
-                        if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7){
-                            //вывести alert о том, что регистрация необязательна
-                            alert('Your tourney less than 7 days, registration is not required');
-                        }
-
-                    }
-
-                }
-
-            }
-        }
-
-    }
-
-    if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
-        if (value.value === "Makhachkala" || value.value === "Pyatigorsk" || value.value === "Vladikavkaz" || value.value === "Magas"){
-            alert('Visa processing for Caucasus cities is 10 days');
-        }
-    }
-
-    if((path.indexOf('registration') !== -1 || path.indexOf('country') !== -1) && path.indexOf('visited') === -1){
-        let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( this.state.countryApplyIn.value)
-        if (this.state.registration.value != "NO"){
-            if (country === "Malaysia" || country === "Singapore") {
-
-                alert(country + " can't register in Saint Petersburg");
-            }
-        }
-    }
-
-    if (path.indexOf('purpose') !== -1 && path.indexOf('visited') === -1 && value.value === "Auto Tourist"){
-        if (this.state.arrivalDate1.visited){
-            state.autoType.visited = true;
-            state.autoModel.visited = true;
-            state.autoColor.visited = true;
-            state.autoNumber.visited = true;
-            let step3Correct = true;
-            if (this.state.autoType.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoType", text: "Auto type", step: 1})
-            }
-            if (this.state.autoModel.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
-            }
-            if (this.state.autoColor.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoColor", text: "Auto color", step: 1})
-            }
-            if (this.state.autoNumber.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
-            }
-
-            state.steps[2].correct = step3Correct;
-            this.setState(state);
-
-        }
-    }
-
+        this.customValidation(path,value);
 
 }
 
@@ -782,7 +776,7 @@ class App extends Component {
         this.state.locations.forEach((item1, index1) => {
             let error = false;
             this.state.locations.forEach((item2, index2) => {
-                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value){
+                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value && typeof item1.city.value !== 'string'){
                     this.updateError("locations." + index1 + ".hotel", "You have chosen this hotel somewhere");
                     error = true;
                 }

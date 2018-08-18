@@ -18,46 +18,23 @@ export class Input extends React.Component {
   }
 
   render() {
-    let {
-      type,
-      label,
-      fieldName,
-      placeholder,
-      visited,
-      value,
-      dateValidator,
-      error,
-      updateField,
-      options,
-      updateCurrentHint,
-      currentHint,
-      viewDate
-    } = { ...this.props };
+    let { type, label, fieldName, placeholder, visited, value, dateValidator, error, updateField, options, updateCurrentHint, currentHint, viewDate } = {
+      ...this.props
+    };
 
     if (typeof viewDate === "undefined") viewDate = new Date();
 
     let disabled = false;
-    if (typeof this.props.className !== "undefined")
-      disabled = this.props.className.indexOf("disabled") !== -1;
-    let className =
-      typeof this.props.className !== "undefined" ? this.props.className : "";
+    if (typeof this.props.className !== "undefined") disabled = this.props.className.indexOf("disabled") !== -1;
+    let className = typeof this.props.className !== "undefined" ? this.props.className : "";
     if (visited) {
       className += error !== "" ? " incorrect" : " correct";
     }
 
-    if (
-      type !== "select" &&
-      type !== "date" &&
-      type !== "country" &&
-      type !== "phone"
-    ) {
+    if (type !== "select" && type !== "date" && type !== "country" && type !== "phone") {
       return (
         <div className="Input-wrapper">
-          {currentHint === fieldName ? (
-            <div className="Input-wrapper__inFocus" />
-          ) : (
-            ""
-          )}
+          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input " + className}>
             <label className="Input__label">{label}</label>
             <input
@@ -95,11 +72,7 @@ export class Input extends React.Component {
       };
       return (
         <div className="Input-wrapper">
-          {currentHint === fieldName ? (
-            <div className="Input-wrapper__inFocus" />
-          ) : (
-            ""
-          )}
+          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input Select " + className}>
             <label className="Input__label">{label}</label>
             <Select
@@ -127,11 +100,7 @@ export class Input extends React.Component {
     } else if (type === "date") {
       return (
         <div className="Input-wrapper">
-          {currentHint === fieldName ? (
-            <div className="Input-wrapper__inFocus" />
-          ) : (
-            ""
-          )}
+          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input " + className}>
             <label className="Input__label">{label}</label>
             <Datetime
@@ -143,7 +112,7 @@ export class Input extends React.Component {
                 updateField(fieldName + ".value", date);
                 updateCurrentHint("");
               }}
-              onBlur={date => {
+              onBlur={() => {
                 updateField(fieldName + ".visited", true);
                 updateCurrentHint("");
               }}
@@ -155,6 +124,7 @@ export class Input extends React.Component {
               viewMode="years"
               className="Datepicker"
               value={value}
+              disableOnClickOutside={false}
             />
             {currentHint === fieldName ? <Hint /> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
@@ -164,15 +134,8 @@ export class Input extends React.Component {
     } else if (type === "country") {
       return (
         <div className="Input-wrapper">
-          {currentHint === fieldName ? (
-            <div className="Input-wrapper__inFocus" />
-          ) : (
-            ""
-          )}
-          <div
-            className={"Input Select_country " + className}
-            onClick={() => updateCurrentHint(fieldName)}
-          >
+          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
+          <div className={"Input Select_country " + className} onClick={() => updateCurrentHint(fieldName)}>
             <label className="Input__label">{label}</label>
             <ReactFlagsSelect
               className=""
@@ -196,11 +159,7 @@ export class Input extends React.Component {
     } else if (type === "phone") {
       return (
         <div className="Input-wrapper">
-          {currentHint === fieldName ? (
-            <div className="Input-wrapper__inFocus" />
-          ) : (
-            ""
-          )}
+          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input Select_country " + className}>
             <label className="Input__label">{label}</label>
             <ReactPhoneInput
