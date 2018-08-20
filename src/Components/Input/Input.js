@@ -144,7 +144,7 @@ export class Input extends React.Component {
               showSelectedLabel={true}
               showOptionLabel={true}
               selectedSize={14}
-              defaultCountry={value}
+              defaultCountry={this.props.usersCountry}
               placeholder="Please select"
               searchPlaceholder="please type"
               searchable={true}
@@ -165,6 +165,7 @@ export class Input extends React.Component {
           <div className={"Input Select_country " + className}>
             <label className="Input__label">{label}</label>
             <ReactPhoneInput
+              defaultCountry={this.props.usersCountry}
               preferredCountries={["gb", "fr", "ru", "us"]}
               disableAreaCodes={true}
               defaultCountry="gb"

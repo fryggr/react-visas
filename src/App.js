@@ -257,7 +257,6 @@ class App extends Component {
      }
 
      if (path.indexOf("groupSize") !== -1) this.updateVisitorsArray();
-     this.validate();
 
      //проверяем, заполнил ли пользователь все предыдущие поля
      if (path.indexOf("userCompleteForm") !== -1 && value === "1") {
@@ -369,10 +368,10 @@ class App extends Component {
 
         this.validateVisitedStep(path);
 
-
         //updateState
         _.set(state, path, value);
         this.setState(state);
+        this.validate();
         this.customValidation(path,value);
 
 }
