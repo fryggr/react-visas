@@ -30,7 +30,6 @@ import mastercard from "./Components/Step/img/mastercard.png";
 import visaDebit from "./Components/Step/img/visa-debit.png";
 import visa from "./Components/Step/img/visa.png";
 import clocksImg from "./Components/Step/img/clocks.png";
-import introBgImg from "./Components/Step/img/bg-intro.png";
 
 /************FOR VALIDATION***********/
 let Validator = require("validatorjs");
@@ -43,6 +42,8 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = state;
+
+
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
         this.updateError = this.updateError.bind(this);
@@ -63,14 +64,35 @@ class App extends Component {
         this.updateCurrentHint = this.updateCurrentHint.bind(this);
         this.validateVisitedStep = this.validateVisitedStep.bind(this);
         this.customValidation = this.customValidation.bind(this);
+        this.updateLocalStorage = this.updateLocalStorage.bind(this);
+        this.updateLocalState = this.updateLocalState.bind(this);
     }
 
     componentWillMount(){
       this.getDataFromServer();
       axios.get('https://ipinfo.io')
            .then(response =>{
-               this.setState({usersCountry: response.data.country})
+               this.setState({usersCountry: response.data.country});
+               this.setState({countryApplyIn: {value: this.state.usersCountry}})
+               visitorTemplate.citizenship =  {value: this.state.usersCountry};
+
            });
+
+
+    }
+
+    updateLocalState() {
+        let state = this.state;
+        let localState = JSON.parse(localStorage.getItem('state'));
+        state = localState;
+        this.setState(state);
+
+    }
+
+    updateLocalStorage() {
+        let state = JSON.stringify(this.state);
+        localStorage.setItem('state', state);
+
     }
 
 
@@ -79,7 +101,7 @@ class App extends Component {
     }
 
     getDataFromServer(){
-        var state = this.state;
+        let state = this.state;
 
         var groupSize = document.querySelectorAll('.input-group-size option');
         var visitPurpose = document.querySelectorAll('.input-purpose option');
@@ -240,6 +262,7 @@ class App extends Component {
     }
 
     customValidation(path, value) {
+     let state = this.state;
      if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
        window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, data => {
          state.OptionsHotels = [];
@@ -260,7 +283,7 @@ class App extends Component {
 
      //проверяем, заполнил ли пользователь все предыдущие поля
      if (path.indexOf("userCompleteForm") !== -1 && value === "1") {
-       let state = this.state;
+
        this.makeFieldsVisited(1);
        this.makeFieldsVisited(2);
        this.makeFieldsVisited(3);
@@ -282,6 +305,7 @@ class App extends Component {
      }
 
      if (path.indexOf("countryApplyIn") !== -1 && path.indexOf("visited") === -1) {
+
        let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
        let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
        state.countryApplyInNotesText = text;
@@ -370,9 +394,11 @@ class App extends Component {
 
         //updateState
         _.set(state, path, value);
-        this.setState(state);
-        this.validate();
-        this.customValidation(path,value);
+        this.setState(state, () => {
+            this.validate();
+            this.customValidation(path,value);
+        });
+
 
 }
 
@@ -637,8 +663,10 @@ class App extends Component {
         let newVisitorsCount = this.state.groupSize.value.value;
 
         if (oldVisitorsCount < newVisitorsCount) {
-            for (let i = oldVisitorsCount; i < newVisitorsCount; i++)
+            for (let i = oldVisitorsCount; i < newVisitorsCount; i++){
                 state.visitors.push(JSON.parse(JSON.stringify(visitorTemplate)));
+                // state.visitors[i].citizenship.value.value = this.state.usersCountry;
+            }
             this.setState(state);
             }
         else if (oldVisitorsCount > newVisitorsCount){
@@ -732,7 +760,7 @@ class App extends Component {
             countryApplyIn: "required",
             delivery: "required",
             email: "required|email",
-            phone: "required|regex:/[0-9]{4,}/i",
+            phone: "required|regex:/^[0-9\\s\\-\\(\\)\\+]{4,}$/ig",
             arrivalDate1: "required|date",
             arrivalDate2: "required|date",
             departureDate1: "required|date",
@@ -845,7 +873,7 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-md-6">
-                        <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2 Input_half" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
+                        <Input currentHint={this.state.currentHint} usersCountry={this.state.usersCountry} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2 Input_half" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
                     </div>
                     <div className="col-md-6">
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportNumber"} value={this.state.visitors[visitorIndex].passportNumber.value} visited={this.state.visitors[visitorIndex].passportNumber.visited} label="Passport number" placeholder="Please enter passport number" error={this.state.visitors[visitorIndex].passportNumber.error}/>
@@ -906,7 +934,7 @@ class App extends Component {
                 }}>
                 <div className="col-md-6">
                     <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} dateValidator={this.getRestrictForDate("arrivalDate" + (
-                        inputIndex + 1))} type="date" className={"mt-4 mr-2 " + (inputIndex === 0 ? "Input_half" : "")}  updateField={this.updateField} fieldName={"arrivalDate" + (
+                        inputIndex + 1))} type="date" className="mt-4 mr-2 Input_half"  updateField={this.updateField} fieldName={"arrivalDate" + (
                         inputIndex + 1)} value={this.state["arrivalDate" + (
                             inputIndex + 1)].value} visited={this.state["arrivalDate" + (
                             inputIndex + 1)].visited} label={"Entry " + (
@@ -986,6 +1014,7 @@ class App extends Component {
                                 label="retrieve saved application"
                                 className="mr-3"
                                 text="LOAD a previously saved existing application."
+                                handleClick={() => this.updateLocalState()}
                             />
                             <Button
                                 handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
@@ -999,9 +1028,7 @@ class App extends Component {
                         </div>
                     </div>
 
-                    <div className="Step__intro-img">
-                        <img src={introBgImg} alt="" />
-                    </div>
+                    <div className="Step__intro-img"></div>
 
                 </div>
             )
@@ -1170,6 +1197,7 @@ class App extends Component {
 
 
               <div className="App__container container">
+
                 <Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep} currency={this.state.currency} price={this.state.totalPrice}/>
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
@@ -1179,10 +1207,12 @@ class App extends Component {
                                   label="retrieve saved application"
                                   className="mr-3"
                                   text="CONTINUE a saved existing application"
+                                  handleClick={() => this.updateLocalState()}
                               />
                               <Button
                                   label="save progress"
                                   text="SAVE your current progress"
+                                  handleClick={() => this.updateLocalStorage()}
                               />
                           </div>
                           <div className="ml-auto col-md-4">
@@ -1198,7 +1228,7 @@ class App extends Component {
                           maxWidth: "710px"
                       }}>
                       <div className="col-sm-6" hidden={this.state.currentStep === 0}>
-                          <Button className="align-self-md-start align-self-center" label="Save progress" />
+                          <Button className="align-self-md-start align-self-center" label="Save progress" handleClick={() => this.updateLocalStorage()}/>
                       </div>
 
                       <div className={

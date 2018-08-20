@@ -159,16 +159,16 @@ export class Input extends React.Component {
         </div>
       );
     } else if (type === "phone") {
+        console.log("PHONE COUNTRY = ", this.props.usersCountry);
       return (
         <div className="Input-wrapper">
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input Select_country " + className}>
             <label className="Input__label">{label}</label>
             <ReactPhoneInput
-              defaultCountry={this.props.usersCountry}
+              defaultCountry={typeof this.props.usersCountry === 'undefined' ? 'gb' : this.props.usersCountry.toLowerCase()}
               preferredCountries={["gb", "fr", "ru", "us"]}
               disableAreaCodes={true}
-              defaultCountry="gb"
               placeholder="+1 234 567 89"
               onFocus={() => updateCurrentHint(fieldName)}
               value={value}
