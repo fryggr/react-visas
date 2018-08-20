@@ -43,8 +43,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = state;
-
-
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
         this.updateError = this.updateError.bind(this);
@@ -63,6 +61,8 @@ class App extends Component {
         this.renderAuto = this.renderAuto.bind(this);
         this.priceCalculate = this.priceCalculate.bind(this);
         this.updateCurrentHint = this.updateCurrentHint.bind(this);
+        this.validateVisitedStep = this.validateVisitedStep.bind(this);
+        this.customValidation = this.customValidation.bind(this);
     }
 
     componentWillMount(){
@@ -221,166 +221,159 @@ class App extends Component {
         }
     }
 
+    validateVisitedStep(path){
+      //make currentStep visited
+      let visitedStepIndex;
+      if (path.indexOf("currentStep") !== -1) {
+          visitedStepIndex = this.state.currentStep;
+          state.steps[visitedStepIndex].visited = true;
+          //make fields of visited steps visited
+          this.makeFieldsVisited(visitedStepIndex);
+          this.validate();
+          if (!this.checkIsStepCorrect(visitedStepIndex)) {
+              state.steps[visitedStepIndex].correct = false;
+          } else {
+              state.steps[visitedStepIndex].correct = true;
+          }
+          this.setState(state);
+      }
+    }
+
+    customValidation(path, value) {
+     if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
+       window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, data => {
+         state.OptionsHotels = [];
+         data.forEach(hotel => {
+           state.OptionsHotels.push({
+             value: hotel.hotelName,
+             label: hotel.hotelName
+           });
+         });
+         let locationIndex = path.split(".")[1];
+         state.locations[locationIndex].hotel.value = {};
+         if (state.locations[locationIndex].hotel.visited) state.locations[locationIndex].hotel.error = "This field is required";
+         this.setState(state);
+       });
+     }
+
+     if (path.indexOf("groupSize") !== -1) this.updateVisitorsArray();
+     this.validate();
+
+     //проверяем, заполнил ли пользователь все предыдущие поля
+     if (path.indexOf("userCompleteForm") !== -1 && value === "1") {
+       let state = this.state;
+       this.makeFieldsVisited(1);
+       this.makeFieldsVisited(2);
+       this.makeFieldsVisited(3);
+       this.makeFieldsVisited(4);
+       this.validate();
+       state["steps"][1].correct = this.checkIsStepCorrect(1);
+       state["steps"][2].correct = this.checkIsStepCorrect(2);
+       state["steps"][3].correct = this.checkIsStepCorrect(3);
+       state["steps"][4].correct = this.checkIsStepCorrect(4);
+       if (!state["steps"][1].correct || !state["steps"][2].correct || !state["steps"][3].correct) {
+         alert("You have errors!");
+         state["userCompleteForm"].value = "2";
+         state["userCompleteForm"].error = "This field must be accepted.";
+         this.setState(state);
+       } else {
+         state["userCompleteForm"].value = value;
+         this.setState(state);
+       }
+     }
+
+     if (path.indexOf("countryApplyIn") !== -1 && path.indexOf("visited") === -1) {
+       let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
+       let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
+       state.countryApplyInNotesText = text;
+       state.countryApplyInFullName = country;
+       this.setState(state);
+     }
+
+     if (path.indexOf("groupSize") !== -1 || path.indexOf("registration") !== -1 || path.indexOf("numberOfEntries") !== -1 || path.indexOf("currency") !== -1)
+       this.priceCalculate();
+
+     if ((path.indexOf("registration") !== -1 || path.indexOf("arrivalDate") !== -1 || path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1) {
+       //если регистрация выбрана
+       if (typeof this.state.registration.value.value !== "undefined") {
+         //если регистрация нужна
+         if (this.state.registration.value.value !== "NO") {
+           //ДЛЯ ПЕРВОЙ ДАТЫ
+           if (typeof this.state.arrivalDate1.value === "object" && typeof this.state.departureDate1.value === "object") {
+             //если между датами меньше 7 дней
+             if (daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) {
+               //вывести alert о том, что регистрация необязательна
+               alert("Your tourney less than 7 days, registration is not required");
+             }
+             //ДЛЯ ВТООРОЙ ДАТЫ
+             if (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object") {
+               //если между датами меньше 7 дней
+               if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7) {
+                 //вывести alert о том, что регистрация необязательна
+                 alert("Your tourney less than 7 days, registration is not required");
+               }
+             }
+           }
+         }
+       }
+     }
+
+     if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
+       if (value.value === "Makhachkala" || value.value === "Pyatigorsk" || value.value === "Vladikavkaz" || value.value === "Magas") {
+         alert("Visa processing for Caucasus cities is 10 days");
+       }
+     }
+
+     if ((path.indexOf("registration") !== -1 || path.indexOf("country") !== -1) && path.indexOf("visited") === -1) {
+       let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(this.state.countryApplyIn.value);
+       if (this.state.registration.value != "NO") {
+         if (country === "Malaysia" || country === "Singapore") {
+           alert(country + " can't register in Saint Petersburg");
+         }
+       }
+     }
+
+     if (path.indexOf("purpose") !== -1 && path.indexOf("visited") === -1 && value.value === "Auto Tourist") {
+       if (this.state.arrivalDate1.visited) {
+         state.autoType.visited = true;
+         state.autoModel.visited = true;
+         state.autoColor.visited = true;
+         state.autoNumber.visited = true;
+         let step3Correct = true;
+         if (this.state.autoType.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoType", text: "Auto type", step: 1 });
+         }
+         if (this.state.autoModel.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoModel", text: "Vechicle make", step: 1 });
+         }
+         if (this.state.autoColor.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoColor", text: "Auto color", step: 1 });
+         }
+         if (this.state.autoNumber.error !== "") {
+           step3Correct = false;
+           state.errors.push({ name: "autoNumber", text: "Licence Plate number", step: 1 });
+         }
+
+         state.steps[2].correct = step3Correct;
+         this.setState(state);
+       }
+     }
+   }
 
     //updates any field in state. path - is path to field. example: visitors.1.sex = this.state['visitors']['1']['sex'].value
     updateField(path, value) {
         let state = this.state;
 
-        //updateState
-        //make currentStep visited
-        let visitedStepIndex;
-        if (path.indexOf("currentStep") !== -1) {
-            visitedStepIndex = this.state.currentStep;
-            console.log(visitedStepIndex);
-            state.steps[visitedStepIndex].visited = true;
-            //make fields of visited steps visited
-            this.makeFieldsVisited(visitedStepIndex);
-            this.validate();
-            if (!this.checkIsStepCorrect(visitedStepIndex)) {
-                state.steps[visitedStepIndex].correct = false;
-            } else {
-                state.steps[visitedStepIndex].correct = true;
-            }
-            this.setState(state);
-        }
+        this.validateVisitedStep(path);
 
+
+        //updateState
         _.set(state, path, value);
         this.setState(state);
-
-        if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
-            window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, (data)=> {
-                state.OptionsHotels = [];
-                data.forEach(hotel => {
-                    state.OptionsHotels.push({value:hotel.hotelName, label:hotel.hotelName})
-                })
-                let locationIndex = path.split(".")[1];
-                state.locations[locationIndex].hotel.value = {};
-                if (state.locations[locationIndex].hotel.visited)
-                    state.locations[locationIndex].hotel.error = "This field is required";
-                this.setState(state);
-            });
-
-
-
-        }
-
-        if (path.indexOf("groupSize") !== -1)
-            this.updateVisitorsArray();
-        this.validate();
-
-
-        //проверяем, заполнил ли пользователь все предыдущие поля
-        if (path.indexOf("userCompleteForm") !== -1 && value === "1"){
-            let state = this.state;
-            this.makeFieldsVisited(1);
-            this.makeFieldsVisited(2);
-            this.makeFieldsVisited(3);
-            this.makeFieldsVisited(4);
-            this.validate();
-            state['steps'][1].correct = this.checkIsStepCorrect(1);
-            state['steps'][2].correct = this.checkIsStepCorrect(2);
-            state['steps'][3].correct = this.checkIsStepCorrect(3);
-            state['steps'][4].correct = this.checkIsStepCorrect(4);
-            if (!state['steps'][1].correct || !state['steps'][2].correct || !state['steps'][3].correct){
-              alert("You have errors!");
-              state['userCompleteForm'].value = "2";
-              state['userCompleteForm'].error = "This field must be accepted."
-              this.setState(state);
-            }
-            else {
-              state['userCompleteForm'].value = value;
-              this.setState(state);
-            }
-
-        }
-
-        if (path.indexOf('countryApplyIn') !== -1 && path.indexOf('visited') === -1){
-            let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( state.countryApplyIn.value)
-            let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
-            state.countryApplyInNotesText = text;
-            state.countryApplyInFullName = country;
-            this.setState(state);
-        }
-
-
-        if (path.indexOf('groupSize') !== -1 || path.indexOf('registration') !== -1 || path.indexOf('numberOfEntries') !== -1 || path.indexOf('currency') !== -1)
-            this.priceCalculate();
-
-        if ((path.indexOf('registration') !== -1 || path.indexOf("arrivalDate") !== -1 ||  path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1){
-            //если регистрация выбрана
-            if (typeof this.state.registration.value.value !== 'undefined'){
-                //если регистрация нужна
-                if (this.state.registration.value.value !== 'NO'){
-                    //ДЛЯ ПЕРВОЙ ДАТЫ
-                    if (typeof this.state.arrivalDate1.value === 'object' && typeof this.state.departureDate1.value === 'object'){
-                        //если между датами меньше 7 дней
-                        if (daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7){
-                            //вывести alert о том, что регистрация необязательна
-                            alert('Your tourney less than 7 days, registration is not required');
-                        }
-                    //ДЛЯ ВТООРОЙ ДАТЫ
-                    if (typeof this.state.arrivalDate2.value === 'object' && typeof this.state.departureDate2.value === 'object'){
-                        //если между датами меньше 7 дней
-                        if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7){
-                            //вывести alert о том, что регистрация необязательна
-                            alert('Your tourney less than 7 days, registration is not required');
-                        }
-
-                    }
-
-                }
-
-            }
-        }
-
-    }
-
-    if (path.indexOf('city') !== -1 && path.indexOf('visited') === -1){
-        if (value.value === "Makhachkala" || value.value === "Pyatigorsk" || value.value === "Vladikavkaz" || value.value === "Magas"){
-            alert('Visa processing for Caucasus cities is 10 days');
-        }
-    }
-
-    if((path.indexOf('registration') !== -1 || path.indexOf('country') !== -1) && path.indexOf('visited') === -1){
-        let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code( this.state.countryApplyIn.value)
-        if (this.state.registration.value != "NO"){
-            if (country === "Malaysia" || country === "Singapore") {
-
-                alert(country + " can't register in Saint Petersburg");
-            }
-        }
-    }
-
-    if (path.indexOf('purpose') !== -1 && path.indexOf('visited') === -1 && value.value === "Auto Tourist"){
-        if (this.state.arrivalDate1.visited){
-            state.autoType.visited = true;
-            state.autoModel.visited = true;
-            state.autoColor.visited = true;
-            state.autoNumber.visited = true;
-            let step3Correct = true;
-            if (this.state.autoType.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoType", text: "Auto type", step: 1})
-            }
-            if (this.state.autoModel.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoModel", text: "Vechicle make", step: 1})
-            }
-            if (this.state.autoColor.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoColor", text: "Auto color", step: 1})
-            }
-            if (this.state.autoNumber.error !== ""){
-                step3Correct = false;
-                state.errors.push({name: "autoNumber", text: "Licence Plate number", step: 1})
-            }
-
-            state.steps[2].correct = step3Correct;
-            this.setState(state);
-
-        }
-    }
-
+        this.customValidation(path,value);
 
 }
 
@@ -478,12 +471,12 @@ class App extends Component {
             }
 
             for (let i = 0; i < this.state.locations.length; i++) {
-                this.state.locations[i].city.visited = true;
-                this.state.locations[i].hotel.visited = true;
+                state.locations[i].city.visited = true;
+                state.locations[i].hotel.visited = true;
             }
         }
         if (stepIndex === 4) {
-          this.state.userCompleteForm.visited = true;
+          state.userCompleteForm.visited = true;
         }
 
         this.setState(state);
@@ -791,7 +784,7 @@ class App extends Component {
         this.state.locations.forEach((item1, index1) => {
             let error = false;
             this.state.locations.forEach((item2, index2) => {
-                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value){
+                if (index1 != index2 && item1.city.value.value === item2.city.value.value && item1.hotel.value.value === item2.hotel.value.value && typeof item1.city.value !== 'string'){
                     this.updateError("locations." + index1 + ".hotel", "You have chosen this hotel somewhere");
                     error = true;
                 }
@@ -840,7 +833,7 @@ class App extends Component {
                                     value: "Female",
                                     text: "Female"
                                 }
-                            ]} name="sex" />
+                            ]} name={"visitors." + visitorIndex + ".sex"} />
                     </div>
                     <div className="col-md-6">
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".birthDate"} value={this.state.visitors[visitorIndex].birthDate.value} viewDate={new Date().setFullYear(new Date().getFullYear() - 40)} visited={this.state.visitors[visitorIndex].birthDate.visited} label="Date of birth" placeholder="" error={this.state.visitors[visitorIndex].birthDate.error}/>
@@ -853,7 +846,7 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-md-6">
-                        <Input usersCountry={this.state.usersCountry} currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
+                        <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2 Input_half" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
                     </div>
                     <div className="col-md-6">
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportNumber"} value={this.state.visitors[visitorIndex].passportNumber.value} visited={this.state.visitors[visitorIndex].passportNumber.visited} label="Passport number" placeholder="Please enter passport number" error={this.state.visitors[visitorIndex].passportNumber.error}/>
@@ -951,7 +944,7 @@ class App extends Component {
                     </div>
                 ];
             }),
-            <Button className="Button_red-border mr-auto mt-3" handleClick={() => this.addLocation()} label={"+add another location"}/>
+            <Button className="Button_red-border mr-auto mt-4" handleClick={() => this.addLocation()} label={"+add another location"}/>
         ];
     }
 
