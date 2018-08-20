@@ -4,6 +4,10 @@ import "./App.css";
 import "./Components/Select/Select.css";
 import "./../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
+
+/*************FOR GET REQUESTS*************/
+import axios from 'axios';
+
 /********* IMPORT COMPONENTS ********/
 import { Header } from "./Components/Header/Header";
 import { RadioGroup } from "./Components/RadioGroup/RadioGroup";
@@ -26,6 +30,7 @@ import mastercard from "./Components/Step/img/mastercard.png";
 import visaDebit from "./Components/Step/img/visa-debit.png";
 import visa from "./Components/Step/img/visa.png";
 import clocksImg from "./Components/Step/img/clocks.png";
+import introBgImg from "./Components/Step/img/bg-intro.png";
 
 /************FOR VALIDATION***********/
 let Validator = require("validatorjs");
@@ -38,6 +43,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = state;
+
 
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
@@ -60,7 +66,11 @@ class App extends Component {
     }
 
     componentWillMount(){
-      this.getDataFromServer()
+      this.getDataFromServer();
+      axios.get('https://ipinfo.io')
+           .then(response =>{
+               this.setState({usersCountry: response.data.country})
+           });
     }
 
 
@@ -843,7 +853,7 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-md-6">
-                        <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
+                        <Input usersCountry={this.state.usersCountry} currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
                     </div>
                     <div className="col-md-6">
                         <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportNumber"} value={this.state.visitors[visitorIndex].passportNumber.value} visited={this.state.visitors[visitorIndex].passportNumber.visited} label="Passport number" placeholder="Please enter passport number" error={this.state.visitors[visitorIndex].passportNumber.error}/>
@@ -867,7 +877,7 @@ class App extends Component {
                         ? [
                             <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="email" className="mt-4" updateField={this.updateField} fieldName="email" value={this.state.email.value} visited={this.state.email.visited} label="Email" placeholder="example@mail.com" error={this.state.email.error}/>,
 
-                            <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="phone" className="mt-4" updateField={this.updateField} fieldName="phone" value={this.state.phone.value} visited={this.state.phone.visited} label="Telephone" error={this.state.phone.error}/>
+                            <Input usersCountry={this.state.usersCountry} currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="phone" className="mt-4" updateField={this.updateField} fieldName="phone" value={this.state.phone.value} visited={this.state.phone.visited} label="Telephone" error={this.state.phone.error}/>
                         ]
                         : []
                 }
@@ -950,7 +960,7 @@ class App extends Component {
         /**************INTRO************/
         if (this.state.currentStep === 0) {
             return (
-                <div className="Step-intro pt-4 mt-5">
+                <div className="Step-intro pt-4">
                     <div className="Step Step_intro">
                         <div className="Step__need">
                             <h4 className="Step__need-title my-3">You will need to hand:</h4>
@@ -979,7 +989,7 @@ class App extends Component {
                     </div>
 
                     <div className="row py-4 px-5 my-4">
-                        <div className="d-flex col-md-6 flex-column flex-md-row col-md-7">
+                        <div className="d-flex col-md-6 flex-column flex-xl-row col-md-7">
                             <Button
                                 label="retrieve saved application"
                                 className="mr-3"
@@ -997,7 +1007,9 @@ class App extends Component {
                         </div>
                     </div>
 
-                    <div className="Step__intro-img"></div>
+                    <div className="Step__intro-img">
+                        <img src={introBgImg} alt="" />
+                    </div>
 
                 </div>
             )
@@ -1011,7 +1023,7 @@ class App extends Component {
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="numberOfEntries" value={this.state.numberOfEntries.value} visited={this.state.numberOfEntries.visited} label="Number of entries" error={this.state.numberOfEntries.error} options={this.state.OptionsNumberOfEntries}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="purpose" value={this.state.purpose.value} visited={this.state.purpose.visited} label="Purpose of visit" error={this.state.purpose.error} options={this.state.OptionsPurpose}/>
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="registration" value={this.state.registration.value} visited={this.state.registration.visited} label="Registration" error={this.state.registration.error} options={this.state.OptionsRegistration}/>
-                <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="country" updateField={this.updateField} fieldName="countryApplyIn" value={this.state.countryApplyIn.value} visited={this.state.countryApplyIn.visited} label="Country appling in" error={this.state.countryApplyIn.error}/>
+                <Input usersCountry={this.state.usersCountry} currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="country" updateField={this.updateField} fieldName="countryApplyIn" value={this.state.countryApplyIn.value} visited={this.state.countryApplyIn.visited} label="Country appling in" error={this.state.countryApplyIn.error}/>
                 {this.state.countryApplyInNotesText !== "" ? <Info text={this.state.countryApplyInNotesText} data={[this.state.countryApplyInFullName]} replaceStr="{Country}"/> : ""}
                 <Input currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="delivery" value={this.state.delivery.value} visited={this.state.delivery.visited} label="Delivery option" error={this.state.delivery.error} options={this.state.OptionsDelivery}/>
             </Step>);

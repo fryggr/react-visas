@@ -105,10 +105,13 @@
 }
 
 .Step__intro-img{
-    background: url(img/bg-intro.jpg) no-repeat;
-    width: calc(100% + 30px);
-    height: 153px;
+    overflow: hidden;
+    margin-right: -15px;
     margin-left: -15px;
+}
+
+.Step__intro-img img{
+    max-width: 100%;
 }
 
 @media (max-width: 1170px), (max-device-width: 1170px) {

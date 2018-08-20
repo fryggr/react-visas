@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+
 /*******IMPORT COMPONENTS********/
 import Select from 'react-select';
 import Datetime from 'react-datetime';
@@ -16,6 +18,7 @@ import { Hint } from './../Hint/Hint';
 export class Input extends React.Component {
     constructor(props) {
         super(props);
+
     }
 
     render() {
@@ -137,14 +140,16 @@ export class Input extends React.Component {
             );
         } else if (type === 'country') {
             return (
-                <div className={'Input Select_country ' + className}>
+                <div
+                    className={'Input Select_country ' + className}
+                    onMouseOver={() => this.props.updateCurrentHint(this.props.fieldName)}>
                     <label className="Input__label">{label}</label>
                     <ReactFlagsSelect
                         className=""
                         showSelectedLabel={true}
                         showOptionLabel={true}
                         selectedSize={14}
-                        defaultCountry={value}
+                        defaultCountry={this.props.usersCountry}
                         placeholder="Please select"
                         searchPlaceholder="please type"
                         searchable={true}
@@ -165,7 +170,7 @@ export class Input extends React.Component {
                     <ReactPhoneInput
                         preferredCountries={['gb', 'fr', 'ru', 'us']}
                         disableAreaCodes={true}
-                        defaultCountry="gb"
+                        defaultCountry={this.props.usersCountry}
                         placeholder="+1 234 567 89"
                         onFocus={() => updateCurrentHint(fieldName)}
                         value={value}
