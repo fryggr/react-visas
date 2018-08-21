@@ -54,7 +54,7 @@ export class Input extends React.Component {
             />
 
             <div className="Input__error">{visited ? error : ""}</div>
-            {currentHint === fieldName ? <Hint /> : ""}
+            {currentHint === fieldName ? <Hint hintText={this.props.hintText} /> : ""}
           </div>
         </div>
       );
@@ -94,7 +94,7 @@ export class Input extends React.Component {
               }}
               options={options}
             />
-            {currentHint === fieldName ? <Hint /> : ""}
+            {currentHint === fieldName ? <Hint hintText={this.props.hintText}/> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
           </div>
         </div>
@@ -128,7 +128,7 @@ export class Input extends React.Component {
               value={value}
               disableOnClickOutside={false}
             />
-            {currentHint === fieldName ? <Hint /> : ""}
+            {currentHint === fieldName ? <Hint hintText={this.props.hintText}/> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
           </div>
         </div>
@@ -153,7 +153,7 @@ export class Input extends React.Component {
                 updateField(fieldName + ".value", selectedOption);
               }}
             />
-            {currentHint === fieldName ? <Hint /> : ""}
+            {currentHint === fieldName ? <Hint hintText={this.props.hintText}/> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
           </div>
         </div>
@@ -177,7 +177,7 @@ export class Input extends React.Component {
                 updateField(fieldName + ".visited", true);
               }}
             />
-            {currentHint === fieldName ? <Hint /> : ""}
+            {currentHint === fieldName ? <Hint hintText={this.props.hintText}/> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
           </div>
         </div>

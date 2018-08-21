@@ -54,7 +54,7 @@ export class RadioGroup extends React.Component {
                 <div className="RadioGroup__error">
                     {this.props.visited ? this.props.error : ''}
                 </div>
-                {this.props.currentHint === this.props.fieldName ? <Hint /> : ''}
+                {this.props.currentHint === this.props.fieldName ? <Hint hintText={this.props.hintText}/> : ''}
             </div>
         );
     }
