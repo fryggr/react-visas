@@ -82,21 +82,33 @@ class App extends Component {
     }
 
     retrieveApplication() {
-        let state = this.state;
-        let localState = JSON.parse(localStorage.getItem('state'));
-        localState.currentStep = this.state.currentStep;
-        state = localState;
-        state.arrivalDate1.value = Moment(state.arrivalDate1.value).format("DD MMM YYYY");
-        state.arrivalDate2.value = Moment(state.arrivalDate2.value).format("DD MMM YYYY");
-        state.departureDate1.value = Moment(state.departureDate1.value).format("DD MMM YYYY");
-        state.departureDate2.value = Moment(state.departureDate2.value).format("DD MMM YYYY");
-        for (let i = 0; i < state.visitors.length; i++) {
-            state.visitors[i].birthDate.value = Moment(state.visitors[i].birthDate.value).format("DD MMM YYYY");
-            state.visitors[i].passportIssued.value = Moment(state.visitors[i].passportIssued.value).format("DD MMM YYYY");
-            state.visitors[i].passportExpired.value = Moment(state.visitors[i].passportExpired.value).format("DD MMM YYYY");
+        // let state = this.state;
+        // let localState = JSON.parse(localStorage.getItem('state'));
+        // localState.currentStep = this.state.currentStep;
+        // state = localState;
+        // state.arrivalDate1.value = Moment(state.arrivalDate1.value).format("DD MMM YYYY");
+        // state.arrivalDate2.value = Moment(state.arrivalDate2.value).format("DD MMM YYYY");
+        // state.departureDate1.value = Moment(state.departureDate1.value).format("DD MMM YYYY");
+        // state.departureDate2.value = Moment(state.departureDate2.value).format("DD MMM YYYY");
+        // for (let i = 0; i < state.visitors.length; i++) {
+        //     state.visitors[i].birthDate.value = Moment(state.visitors[i].birthDate.value).format("DD MMM YYYY");
+        //     state.visitors[i].passportIssued.value = Moment(state.visitors[i].passportIssued.value).format("DD MMM YYYY");
+        //     state.visitors[i].passportExpired.value = Moment(state.visitors[i].passportExpired.value).format("DD MMM YYYY");
+        // }
+        // this.setState(state);
+        // console.log(state);
+        let retrievedState = JSON.parse(localStorage['state']);
+        retrievedState.arrivalDate1.value = Moment(retrievedState.arrivalDate1.value).format("DD MMM YYYY");
+        retrievedState.arrivalDate2.value = Moment(retrievedState.arrivalDate2.value).format("DD MMM YYYY");
+        retrievedState.departureDate1.value = Moment(retrievedState.departureDate1.value).format("DD MMM YYYY");
+        retrievedState.departureDate2.value = Moment(retrievedState.departureDate2.value).format("DD MMM YYYY");
+        for (let i = 0; i < retrievedState.visitors.length; i++) {
+            retrievedState.visitors[i].birthDate.value = Moment(retrievedState.visitors[i].birthDate.value).format("DD MMM YYYY");
+            retrievedState.visitors[i].passportIssued.value = Moment(retrievedState.visitors[i].passportIssued.value).format("DD MMM YYYY");
+            retrievedState.visitors[i].passportExpired.value = Moment(retrievedState.visitors[i].passportExpired.value).format("DD MMM YYYY");
         }
-        this.setState(state);
-        console.log(state);
+        this.setState(retrievedState);
+        console.log(retrievedState);
     }
 
     saveApplication() {
@@ -253,6 +265,7 @@ class App extends Component {
     }
 
     validateVisitedStep(path){
+        let state = this.state;
       //make currentStep visited
       let visitedStepIndex;
       if (path.indexOf("currentStep") !== -1) {
@@ -286,7 +299,7 @@ class App extends Component {
          if (state.locations[locationIndex].hotel.visited) state.locations[locationIndex].hotel.error = "This field is required";
          this.setState(state);
        });
-     }
+    }
 
      if (path.indexOf("groupSize") !== -1) this.updateVisitorsArray();
 
