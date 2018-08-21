@@ -64,8 +64,8 @@ class App extends Component {
         this.updateCurrentHint = this.updateCurrentHint.bind(this);
         this.validateVisitedStep = this.validateVisitedStep.bind(this);
         this.customValidation = this.customValidation.bind(this);
-        this.updateLocalStorage = this.updateLocalStorage.bind(this);
-        this.updateLocalState = this.updateLocalState.bind(this);
+        this.saveApplication = this.saveApplication.bind(this);
+        this.retrieveApplication = this.retrieveApplication.bind(this);
     }
 
     componentWillMount(){
@@ -81,18 +81,16 @@ class App extends Component {
 
     }
 
-    updateLocalState() {
+    retrieveApplication() {
         let state = this.state;
         let localState = JSON.parse(localStorage.getItem('state'));
         state = localState;
         this.setState(state);
-
     }
 
-    updateLocalStorage() {
+    saveApplication() {
         let state = JSON.stringify(this.state);
         localStorage.setItem('state', state);
-
     }
 
 
@@ -1014,7 +1012,7 @@ class App extends Component {
                                 label="retrieve saved application"
                                 className="mr-3"
                                 text="LOAD a previously saved existing application."
-                                handleClick={() => this.updateLocalState()}
+                                handleClick={() => this.retrieveApplication()}
                             />
                             <Button
                                 handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
@@ -1198,7 +1196,15 @@ class App extends Component {
 
               <div className="App__container container">
 
-                <Sticky type="priceSticky" links={this.state.errors} currentStep={this.state.currentStep} currency={this.state.currency} price={this.state.totalPrice}/>
+                <Sticky
+                    type="priceSticky"
+                    links={this.state.errors}
+                    currentStep={this.state.currentStep}
+                    currency={this.state.currency}
+                    price={this.state.totalPrice}
+                    retrieveApp={() => this.retrieveApplication()}
+                    saveApp={() => this.saveApplication()}
+                />
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
                       <div className="row py-3" hidden={this.state.currentStep === 0}>
@@ -1207,12 +1213,12 @@ class App extends Component {
                                   label="retrieve saved application"
                                   className="mr-3"
                                   text="CONTINUE a saved existing application"
-                                  handleClick={() => this.updateLocalState()}
+                                  handleClick={() => this.retrieveApplication()}
                               />
                               <Button
                                   label="save progress"
                                   text="SAVE your current progress"
-                                  handleClick={() => this.updateLocalStorage()}
+                                  handleClick={() => this.saveApplication()}
                               />
                           </div>
                           <div className="ml-auto col-md-4">
@@ -1228,7 +1234,7 @@ class App extends Component {
                           maxWidth: "710px"
                       }}>
                       <div className="col-sm-6" hidden={this.state.currentStep === 0}>
-                          <Button className="align-self-md-start align-self-center" label="Save progress" handleClick={() => this.updateLocalStorage()}/>
+                          <Button className="align-self-md-start align-self-center" label="Save progress" handleClick={() => this.saveApplication()}/>
                       </div>
 
                       <div className={
