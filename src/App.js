@@ -212,7 +212,12 @@ class App extends Component {
                 //должна быть позже сегодня
                 return current.isBefore(today);
             };
-        } else if (datePickerName === "passportExpired") {
+        } else if (datePickerName === "userExpiryDate") {
+            return function(current) {
+                return current.isAfter(today);
+            }
+        }
+        else if (datePickerName === "passportExpired") {
             return function(current) {
                 //дожна быть через 6 месяцев после сегодня
                 //должна быть после даты первого вьезда + 6 месяцев
@@ -1165,7 +1170,7 @@ class App extends Component {
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" error={this.state.userHouseNumber.error}/>
+                            <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" error={this.state.userHouseNumber.error}/>
                         </div>
                         <div className="col-md-6">
                             <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" error={this.state.userPostcode.error}/>
@@ -1177,7 +1182,7 @@ class App extends Component {
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" error={this.state.userExpiryDate.error}/>
+                            <Input hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("userExpiryDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" error={this.state.userExpiryDate.error}/>
                         </div>
                         <div className="col-md-6">
                             <Input hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV"  error={this.state.userCCV.error}/>
