@@ -112,7 +112,7 @@ export class Input extends React.Component {
           <div className={"Input " + className}>
             <label className="Input__label">{label}</label>
             <Datetime
-              inputProps={{ disabled: disabled }}
+              inputProps={{ disabled: disabled, readonly: "readonly" }}
               isValidDate={dateValidator}
               open={currentHint === fieldName}
               onFocus={() => updateCurrentHint(fieldName)}

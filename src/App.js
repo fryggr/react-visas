@@ -656,13 +656,7 @@ class App extends Component {
 
         }
 
-        if (stepIndex === 4){
-          state.errors = state.errors.filter(item => item.step !== 3);
-            if (this.state.userCompleteForm.error !== ""){
-              correct = false;
-              state.errors.push({name: "userCompleteForm", text: "Please complete form", step: 4})
-            }
-        }
+
         //remove duplicates
         state.errors = _.uniqBy(state.errors, 'name')
         this.setState(state);

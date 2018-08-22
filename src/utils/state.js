@@ -160,7 +160,6 @@ export default {
     /*************USER'S INPUT STEP 4************/
     userCompleteForm: {
         value: '',
-        error: '',
         visited: false
     },
     userFirstName: {
