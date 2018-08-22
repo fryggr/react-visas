@@ -17,6 +17,12 @@ import { Hint } from "./../Hint/Hint";
 export class Input extends React.Component {
   constructor(props) {
     super(props);
+
+  }
+
+  componentWillUpdate(){
+      if (typeof this.refs.country !== 'undefined')
+        this.refs.country.updateSelected(this.props.value)
   }
 
   render() {
@@ -134,12 +140,14 @@ export class Input extends React.Component {
         </div>
       );
     } else if (type === "country") {
+
       return (
         <div className="Input-wrapper">
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input Select_country " + className} onClick={() => updateCurrentHint(fieldName)}>
             <label className="Input__label">{label}</label>
             <ReactFlagsSelect
+              ref="country"
               className=""
               showSelectedLabel={true}
               showOptionLabel={true}
