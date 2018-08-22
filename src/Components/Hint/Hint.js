@@ -44,7 +44,7 @@ export class Hint extends React.Component{
                             <a href="tel:+44(0)2071007370">+44 (0)207 100 7370</a>
                         </div>
                     </div>
-                    <div className="hint__action" onClick={() => window.open('//my.realrussia.co.uk/visitor/index.php?/Default/LiveChat/Chat/Request/_sessionID=/_promptType=chat/_proactive=0/_filterDepartmentID=/_randomNumber=oswadpz4w8cpipze0dq39pzniqcyepzu/_fullName=/_email=/', 'livechatwin', 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,resizable=1,width=600,height=690')}>
+                    <div className="hint__action" >
                         <div className="hint__action-icon">
                             <img src={headset} />
                         </div>
@@ -52,7 +52,7 @@ export class Hint extends React.Component{
                             Click to Call
                         </div>
                     </div>
-                    <div className="hint__action">
+                    <div className="hint__action" onClick={() => window.open('//my.realrussia.co.uk/visitor/index.php?/Default/LiveChat/Chat/Request/_sessionID=/_promptType=chat/_proactive=0/_filterDepartmentID=/_randomNumber=oswadpz4w8cpipze0dq39pzniqcyepzu/_fullName=/_email=/', 'livechatwin', 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,resizable=1,width=600,height=690')}>
                         <div className="hint__action-icon">
                             <img src={support} />
                         </div>
