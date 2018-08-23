@@ -48,7 +48,7 @@ export default {
 
     /*************USER'S INPUT STEP 1************/
     groupSize: {
-        value: '',
+        value: '1',
         error: '',
         visited: false
     },
@@ -208,25 +208,46 @@ export default {
 
     /*******DATA FROM SERVER**********/
     OptionsGroupSize: [
-
+        {
+            value: '1',
+            label: '1'
+        }
     ],
     OptionsNumberOfEntries: [
-
+        {
+            value: '',
+            label: ''
+        }
     ],
     OptionsPurpose: [
-
+        {
+            value: '',
+            label: ''
+        }
     ],
     OptionsRegistration: [
-
+        {
+            value: '',
+            label: ''
+        }
     ],
     OptionsDelivery: [
-
+        {
+            value: '',
+            label: ''
+        }
     ],
     OptionsCities: [
-
+        {
+            value: '',
+            label: ''
+        }
     ],
     OptionsHotels: [
-
+        {
+            value: '',
+            label: ''
+        }
     ],
     OptionsAutoModels: [
         {

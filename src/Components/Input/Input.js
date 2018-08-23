@@ -8,10 +8,13 @@ import Datetime from "react-datetime";
 import ReactFlagsSelect from "react-flags-select";
 import "react-phone-number-input/style.css";
 import ReactPhoneInput from "react-phone-input-2";
+import IntlTelInput from 'react-intl-tel-input';
 /*******IMPORT STYLES********/
 import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";
 import "./../Datepicker/Datepicker.css";
+import '../../../node_modules/react-intl-tel-input/dist/main.css';
+import '../../../node_modules/react-intl-tel-input/dist/libphonenumber.js';
 import { Hint } from "./../Hint/Hint";
 
 export class Input extends React.Component {
@@ -169,11 +172,31 @@ export class Input extends React.Component {
     } else if (type === "phone") {
         console.log("PHONE COUNTRY = ", this.props.usersCountry);
       return (
-        <div className="Input-wrapper">
+        <div className="Input-wrapper" onFocus={() => updateCurrentHint(fieldName)}>
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input Select_country " + className}>
             <label className="Input__label">{label}</label>
-            <ReactPhoneInput
+            {
+            <IntlTelInput
+                defaultCountry={typeof this.props.usersCountry === 'undefined' ? 'gb' : this.props.usersCountry.toLowerCase()}
+                preferredCountries={["gb", "fr", "ru", "us"]}
+                css={ ['intl-tel-input', 'form-control'] }
+                utilsScript={ 'libphonenumber.js' }
+                autoComplete={'on'}
+                format={true}
+                onPhoneNumberFocus={() => updateCurrentHint(fieldName)}
+                onPhoneNumberChange={(status, value, countryData, number, id) => {
+                    updateField(fieldName + ".value", number)
+                  }}
+                onPhoneNumberBlur={e => {
+                  updateField(fieldName + ".visited", true);
+                }}
+                defaultValue={value}
+              />
+              }
+
+            {
+            /*<ReactPhoneInput
               defaultCountry={typeof this.props.usersCountry === 'undefined' ? 'gb' : this.props.usersCountry.toLowerCase()}
               preferredCountries={["gb", "fr", "ru", "us"]}
               disableAreaCodes={true}
@@ -184,7 +207,8 @@ export class Input extends React.Component {
               onBlur={e => {
                 updateField(fieldName + ".visited", true);
               }}
-            />
+            />*/
+            }
             {currentHint === fieldName ? <Hint hintText={this.props.hintText}/> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
           </div>
