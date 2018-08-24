@@ -19,7 +19,7 @@ export class RadioGroup extends React.Component {
         let className = typeof this.props.className !== 'undefined' ? this.props.className : '';
         return (
             <div
-                onMouseOver={() => this.props.updateCurrentHint(this.props.fieldName)}
+                onMouseOver={(e) => this.props.updateCurrentHint(e,this.props.fieldName)}
                 className={'RadioGroup ' + className}>
                 <div
                     className="RadioGroup__title"

@@ -50,7 +50,7 @@ export class Input extends React.Component {
             <label className="Input__label">{label}</label>
             <input
               disabled={disabled}
-              onFocus={() => updateCurrentHint(fieldName)}
+              onFocus={(e) => updateCurrentHint(e,fieldName)}
               onBlur={e => {
                 updateField(fieldName + ".visited", true);
                 updateField(fieldName + ".value", e.target.value);
@@ -97,7 +97,7 @@ export class Input extends React.Component {
                 updateField(fieldName + ".visited", true);
                 updateField(fieldName + ".value", selectedOption);
               }}
-              onFocus={() => updateCurrentHint(fieldName)}
+              onFocus={(e) => updateCurrentHint(e,fieldName)}
               onBlur={e => {
                 updateField(fieldName + ".visited", true);
               }}
@@ -118,14 +118,14 @@ export class Input extends React.Component {
               inputProps={{ disabled: disabled, readonly: "readonly" }}
               isValidDate={dateValidator}
               open={currentHint === fieldName}
-              onFocus={() => updateCurrentHint(fieldName)}
-              onChange={date => {
+              onFocus={(e) => updateCurrentHint(e,fieldName)}
+              onChange={(e,date) => {
                 updateField(fieldName + ".value", date);
-                updateCurrentHint("");
+                updateCurrentHint(e,"");
               }}
-              onBlur={() => {
+              onBlur={(e) => {
                 updateField(fieldName + ".visited", true);
-                updateCurrentHint("");
+                updateCurrentHint(e,"");
               }}
               viewDate={viewDate}
               input={true}
@@ -147,7 +147,7 @@ export class Input extends React.Component {
       return (
         <div className="Input-wrapper">
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
-          <div className={"Input Select_country " + className} onClick={() => updateCurrentHint(fieldName)}>
+          <div className={"Input Select_country " + className} onClick={(e) => updateCurrentHint(e,fieldName)}>
             <label className="Input__label">{label}</label>
             <ReactFlagsSelect
               ref="country"
@@ -172,7 +172,7 @@ export class Input extends React.Component {
     } else if (type === "phone") {
         console.log("PHONE COUNTRY = ", this.props.usersCountry);
       return (
-        <div className="Input-wrapper" onFocus={() => updateCurrentHint(fieldName)}>
+        <div className="Input-wrapper" onFocus={(e) => updateCurrentHint(e,fieldName)}>
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
           <div className={"Input Select_country " + className}>
             <label className="Input__label">{label}</label>
@@ -184,7 +184,7 @@ export class Input extends React.Component {
                 utilsScript={ 'libphonenumber.js' }
                 autoComplete={'on'}
                 format={true}
-                onPhoneNumberFocus={() => updateCurrentHint(fieldName)}
+                onPhoneNumberFocus={(e) => updateCurrentHint(e,fieldName)}
                 onPhoneNumberChange={(status, value, countryData, number, id) => {
                     updateField(fieldName + ".value", number)
                   }}
