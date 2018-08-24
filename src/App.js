@@ -43,6 +43,12 @@ class App extends Component {
         super(props);
         this.state = state;
 
+        document.body.onclick = (e) => {
+            if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
+                this.updateCurrentHint("");
+            }
+        }
+
 
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
@@ -109,66 +115,66 @@ class App extends Component {
     }
 
     getDataFromServer(){
-        let state = this.state;
-
-        var groupSize = document.querySelectorAll('.input-group-size option');
-        var visitPurpose = document.querySelectorAll('.input-purpose option');
-        var entriesNumber = document.querySelectorAll('.input-entries option');
-        var registration = document.querySelectorAll('.input-registration option');
-        var optionsDelivery = document.querySelectorAll('.input-delivery option');
-        var optionsCities = document.querySelectorAll('datalist#browsers option');
-        var autoModel = document.querySelectorAll('.input-vehicle-make option');
-        var autoColor = document.querySelectorAll('.input-vehicle-color option');
-        var currencyRates = document.querySelectorAll('[name="currency"] option');
-
-
-        var newGroup = [],
-            newVisitPurpose = [],
-            newEntriesNumber = [],
-            newRegistration = [],
-            newOptionsDelivery = [],
-            newOptionsCities = [],
-            newAutoModel = [],
-            newAutoColor= [],
-            newCurrencyRates = [];
-
-        getData(groupSize, newGroup);
-        getData(visitPurpose, newVisitPurpose);
-        getData(entriesNumber, newEntriesNumber);
-        getDataInsideTag(registration, newRegistration);
-        getDataInsideTag(optionsDelivery, newOptionsDelivery);
-        getData(optionsCities, newOptionsCities);
-        getData(autoModel, newAutoModel);
-        getData(autoColor, newAutoColor);
-        getData(autoColor, newAutoColor);
-        getData(currencyRates, newCurrencyRates);
-        state.OptionsGroupSize = newGroup.slice();
-        state.OptionsPurpose = newVisitPurpose.slice();
-        state.OptionsNumberOfEntries = newEntriesNumber.slice();
-        state.OptionsRegistration = newRegistration.slice();
-        state.OptionsDelivery = newOptionsDelivery.slice();
-        state.OptionsCities = newOptionsCities.slice();
-        state.OptionsAutoModels = newAutoModel.slice();
-        state.OptionsAutoColors = newAutoColor.slice();
-        state.OptionsCurrenciesRate = newCurrencyRates.slice();
-
-        function getData(obj, array) {
-          obj.forEach(function (domItem) {
-            var newObj = {};
-            newObj.value = domItem.value;
-            newObj.label = domItem.innerHTML;
-            array.push(newObj);
-          });
-        }
-
-        function getDataInsideTag(obj, array) {
-          obj.forEach(function (domItem) {
-            var newObj = {};
-            newObj.value = domItem.value;
-            newObj.label = domItem.innerHTML;
-            array.push(newObj);
-          });
-        }
+        // let state = this.state;
+        //
+        // var groupSize = document.querySelectorAll('.input-group-size option');
+        // var visitPurpose = document.querySelectorAll('.input-purpose option');
+        // var entriesNumber = document.querySelectorAll('.input-entries option');
+        // var registration = document.querySelectorAll('.input-registration option');
+        // var optionsDelivery = document.querySelectorAll('.input-delivery option');
+        // var optionsCities = document.querySelectorAll('datalist#browsers option');
+        // var autoModel = document.querySelectorAll('.input-vehicle-make option');
+        // var autoColor = document.querySelectorAll('.input-vehicle-color option');
+        // var currencyRates = document.querySelectorAll('[name="currency"] option');
+        //
+        //
+        // var newGroup = [],
+        //     newVisitPurpose = [],
+        //     newEntriesNumber = [],
+        //     newRegistration = [],
+        //     newOptionsDelivery = [],
+        //     newOptionsCities = [],
+        //     newAutoModel = [],
+        //     newAutoColor= [],
+        //     newCurrencyRates = [];
+        //
+        // getData(groupSize, newGroup);
+        // getData(visitPurpose, newVisitPurpose);
+        // getData(entriesNumber, newEntriesNumber);
+        // getDataInsideTag(registration, newRegistration);
+        // getDataInsideTag(optionsDelivery, newOptionsDelivery);
+        // getData(optionsCities, newOptionsCities);
+        // getData(autoModel, newAutoModel);
+        // getData(autoColor, newAutoColor);
+        // getData(autoColor, newAutoColor);
+        // getData(currencyRates, newCurrencyRates);
+        // state.OptionsGroupSize = newGroup.slice();
+        // state.OptionsPurpose = newVisitPurpose.slice();
+        // state.OptionsNumberOfEntries = newEntriesNumber.slice();
+        // state.OptionsRegistration = newRegistration.slice();
+        // state.OptionsDelivery = newOptionsDelivery.slice();
+        // state.OptionsCities = newOptionsCities.slice();
+        // state.OptionsAutoModels = newAutoModel.slice();
+        // state.OptionsAutoColors = newAutoColor.slice();
+        // state.OptionsCurrenciesRate = newCurrencyRates.slice();
+        //
+        // function getData(obj, array) {
+        //   obj.forEach(function (domItem) {
+        //     var newObj = {};
+        //     newObj.value = domItem.value;
+        //     newObj.label = domItem.innerHTML;
+        //     array.push(newObj);
+        //   });
+        // }
+        //
+        // function getDataInsideTag(obj, array) {
+        //   obj.forEach(function (domItem) {
+        //     var newObj = {};
+        //     newObj.value = domItem.value;
+        //     newObj.label = domItem.innerHTML;
+        //     array.push(newObj);
+        //   });
+        // }
     }
 
 
@@ -417,50 +423,50 @@ class App extends Component {
 }
 
     priceCalculate(){
-
-        window.Visas.Russian.EntryTypeId.parseFrom = function(val) {
-            val = val.toLowerCase();
-            if (val.indexOf("single") >= 0) {
-                return window.Visas.Russian.EntryTypeId.Single;
-            }
-
-            if (val.indexOf("double") >= 0) {
-                return window.Visas.Russian.EntryTypeId.Double;
-            }
-            // throw new Error();
-        };
-
-        window.Visas.Russian.RegistrationTypeId.parseFrom = function(val) {
-            switch (val) {
-                case "NO":
-                    return null;
-                case "YES":
-                    return window.Visas.Russian.RegistrationTypeId.RegistrationInMoscow;
-                case "YES_Piter":
-                    return window.Visas.Russian.RegistrationTypeId.RegistrationInStPetersburg;
-                // default:
-                    // throw new Error();
-            }
-        };
-
-        let state = this.state;
-        //PRICE CALCULATING
-
-        let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
-        let defaultRegistration = state.registration.value.value || "NO";
-        let defaultGroupSize = state.groupSize.value.value || 1;
-
-        window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(defaultNumberOfEntries), window.Visas.Russian.RegistrationTypeId.parseFrom(defaultRegistration), defaultGroupSize, (data) => {
-            state.priceInPounds = parseFloat(data.Total.toFixed(2));
-            state.OptionsCurrenciesRate.forEach(item => {
-                if (item.label === state.currency.label){
-                    state.totalPrice = parseFloat(item.value * state.priceInPounds)
-                    this.setState(state);
-                }
-
-            })
-
-        });
+        //
+        // window.Visas.Russian.EntryTypeId.parseFrom = function(val) {
+        //     val = val.toLowerCase();
+        //     if (val.indexOf("single") >= 0) {
+        //         return window.Visas.Russian.EntryTypeId.Single;
+        //     }
+        //
+        //     if (val.indexOf("double") >= 0) {
+        //         return window.Visas.Russian.EntryTypeId.Double;
+        //     }
+        //     // throw new Error();
+        // };
+        //
+        // window.Visas.Russian.RegistrationTypeId.parseFrom = function(val) {
+        //     switch (val) {
+        //         case "NO":
+        //             return null;
+        //         case "YES":
+        //             return window.Visas.Russian.RegistrationTypeId.RegistrationInMoscow;
+        //         case "YES_Piter":
+        //             return window.Visas.Russian.RegistrationTypeId.RegistrationInStPetersburg;
+        //         // default:
+        //             // throw new Error();
+        //     }
+        // };
+        //
+        // let state = this.state;
+        // //PRICE CALCULATING
+        //
+        // let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
+        // let defaultRegistration = state.registration.value.value || "NO";
+        // let defaultGroupSize = state.groupSize.value.value || 1;
+        //
+        // window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(defaultNumberOfEntries), window.Visas.Russian.RegistrationTypeId.parseFrom(defaultRegistration), defaultGroupSize, (data) => {
+        //     state.priceInPounds = parseFloat(data.Total.toFixed(2));
+        //     state.OptionsCurrenciesRate.forEach(item => {
+        //         if (item.label === state.currency.label){
+        //             state.totalPrice = parseFloat(item.value * state.priceInPounds)
+        //             this.setState(state);
+        //         }
+        //
+        //     })
+        //
+        // });
 
     }
 
