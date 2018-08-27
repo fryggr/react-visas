@@ -47,6 +47,7 @@ class App extends Component {
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
+            this.sendFormData();
         }
 
 
@@ -72,6 +73,7 @@ class App extends Component {
         this.customValidation = this.customValidation.bind(this);
         this.saveApplication = this.saveApplication.bind(this);
         this.retrieveApplication = this.retrieveApplication.bind(this);
+        this.sendFormData = this.sendFormData.bind(this);
     }
 
     componentWillMount(){
@@ -85,6 +87,90 @@ class App extends Component {
            });
 
 
+    }
+
+    sendFormData(){
+        let formData = {};
+        console.log(this.state);
+        for (let prop in this.state) {
+            if(prop !== 'currentHint' && prop !== 'currentStep' && prop !== 'priceInPounds' && prop !== 'currencies' && prop !== 'steps' && prop !== 'errors' && prop !== 'OptionsGroupSize' && prop !== 'OptionsNumberOfEntries' && prop !== 'OptionsPurpose' && prop !== 'OptionsRegistration' && prop !== 'OptionsDelivery' && prop !== 'OptionsCities' && prop !== 'OptionsHotels' && prop !== 'OptionsAutoModels' && prop !== 'OptionsAutoColors' && prop !== 'OptionsCardType' && prop !== 'countryApplyInNotesText' && prop !== 'countryApplyInFullName' && prop !== 'OptionsCurrenciesRate'){
+                if(prop === 'visitors'){
+                    for (let i = 0; i < this.state.visitors.length; i++) {
+                        // formData['birthDate' + (i + 1)] = this.state.visitors[i].birthDate.value
+                        formData['dobYear' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('YYYY')
+                        formData['dobMonth' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('MMMM')
+                        formData['dobDay' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('DD')
+                        formData['passportCitzenship' + (i + 1)] = this.state.visitors[i].citizenship.value
+                        formData['firstName' + (i + 1)] = this.state.visitors[i].firstName.value
+                        formData['middleName' + (i + 1)] = this.state.visitors[i].middleName.value
+                        // formData['passportExpired' + (i + 1)] = this.state.visitors[i].passportExpired.value
+                        formData['passportYearExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('YYYY')
+                        formData['passportMonthExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('MMMM')
+                        formData['passportDayExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('DD')
+                        // formData['passportIssued' + (i + 1)] = this.state.visitors[i].passportIssued.value
+                        formData['passportYearIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('YYYY')
+                        formData['passportMonthIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('MMMM')
+                        formData['passportDayIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('DD')
+                        formData['passportNumber' + (i + 1)] = this.state.visitors[i].passportNumber.value
+                        formData['gender_' + (i + 1)] = this.state.visitors[i].sex.value
+                        formData['surName' + (i + 1)] = this.state.visitors[i].surName.value
+                    }
+                }
+                else
+                    if(prop === 'locations'){
+                        for (let i = 0; i < this.state.locations.length; i++) {
+                            formData['visitHotel' + (i + 1)] = this.state.locations[i].hotel.value.value
+                            formData['visitCity' + (i + 1)] = this.state.locations[i].city.value.value
+                        }
+                    }
+                    else
+                        if(prop === 'autoColor' ||
+                        prop === 'autoModel' ||
+                        prop === 'delivery' ||
+                        prop === 'groupSize' ||
+                        prop === 'numberOfEntries' ||
+                        prop === 'purpose' ||
+                        prop === 'registration'){
+                            formData.vehicleColor = this.state.autoColor.value.value
+                            formData.vehicleMake = this.state.autoModel.value.value
+                            formData.deliveryOption = this.state.delivery.value.value
+                            formData.groupNum = this.state.groupSize.value.value
+                            formData.visaType = this.state.numberOfEntries.value.value
+                            formData.purposeOfVisit = this.state.purpose.value.value
+                            formData.regService = this.state.registration.value.value
+                        }
+                        else
+                            if(prop === 'totalPrice' || prop === 'usersCountry') {
+                                formData.consulateCountry = this.state.usersCountry
+                                formData.totalPrice = this.state.totalPrice
+                            }
+                            else
+                                if(prop === 'autoNumber') {
+                                    formData.vehiclePlateNumber = this.state.autoNumber.value
+                                }
+                                else
+                                    if(prop === 'departureDate1' || prop === 'arrivalDate1' || prop === 'departureDate2' || prop === 'arrivalDate2'){
+                                        formData.arrivalDate1 = Moment(this.state.arrivalDate1.value).format('YYYY')
+                                        formData.departureDate1 = Moment(this.state.departureDate1.value).format('YYYY')
+                                    }
+                                    else formData[prop] = this.state[prop].value
+            }
+
+
+        }
+        console.log(formData);
+        // axios({
+        //     method: 'post',
+        //     url: 'https://ipinfo.io/',
+        //     data: formData,
+        //     config: { headers: {'Content-Type': 'multipart/form-data' }}
+        // })
+        // .then(function(response){
+        //     console.log(response);
+        // })
+        // .catch(function(response){
+        //     console.log(response);
+        // })
     }
 
     retrieveApplication() {
@@ -115,66 +201,66 @@ class App extends Component {
     }
 
     getDataFromServer(){
-        // let state = this.state;
-        //
-        // var groupSize = document.querySelectorAll('.input-group-size option');
-        // var visitPurpose = document.querySelectorAll('.input-purpose option');
-        // var entriesNumber = document.querySelectorAll('.input-entries option');
-        // var registration = document.querySelectorAll('.input-registration option');
-        // var optionsDelivery = document.querySelectorAll('.input-delivery option');
-        // var optionsCities = document.querySelectorAll('datalist#browsers option');
-        // var autoModel = document.querySelectorAll('.input-vehicle-make option');
-        // var autoColor = document.querySelectorAll('.input-vehicle-color option');
-        // var currencyRates = document.querySelectorAll('[name="currency"] option');
-        //
-        //
-        // var newGroup = [],
-        //     newVisitPurpose = [],
-        //     newEntriesNumber = [],
-        //     newRegistration = [],
-        //     newOptionsDelivery = [],
-        //     newOptionsCities = [],
-        //     newAutoModel = [],
-        //     newAutoColor= [],
-        //     newCurrencyRates = [];
-        //
-        // getData(groupSize, newGroup);
-        // getData(visitPurpose, newVisitPurpose);
-        // getData(entriesNumber, newEntriesNumber);
-        // getDataInsideTag(registration, newRegistration);
-        // getDataInsideTag(optionsDelivery, newOptionsDelivery);
-        // getData(optionsCities, newOptionsCities);
-        // getData(autoModel, newAutoModel);
-        // getData(autoColor, newAutoColor);
-        // getData(autoColor, newAutoColor);
-        // getData(currencyRates, newCurrencyRates);
-        // state.OptionsGroupSize = newGroup.slice();
-        // state.OptionsPurpose = newVisitPurpose.slice();
-        // state.OptionsNumberOfEntries = newEntriesNumber.slice();
-        // state.OptionsRegistration = newRegistration.slice();
-        // state.OptionsDelivery = newOptionsDelivery.slice();
-        // state.OptionsCities = newOptionsCities.slice();
-        // state.OptionsAutoModels = newAutoModel.slice();
-        // state.OptionsAutoColors = newAutoColor.slice();
-        // state.OptionsCurrenciesRate = newCurrencyRates.slice();
-        //
-        // function getData(obj, array) {
-        //   obj.forEach(function (domItem) {
-        //     var newObj = {};
-        //     newObj.value = domItem.value;
-        //     newObj.label = domItem.innerHTML;
-        //     array.push(newObj);
-        //   });
-        // }
-        //
-        // function getDataInsideTag(obj, array) {
-        //   obj.forEach(function (domItem) {
-        //     var newObj = {};
-        //     newObj.value = domItem.value;
-        //     newObj.label = domItem.innerHTML;
-        //     array.push(newObj);
-        //   });
-        // }
+        let state = this.state;
+
+        var groupSize = document.querySelectorAll('.input-group-size option');
+        var visitPurpose = document.querySelectorAll('.input-purpose option');
+        var entriesNumber = document.querySelectorAll('.input-entries option');
+        var registration = document.querySelectorAll('.input-registration option');
+        var optionsDelivery = document.querySelectorAll('.input-delivery option');
+        var optionsCities = document.querySelectorAll('datalist#browsers option');
+        var autoModel = document.querySelectorAll('.input-vehicle-make option');
+        var autoColor = document.querySelectorAll('.input-vehicle-color option');
+        var currencyRates = document.querySelectorAll('[name="currency"] option');
+
+
+        var newGroup = [],
+            newVisitPurpose = [],
+            newEntriesNumber = [],
+            newRegistration = [],
+            newOptionsDelivery = [],
+            newOptionsCities = [],
+            newAutoModel = [],
+            newAutoColor= [],
+            newCurrencyRates = [];
+
+        getData(groupSize, newGroup);
+        getData(visitPurpose, newVisitPurpose);
+        getData(entriesNumber, newEntriesNumber);
+        getDataInsideTag(registration, newRegistration);
+        getDataInsideTag(optionsDelivery, newOptionsDelivery);
+        getData(optionsCities, newOptionsCities);
+        getData(autoModel, newAutoModel);
+        getData(autoColor, newAutoColor);
+        getData(autoColor, newAutoColor);
+        getData(currencyRates, newCurrencyRates);
+        state.OptionsGroupSize = newGroup.slice();
+        state.OptionsPurpose = newVisitPurpose.slice();
+        state.OptionsNumberOfEntries = newEntriesNumber.slice();
+        state.OptionsRegistration = newRegistration.slice();
+        state.OptionsDelivery = newOptionsDelivery.slice();
+        state.OptionsCities = newOptionsCities.slice();
+        state.OptionsAutoModels = newAutoModel.slice();
+        state.OptionsAutoColors = newAutoColor.slice();
+        state.OptionsCurrenciesRate = newCurrencyRates.slice();
+
+        function getData(obj, array) {
+          obj.forEach(function (domItem) {
+            var newObj = {};
+            newObj.value = domItem.value;
+            newObj.label = domItem.innerHTML;
+            array.push(newObj);
+          });
+        }
+
+        function getDataInsideTag(obj, array) {
+          obj.forEach(function (domItem) {
+            var newObj = {};
+            newObj.value = domItem.value;
+            newObj.label = domItem.innerHTML;
+            array.push(newObj);
+          });
+        }
     }
 
 
@@ -423,50 +509,50 @@ class App extends Component {
 }
 
     priceCalculate(){
-        //
-        // window.Visas.Russian.EntryTypeId.parseFrom = function(val) {
-        //     val = val.toLowerCase();
-        //     if (val.indexOf("single") >= 0) {
-        //         return window.Visas.Russian.EntryTypeId.Single;
-        //     }
-        //
-        //     if (val.indexOf("double") >= 0) {
-        //         return window.Visas.Russian.EntryTypeId.Double;
-        //     }
-        //     // throw new Error();
-        // };
-        //
-        // window.Visas.Russian.RegistrationTypeId.parseFrom = function(val) {
-        //     switch (val) {
-        //         case "NO":
-        //             return null;
-        //         case "YES":
-        //             return window.Visas.Russian.RegistrationTypeId.RegistrationInMoscow;
-        //         case "YES_Piter":
-        //             return window.Visas.Russian.RegistrationTypeId.RegistrationInStPetersburg;
-        //         // default:
-        //             // throw new Error();
-        //     }
-        // };
-        //
-        // let state = this.state;
-        // //PRICE CALCULATING
-        //
-        // let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
-        // let defaultRegistration = state.registration.value.value || "NO";
-        // let defaultGroupSize = state.groupSize.value.value || 1;
-        //
-        // window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(defaultNumberOfEntries), window.Visas.Russian.RegistrationTypeId.parseFrom(defaultRegistration), defaultGroupSize, (data) => {
-        //     state.priceInPounds = parseFloat(data.Total.toFixed(2));
-        //     state.OptionsCurrenciesRate.forEach(item => {
-        //         if (item.label === state.currency.label){
-        //             state.totalPrice = parseFloat(item.value * state.priceInPounds)
-        //             this.setState(state);
-        //         }
-        //
-        //     })
-        //
-        // });
+
+        window.Visas.Russian.EntryTypeId.parseFrom = function(val) {
+            val = val.toLowerCase();
+            if (val.indexOf("single") >= 0) {
+                return window.Visas.Russian.EntryTypeId.Single;
+            }
+
+            if (val.indexOf("double") >= 0) {
+                return window.Visas.Russian.EntryTypeId.Double;
+            }
+            // throw new Error();
+        };
+
+        window.Visas.Russian.RegistrationTypeId.parseFrom = function(val) {
+            switch (val) {
+                case "NO":
+                    return null;
+                case "YES":
+                    return window.Visas.Russian.RegistrationTypeId.RegistrationInMoscow;
+                case "YES_Piter":
+                    return window.Visas.Russian.RegistrationTypeId.RegistrationInStPetersburg;
+                // default:
+                    // throw new Error();
+            }
+        };
+
+        let state = this.state;
+        //PRICE CALCULATING
+
+        let defaultNumberOfEntries = state.numberOfEntries.value.value || 'Single Entry Visa';
+        let defaultRegistration = state.registration.value.value || "NO";
+        let defaultGroupSize = state.groupSize.value.value || 1;
+
+        window.Visas.Russian.Prices.CurrentPriceServiceProxy.GetTouristVSDOrderPrice(window.Visas.Russian.EntryTypeId.parseFrom(defaultNumberOfEntries), window.Visas.Russian.RegistrationTypeId.parseFrom(defaultRegistration), defaultGroupSize, (data) => {
+            state.priceInPounds = parseFloat(data.Total.toFixed(2));
+            state.OptionsCurrenciesRate.forEach(item => {
+                if (item.label === state.currency.label){
+                    state.totalPrice = parseFloat(item.value * state.priceInPounds)
+                    this.setState(state);
+                }
+
+            })
+
+        });
 
     }
 
@@ -1194,7 +1280,7 @@ class App extends Component {
     render() {
 
         return (
-            <div className="App text-center text-md-left mb-5">
+            <div className="App text-center text-md-left mb-5" onClick={() => this.sendFormData}>
 
 
                 <Header
@@ -1280,6 +1366,7 @@ class App extends Component {
                                   (this.state.userCompleteForm.value !== "1" ? "disabled" : "")
                               }
                               label="Make payment"
+                              handleClick={() => this.sendFormData}
                           />
                       </div>
 
