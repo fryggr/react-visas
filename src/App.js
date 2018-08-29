@@ -47,7 +47,6 @@ class App extends Component {
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
-            this.sendFormData();
         }
 
 
@@ -91,7 +90,6 @@ class App extends Component {
 
     sendFormData(){
         let formData = {};
-        console.log(this.state);
         for (let prop in this.state) {
             if(prop !== 'currentHint' && prop !== 'currentStep' && prop !== 'priceInPounds' && prop !== 'currencies' && prop !== 'steps' && prop !== 'errors' && prop !== 'OptionsGroupSize' && prop !== 'OptionsNumberOfEntries' && prop !== 'OptionsPurpose' && prop !== 'OptionsRegistration' && prop !== 'OptionsDelivery' && prop !== 'OptionsCities' && prop !== 'OptionsHotels' && prop !== 'OptionsAutoModels' && prop !== 'OptionsAutoColors' && prop !== 'OptionsCardType' && prop !== 'countryApplyInNotesText' && prop !== 'countryApplyInFullName' && prop !== 'OptionsCurrenciesRate'){
                 if(prop === 'visitors'){
@@ -1280,7 +1278,7 @@ class App extends Component {
     render() {
 
         return (
-            <div className="App text-center text-md-left mb-5" onClick={() => this.sendFormData}>
+            <div className="App text-center text-md-left mb-5">
 
 
                 <Header
