@@ -143,7 +143,14 @@ export default {
                 value: '',
                 error: '',
                 visited: false
-            }
+            },
+            OptionsHotels:
+                [
+                    {
+                        value: '',
+                        label: ''
+                    }
+                ]
         }
     ],
     userNeedsNewsletter: {

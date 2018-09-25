@@ -47,6 +47,7 @@ class App extends Component {
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
+            console.log('shiiiit');
         }
 
 
@@ -375,8 +376,30 @@ class App extends Component {
              value: hotel.hotelName,
              label: hotel.hotelName
            });
+
          });
+
+         // console.log(state.OptionsHotels);
+
          let locationIndex = path.split(".")[1];
+         // console.log(state.locations[locationIndex].OptionsHotels);
+         state.locations[locationIndex].OptionsHotels = [];
+
+         data.forEach(hotel => {
+             state.locations.forEach((item,index) => {
+                 // console.log(state.locations[index]);
+                 // console.log(state.locations[index].OptionsHotels);
+                 // console.log(index);
+                 // console.log(state.locations);
+                state.locations[index].OptionsHotels.push({
+                  value: hotel.hotelName,
+                  label: hotel.hotelName
+                });
+            })
+         });
+
+         // console.log(state.locations[locationIndex].OptionsHotels);
+
          state.locations[locationIndex].hotel.value = {};
          if (state.locations[locationIndex].hotel.visited) state.locations[locationIndex].hotel.error = "This field is required";
          this.setState(state);
@@ -504,7 +527,7 @@ class App extends Component {
         });
 
 
-}
+    }
 
     priceCalculate(){
 
@@ -1056,11 +1079,26 @@ class App extends Component {
         let state = this.state;
         return [
             state.locations.map((location, locationIndex) => {
+                // console.log(state.locations[locationIndex].OptionsHotels);
+                // console.log(state.OptionsHotels);
                 return [
                     <ToggleTab className="mt-4" label={"Location " + (
                         locationIndex + 1)}>
                         <Input hintText="This is the help text for field 'City'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={state.locations[locationIndex].city.value} fieldName={"locations." + locationIndex + ".city"} visited={state.locations[locationIndex].city.visited} label="City" error={state.locations[locationIndex].city.error} options={state.OptionsCities}/>
-                        <Input hintText="This is the help text for field 'Hotel'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={state.locations[locationIndex].hotel.value} fieldName={"locations." + locationIndex + ".hotel"} visited={state.locations[locationIndex].hotel.visited} label="Hotel" error={state.locations[locationIndex].hotel.error} options={state.OptionsHotels}/>
+                        <Input
+                            hintText="This is the help text for field 'Hotel'"
+                            currentHint={this.state.currentHint}
+                            updateCurrentHint={this.updateCurrentHint}
+                            type="select"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            value={state.locations[locationIndex].hotel.value}
+                            fieldName={"locations." + locationIndex + ".hotel"}
+                            visited={state.locations[locationIndex].hotel.visited}
+                            label="Hotel"
+                            error={state.locations[locationIndex].hotel.error}
+                            options={state.locations[locationIndex].OptionsHotels}
+                        />
                     </ToggleTab>,
                     <div>
                     {state.locations.length > 1 ?
@@ -1209,9 +1247,20 @@ class App extends Component {
                     </div>
 
                     <Info
-                        text="The visa support document applied for will be valid for processing a visa for the named person to enter Russia on or after  < not specified > and they must leave Russia on or before < not specified >. The visa will allow one entry to and one exit from Russia during this period. It is the applicant’s responsibility to confirm that the visa support document/visa meet their requirements before they process the visa, or travel or use the visa itself.
-                        Please note that once the visa support is issued, no refunds are possible."
-                        data={[new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]}
+                        text={
+                            (this.state.numberOfEntries.value.value === "Double entry visa" ?
+                                "The visa support document applied for will be valid for processing a visa for the named person to enter Russia (the first time) on or after < not specified > and they must leave Russia (for the second time) on or before < not specified >. The visa will allow two entries into and two exits from Russia during this period. It is the applicant’s responsibility to confirm that the visa support document/visa meet their requirements before they process the visa, or travel or use the visa itself. Please note that once your visa is issued the pre-paid registration fees are non-refundable. Please note that once the visa support is issued, no refunds are possible."
+                                :
+                                "The visa support document applied for will be valid for processing a visa for the named person to enter Russia on or after  < not specified > and they must leave Russia on or before < not specified >. The visa will allow one entry to and one exit from Russia during this period. It is the applicant’s responsibility to confirm that the visa support document/visa meet their requirements before they process the visa, or travel or use the visa itself. Please note that once the visa support is issued, no refunds are possible."
+                            )
+                        }
+                        data={
+                            (this.state.numberOfEntries.value.value === "Double entry visa" ?
+                                [new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate2.value).toLocaleDateString()]
+                                :
+                                [new Date(this.state.arrivalDate1.value).toLocaleDateString(), new Date(this.state.departureDate1.value).toLocaleDateString()]
+                            )
+                        }
                         replaceStr="< not specified >"
                     />
                 <RadioGroup hintText="This is the help text for field 'userCompleteForm'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
