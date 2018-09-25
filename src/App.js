@@ -379,18 +379,12 @@ class App extends Component {
 
          });
 
-         // console.log(state.OptionsHotels);
 
          let locationIndex = path.split(".")[1];
-         // console.log(state.locations[locationIndex].OptionsHotels);
          state.locations[locationIndex].OptionsHotels = [];
 
          data.forEach(hotel => {
              state.locations.forEach((item,index) => {
-                 // console.log(state.locations[index]);
-                 // console.log(state.locations[index].OptionsHotels);
-                 // console.log(index);
-                 // console.log(state.locations);
                 state.locations[index].OptionsHotels.push({
                   value: hotel.hotelName,
                   label: hotel.hotelName
@@ -398,7 +392,6 @@ class App extends Component {
             })
          });
 
-         // console.log(state.locations[locationIndex].OptionsHotels);
 
          state.locations[locationIndex].hotel.value = {};
          if (state.locations[locationIndex].hotel.visited) state.locations[locationIndex].hotel.error = "This field is required";
@@ -449,20 +442,20 @@ class App extends Component {
          //если регистрация нужна
          if (this.state.registration.value.value !== "NO") {
            //ДЛЯ ПЕРВОЙ ДАТЫ
-           if (typeof this.state.arrivalDate1.value === "object" && typeof this.state.departureDate1.value === "object") {
+           if ((typeof this.state.arrivalDate1.value === "object" && typeof this.state.departureDate1.value === "object") || (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object")) {
              //если между датами меньше 7 дней
-             if (daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) {
+             if ((daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) || (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7)) {
                //вывести alert о том, что регистрация необязательна
                alert("Your tourney less than 7 days, registration is not required");
              }
              //ДЛЯ ВТООРОЙ ДАТЫ
-             if (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object") {
-               //если между датами меньше 7 дней
-               if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7) {
-                 //вывести alert о том, что регистрация необязательна
-                 alert("Your tourney less than 7 days, registration is not required");
-               }
-             }
+             // if (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object") {
+             //   //если между датами меньше 7 дней
+             //   if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7) {
+             //     //вывести alert о том, что регистрация необязательна
+             //     alert("Your tourney less than 7 days, registration is not required");
+             //   }
+             // }
            }
          }
        }
