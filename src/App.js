@@ -988,9 +988,18 @@ class App extends Component {
                     }}>
                     <div className="col-md-6">
                         <Input hintText="This is the help text for field 'Citizenship'" currentHint={this.state.currentHint} usersCountry={this.state.usersCountry} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2 Input_half" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
+
                     </div>
                     <div className="col-md-6">
                         <Input hintText="This is the help text for field 'Passport number'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportNumber"} value={this.state.visitors[visitorIndex].passportNumber.value} visited={this.state.visitors[visitorIndex].passportNumber.visited} label="Passport number" placeholder="Please enter passport number" error={this.state.visitors[visitorIndex].passportNumber.error}/>
+                    </div>
+                </div>
+
+                <div className="row" style={{
+                        maxWidth: "655px"
+                    }}>
+                    <div className="col-12">
+                        {this.state.citizenshipText !== "" ? <Info text={this.state.citizenshipText} data={[this.state.citizenshipName]} replaceStr="{Country}"/> : ""}
                     </div>
                 </div>
 

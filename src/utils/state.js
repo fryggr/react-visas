@@ -280,5 +280,7 @@ export default {
     ],
 
     countryApplyInNotesText: '',
-    countryApplyInFullName: ''
+    countryApplyInFullName: '',
+    citizenshipText: '{Country} nationals do not require a tourist visa to visit the Russian Federation for up to 90 days; however, it is necessary to present the original visa support documents (tourist voucher/confirmation) to the immigration authorities at passport control on arrival.',
+    citizenshipName: 'Israel'
 };
