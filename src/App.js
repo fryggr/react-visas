@@ -458,20 +458,37 @@ class App extends Component {
             let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.visitors[visitorIndex].citizenship.value);
             // let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
             // let citizenshipText = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(citizenship);
-            // console.log(citizenship);
+            console.log("citizenship: ", citizenship);
+            if(citizenship === null){
+                state.visitors[visitorIndex].citizenship.error = "You can not apply for a visa"
+            }
             // console.log(citizenshipText);
             // state.visitors[visitorIndex].citizenshipCountry = citizenship;
             // state.visitors[visitorIndex].citizenshipCountryText = citizenshipText;
 
             window.Visas.Russian.TVSD.TouristVSDWebService.Current.GetCitizenshipSpecificMessage(citizenship, (message) => {
                 // console.log(message);
+                console.log("citizenship: ", citizenship);
                 state.visitors[visitorIndex].citizenshipCountryText = message;
                 // console.log(state.visitors[visitorIndex].citizenshipCountryText);
                  this.setState(state);
              });
 
+            window.Visas.Russian.Rules.RuleChecker.Current.IsTouristVSDServiceAvailable(citizenship, (isAvailable ) => {
+                // console.log("citizenship: ", citizenship);
+                // console.log("isAvailable: ", isAvailable);
+                if(isAvailable === false ){
+                    state.visitors[visitorIndex].citizenship.error = "You can not apply for a visa"
+                }
+                 this.setState(state);
+
+            }, () => {
+                // console.log("fail");
+                state.visitors[visitorIndex].citizenship.error = "You can not apply for a visa";
+                this.setState(state);
+            })
+
           })
-          // this.setState(state);
      }
 
      if (path.indexOf("groupSize") !== -1 || path.indexOf("registration") !== -1 || path.indexOf("numberOfEntries") !== -1 || path.indexOf("currency") !== -1)
