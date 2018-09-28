@@ -47,7 +47,7 @@ class App extends Component {
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
-            // console.log('shiiiit');
+
         }
 
 
@@ -74,6 +74,21 @@ class App extends Component {
         this.saveApplication = this.saveApplication.bind(this);
         this.retrieveApplication = this.retrieveApplication.bind(this);
         this.sendFormData = this.sendFormData.bind(this);
+        this.registration7Days = this.registration7Days.bind(this);
+    }
+
+    registration7Days(date, days){
+        // console.log(date);
+        date = Moment(date); // clone
+        while (days > 0) {
+          date = date.add(1, 'days');
+          // decrease "days" only if it's a weekday.
+          if (date.isoWeekday() !== 6 && date.isoWeekday() !== 7) {
+            days -= 1;
+          }
+        }
+        // console.log(date.toDate());
+        return date;
     }
 
     componentWillMount(){
@@ -368,6 +383,7 @@ class App extends Component {
 
     customValidation(path, value) {
      let state = this.state;
+
      if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
        window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, data => {
          state.OptionsHotels = [];
@@ -500,20 +516,25 @@ class App extends Component {
          //если регистрация нужна
          if (this.state.registration.value.value !== "NO") {
            //ДЛЯ ПЕРВОЙ ДАТЫ
-           if ((typeof this.state.arrivalDate1.value === "object" && typeof this.state.departureDate1.value === "object") || (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object")) {
+           if ((typeof this.state.arrivalDate1.value === "object" && typeof this.state.departureDate1.value === "object")) {
              //если между датами меньше 7 дней
-             if ((daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) || (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7)) {
+             // if ((daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) || (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7)) {
+             let arrivalDate1 = this.registration7Days(this.state.arrivalDate1.value.toDate(), 8);
+             if (this.state.departureDate1.value.toDate() <= arrivalDate1.toDate()) {
                //вывести alert о том, что регистрация необязательна
+
                alert("Your tourney less than 7 days, registration is not required");
              }
              //ДЛЯ ВТООРОЙ ДАТЫ
-             // if (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object") {
-             //   //если между датами меньше 7 дней
-             //   if (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7) {
-             //     //вывести alert о том, что регистрация необязательна
-             //     alert("Your tourney less than 7 days, registration is not required");
-             //   }
-             // }
+             if (typeof this.state.arrivalDate2.value === "object" && typeof this.state.departureDate2.value === "object") {
+               //если между датами меньше 7 дней
+               let arrivalDate2 = this.registration7Days(this.state.arrivalDate2.value.toDate(), 8);
+               if (this.state.departureDate2.value.toDate() <= arrivalDate2.toDate()) {
+                 //вывести alert о том, что регистрация необязательна
+
+                 alert("Your tourney less than 7 days, registration is not required");
+               }
+             }
            }
          }
        }
