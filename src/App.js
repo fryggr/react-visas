@@ -47,7 +47,7 @@ class App extends Component {
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
-            console.log('shiiiit');
+            // console.log('shiiiit');
         }
 
 
@@ -426,11 +426,52 @@ class App extends Component {
 
      if (path.indexOf("countryApplyIn") !== -1 && path.indexOf("visited") === -1) {
 
-       let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
-       let text = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(country);
-       state.countryApplyInNotesText = text;
-       state.countryApplyInFullName = country;
+       let countryApplyIn = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
+       let textcountryApplyIn = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(countryApplyIn);
+       state.countryApplyInNotesText = textcountryApplyIn;
+       state.countryApplyInFullName = countryApplyIn;
+
+
+
        this.setState(state);
+     }
+
+     if (path.indexOf("citizenship") !== -1 && path.indexOf("visited") === -1){
+         let arr = [];
+         for (let i = 0; i < this.state.groupSize.value.value; i++)
+             arr[i] = i;
+
+             // let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
+             // let citizenshipText = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(countryApplyIn);
+             // console.log(countryApplyIn);
+             // console.log(textcountryApplyIn);
+             // state.citizenshipText = textcountryApplyIn;
+             // state.citizenship = countryApplyIn;
+
+
+
+          arr.forEach(visitorIndex => {
+
+              // state.visitors[visitorIndex].citizenshipCountryText = 'Some text about citizenship';
+            // console.log(visitorIndex);
+            // console.log(state.visitors[visitorIndex].citizenship.value);
+            let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.visitors[visitorIndex].citizenship.value);
+            // let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
+            // let citizenshipText = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(citizenship);
+            // console.log(citizenship);
+            // console.log(citizenshipText);
+            // state.visitors[visitorIndex].citizenshipCountry = citizenship;
+            // state.visitors[visitorIndex].citizenshipCountryText = citizenshipText;
+
+            window.Visas.Russian.TVSD.TouristVSDWebService.Current.GetCitizenshipSpecificMessage(citizenship, (message) => {
+                // console.log(message);
+                state.visitors[visitorIndex].citizenshipCountryText = message;
+                // console.log(state.visitors[visitorIndex].citizenshipCountryText);
+                 this.setState(state);
+             });
+
+          })
+          // this.setState(state);
      }
 
      if (path.indexOf("groupSize") !== -1 || path.indexOf("registration") !== -1 || path.indexOf("numberOfEntries") !== -1 || path.indexOf("currency") !== -1)
@@ -999,7 +1040,8 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-12">
-                        {this.state.citizenshipText !== "" ? <Info text={this.state.citizenshipText} data={[this.state.citizenshipName]} replaceStr="{Country}"/> : ""}
+                        {/*this.state.countryApplyInNotesText !== "" ? <Info text={this.state.countryApplyInNotesText} data=''/> : ""*/}
+                        {this.state.visitors[visitorIndex].citizenshipCountryText !== "" ? <Info text={this.state.visitors[visitorIndex].citizenshipCountryText} data=''/> : ""}
                     </div>
                 </div>
 

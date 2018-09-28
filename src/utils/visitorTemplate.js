@@ -29,6 +29,8 @@ export default  {
         error: "",
         visited: false
     },
+    citizenshipCountryText: '',
+    citizenshipCountry: '',
     passportNumber: {
         value: "",
         error: "",

@@ -170,7 +170,7 @@ export class Input extends React.Component {
         </div>
       );
     } else if (type === "phone") {
-        console.log("PHONE COUNTRY = ", this.props.usersCountry);
+        // console.log("PHONE COUNTRY = ", this.props.usersCountry);
       return (
         <div className="Input-wrapper" onFocus={() => updateCurrentHint(fieldName)}>
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
