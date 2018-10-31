@@ -44,6 +44,7 @@ class App extends Component {
         this.state = state;
 
         document.body.onclick = (e) => {
+            this.createOrder();
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
@@ -74,6 +75,7 @@ class App extends Component {
         this.saveApplication = this.saveApplication.bind(this);
         this.retrieveApplication = this.retrieveApplication.bind(this);
         this.sendFormData = this.sendFormData.bind(this);
+        this.createOrder = this.createOrder.bind(this);
         this.registration7Days = this.registration7Days.bind(this);
     }
 
@@ -104,75 +106,198 @@ class App extends Component {
 
     }
 
+    createOrder(){
+        // if(this.state.userCompleteForm.value !== ''){
+            console.log(this.state.userCompleteForm.value);
+            this.sendFormData();
+            // let orderRequest = this.sendFormData();
+            let orderRequest = JSON.stringify(this.sendFormData());
+            console.log(orderRequest);
+            window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(orderRequest, (order)=>{console.log('success')}, ()=>{console.log('error')});
+            // window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(orderRequest, (order) => {
+            //     alert("Success");
+            //     console.log(order);
+            // }, () => {
+            //     alert("error");
+            // })
+        // }
+    }
+
     sendFormData(){
         let formData = {};
-        for (let prop in this.state) {
-            if(prop !== 'currentHint' && prop !== 'currentStep' && prop !== 'priceInPounds' && prop !== 'currencies' && prop !== 'steps' && prop !== 'errors' && prop !== 'OptionsGroupSize' && prop !== 'OptionsNumberOfEntries' && prop !== 'OptionsPurpose' && prop !== 'OptionsRegistration' && prop !== 'OptionsDelivery' && prop !== 'OptionsCities' && prop !== 'OptionsHotels' && prop !== 'OptionsAutoModels' && prop !== 'OptionsAutoColors' && prop !== 'OptionsCardType' && prop !== 'countryApplyInNotesText' && prop !== 'countryApplyInFullName' && prop !== 'OptionsCurrenciesRate'){
-                if(prop === 'visitors'){
-                    for (let i = 0; i < this.state.visitors.length; i++) {
-                        // formData['birthDate' + (i + 1)] = this.state.visitors[i].birthDate.value
-                        formData['dobYear' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('YYYY')
-                        formData['dobMonth' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('MMMM')
-                        formData['dobDay' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('DD')
-                        formData['passportCitzenship' + (i + 1)] = this.state.visitors[i].citizenship.value
-                        formData['firstName' + (i + 1)] = this.state.visitors[i].firstName.value
-                        formData['middleName' + (i + 1)] = this.state.visitors[i].middleName.value
-                        // formData['passportExpired' + (i + 1)] = this.state.visitors[i].passportExpired.value
-                        formData['passportYearExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('YYYY')
-                        formData['passportMonthExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('MMMM')
-                        formData['passportDayExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('DD')
-                        // formData['passportIssued' + (i + 1)] = this.state.visitors[i].passportIssued.value
-                        formData['passportYearIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('YYYY')
-                        formData['passportMonthIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('MMMM')
-                        formData['passportDayIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('DD')
-                        formData['passportNumber' + (i + 1)] = this.state.visitors[i].passportNumber.value
-                        formData['gender_' + (i + 1)] = this.state.visitors[i].sex.value
-                        formData['surName' + (i + 1)] = this.state.visitors[i].surName.value
-                    }
-                }
-                else
-                    if(prop === 'locations'){
-                        for (let i = 0; i < this.state.locations.length; i++) {
-                            formData['visitHotel' + (i + 1)] = this.state.locations[i].hotel.value.value
-                            formData['visitCity' + (i + 1)] = this.state.locations[i].city.value.value
-                        }
-                    }
-                    else
-                        if(prop === 'autoColor' ||
-                        prop === 'autoModel' ||
-                        prop === 'delivery' ||
-                        prop === 'groupSize' ||
-                        prop === 'numberOfEntries' ||
-                        prop === 'purpose' ||
-                        prop === 'registration'){
-                            formData.vehicleColor = this.state.autoColor.value.value
-                            formData.vehicleMake = this.state.autoModel.value.value
-                            formData.deliveryOption = this.state.delivery.value.value
-                            formData.groupNum = this.state.groupSize.value.value
-                            formData.visaType = this.state.numberOfEntries.value.value
-                            formData.purposeOfVisit = this.state.purpose.value.value
-                            formData.regService = this.state.registration.value.value
-                        }
-                        else
-                            if(prop === 'totalPrice' || prop === 'usersCountry') {
-                                formData.consulateCountry = this.state.usersCountry
-                                formData.totalPrice = this.state.totalPrice
-                            }
-                            else
-                                if(prop === 'autoNumber') {
-                                    formData.vehiclePlateNumber = this.state.autoNumber.value
-                                }
-                                else
-                                    if(prop === 'departureDate1' || prop === 'arrivalDate1' || prop === 'departureDate2' || prop === 'arrivalDate2'){
-                                        formData.arrivalDate1 = Moment(this.state.arrivalDate1.value).format('YYYY')
-                                        formData.departureDate1 = Moment(this.state.departureDate1.value).format('YYYY')
-                                    }
-                                    else formData[prop] = this.state[prop].value
-            }
 
-
+        function getISOName(country){
+            let countryApplyIn = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(country);
+            return countryApplyIn;
         }
+        // for (let prop in this.state) {
+            // if(prop !== 'currentHint' &&
+            // prop !== 'currentStep' &&
+            // prop !== 'priceInPounds' &&
+            // prop !== 'currencies' &&
+            // prop !== 'steps' &&
+            // prop !== 'errors' &&
+            // prop !== 'OptionsGroupSize' &&
+            // prop !== 'OptionsNumberOfEntries' &&
+            // prop !== 'OptionsPurpose' &&
+            // prop !== 'OptionsRegistration' &&
+            // prop !== 'OptionsDelivery' &&
+            // prop !== 'OptionsCities' &&
+            // prop !== 'OptionsHotels' &&
+            // prop !== 'OptionsAutoModels' &&
+            // prop !== 'OptionsAutoColors' &&
+            // prop !== 'OptionsCardType' &&
+            // prop !== 'countryApplyInNotesText' &&
+            // prop !== 'countryApplyInFullName' &&
+            // prop !== 'OptionsCurrenciesRate'){
+            formData["Application"] = {
+                "GroupCount": this.state.visitors.length,
+                "Applicants": [],
+                "ConsulateCountry": getISOName(this.state.usersCountry),
+            }
+            formData["ServiceDetails"] = {
+                "RegistrationType": this.state.registration.value.value
+            }
+            let delivery = {};
+
+            delivery["DeliveryType"] = this.state.delivery.value.value;
+            delivery["OtherAddress"] = "OtherAddress";
+            formData["ServiceDetails"]["Delivery"] = delivery;
+
+            formData["Currency"] = this.state.currency.value;
+            formData["PartnerId"] = "";
+                // if(prop === 'visitors'){
+
+            for (let i = 0; i < this.state.visitors.length; i++) {
+                let newApplicant = {};
+                let newApplicantPassport = {};
+
+                newApplicant["Firstname"] = this.state.visitors[i].firstName.value;
+                newApplicant["Middlename"] = this.state.visitors[i].middleName.value;
+                newApplicant["Surname"] = this.state.visitors[i].surName.value;
+                newApplicant["Gender"] = this.state.visitors[i].sex.value;
+                newApplicant["BirthDate"] = Moment(this.state.visitors[i].birthDate.value).format("DD MMMM YYYY");
+
+                newApplicantPassport["Citizenship"] = getISOName(this.state.visitors[i].citizenship.value);
+                newApplicantPassport["IssueDate"] = Moment(this.state.visitors[i].passportIssued.value).format("DD MMMM YYYY");
+                newApplicantPassport["ExpireDate"] = Moment(this.state.visitors[i].passportExpired.value).format("DD MMMM YYYY");
+                newApplicantPassport["PassportNumber"] = this.state.visitors[i].passportNumber.value;
+                newApplicant["Passport"] = newApplicantPassport;
+
+                formData["Application"]["Applicants"].push(newApplicant);
+            }
+            let newVisitDetails = {};
+            let visit1 = {};
+            newVisitDetails["EntryType"] = this.state.numberOfEntries.value.value;
+            newVisitDetails["EntryTypeId"] = 1;
+            newVisitDetails["PurposeOfVisit"] = this.state.purpose.value.value;
+            visit1["EntryDate"] = Moment(this.state.arrivalDate1.value).format("DD MMMM YYYY");
+            visit1["ExitDate"] = Moment(this.state.departureDate1.value).format("DD MMMM YYYY");
+            if(this.state.numberOfEntries.value.value === "Double entry visa") {
+                newVisitDetails["EntryTypeId"] = 2;
+                let visit2 = {};
+                visit2["EntryDate"] = Moment(this.state.arrivalDate2.value).format("DD MMMM YYYY");
+                visit2["ExitDate"] = Moment(this.state.departureDate2.value).format("DD MMM YYYY");
+                newVisitDetails["Visit2"] = visit2;
+            }
+            newVisitDetails["Visit1"] = visit1;
+            let newItineraryLegs = [];
+            for (let i = 0; i < this.state.locations.length; i++) {
+                let newLeg = {};
+                newLeg["Hotel"] = this.state.locations[i].hotel.value.value
+                newLeg["City"] = this.state.locations[i].city.value.value
+                newItineraryLegs.push(newLeg);
+            }
+            let newAutoTourismDetails = {};
+            newAutoTourismDetails["VehicleMake"] = this.state.autoModel.value.value;
+            newAutoTourismDetails["VehicleColor"] = this.state.autoColor.value.value;
+            newAutoTourismDetails["VehiclePlateNumber"] = this.state.autoNumber.value;
+            newAutoTourismDetails["VehicleType"] = this.state.autoType.value;
+            formData["Application"]["VisitDetails"] = newVisitDetails;
+            newVisitDetails["ItineraryLegs"] = newItineraryLegs;
+            newVisitDetails["AutoTourismDetails"] = newAutoTourismDetails;
+
+            let newContacts = {};
+            newContacts["Email"] = this.state.email.value;
+            newContacts["Phone"] = this.state.phone.value;
+            formData["Application"]["Contacts"] = newContacts;
+
+                        // formData['birthDate' + (i + 1)] = this.state.visitors[i].birthDate.value
+                        // formData['dobYear' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('YYYY')
+                        // formData['dobMonth' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('MMMM')
+                        // formData['dobDay' + (i + 1)] = Moment(this.state.visitors[i].birthDate.value).format('DD')
+                        // formData['passportCitzenship' + (i + 1)] = this.state.visitors[i].citizenship.value
+                        // formData['firstName' + (i + 1)] = this.state.visitors[i].firstName.value
+                        // formData['middleName' + (i + 1)] = this.state.visitors[i].middleName.value
+                        // // formData['passportExpired' + (i + 1)] = this.state.visitors[i].passportExpired.value
+                        // formData['passportYearExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('YYYY')
+                        // formData['passportMonthExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('MMMM')
+                        // formData['passportDayExpires' + (i + 1)] = Moment(this.state.visitors[i].passportExpired.value).format('DD')
+                        // // formData['passportIssued' + (i + 1)] = this.state.visitors[i].passportIssued.value
+                        // formData['passportYearIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('YYYY')
+                        // formData['passportMonthIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('MMMM')
+                        // formData['passportDayIssued' + (i + 1)] = Moment(this.state.visitors[i].passportIssued.value).format('DD')
+                        // formData['passportNumber' + (i + 1)] = this.state.visitors[i].passportNumber.value
+                        // formData['gender_' + (i + 1)] = this.state.visitors[i].sex.value
+                        // formData['surName' + (i + 1)] = this.state.visitors[i].surName.value
+
+                // }
+
+                // if(prop === 'delivery' || prop === 'registration'){
+
+
+                // }
+
+                // if(prop === 'locations' || prop === 'autoType' || prop === 'autoNumber' || prop === 'autoColor' || prop === 'autoModel' || prop === 'locations' || prop === 'numberOfEntries' || prop === 'purpose' || prop === 'purpose' || prop === 'departureDate1' || prop === 'arrivalDate1' || prop === 'departureDate2' || prop === 'arrivalDate2'){
+
+                // }
+
+
+
+                // if(prop === 'locations'){
+                //     for (let i = 0; i < this.state.locations.length; i++) {
+                //         formData['visitHotel' + (i + 1)] = this.state.locations[i].hotel.value.value
+                //         formData['visitCity' + (i + 1)] = this.state.locations[i].city.value.value
+                //     }
+                // }
+                //
+                //
+                //
+                // if(prop === 'autoColor' ||
+                // prop === 'autoModel' ||
+                // prop === 'groupSize' ||
+                // prop === 'numberOfEntries' ||
+                // prop === 'purpose'){
+                //
+                //     formData.vehicleColor = this.state.autoColor.value.value
+                //     formData.vehicleMake = this.state.autoModel.value.value
+                //     formData.deliveryOption = this.state.delivery.value.value
+                //     formData.groupNum = this.state.groupSize.value.value
+                //     formData.visaType = this.state.numberOfEntries.value.value
+                //     formData.purposeOfVisit = this.state.purpose.value.value
+                //     formData.regService = this.state.registration.value.value
+                // }
+                //
+                // if(prop === 'totalPrice' || prop === 'usersCountry') {
+                //     formData.consulateCountry = this.state.usersCountry
+                //     formData.totalPrice = this.state.totalPrice
+                // }
+                //
+                // if(prop === 'autoNumber') {
+                //     formData.vehiclePlateNumber = this.state.autoNumber.value
+                // }
+                //
+                // if(prop === 'departureDate1' || prop === 'arrivalDate1' || prop === 'departureDate2' || prop === 'arrivalDate2'){
+                //     formData.arrivalDate1 = Moment(this.state.arrivalDate1.value).format('YYYY')
+                //     formData.departureDate1 = Moment(this.state.departureDate1.value).format('YYYY')
+                // }
+                // formData[prop] = this.state[prop].value
+            // }
+
+
+        // }
         console.log(formData);
+        return formData;
         // axios({
         //     method: 'post',
         //     url: 'https://ipinfo.io/',
