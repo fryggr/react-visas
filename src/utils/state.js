@@ -22,6 +22,38 @@ export default {
         }
     ],
 
+    cardNumber: {
+        value: '',
+        error: '',
+        visited: false
+    },
+    cardholderName: {
+        value: '',
+        error: '',
+        visited: false
+    },
+    cardExpirationDate:{
+        value: '',
+        error: '',
+        visited: false
+    },
+    cardCVV:{
+        value: '',
+        error: '',
+        visited: false
+    },
+    cardpostCode: {
+        value: '',
+        error: '',
+        visited: false
+    },
+    cardstreetAddress: {
+        value: '',
+        error: '',
+        visited: false
+    },
+
+
     /********THIS DATA FOR STEPSNAVIGATION COMPONENT**********/
     steps: [
         {

@@ -44,7 +44,6 @@ class App extends Component {
         this.state = state;
 
         document.body.onclick = (e) => {
-            // this.createOrder();
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
@@ -77,6 +76,7 @@ class App extends Component {
         this.sendFormData = this.sendFormData.bind(this);
         this.createOrder = this.createOrder.bind(this);
         this.registration7Days = this.registration7Days.bind(this);
+        this.createPaymentService = this.createPaymentService.bind(this);
     }
 
     registration7Days(date, days){
@@ -103,15 +103,21 @@ class App extends Component {
 
            });
 
-
     }
 
     createOrder(){
-        // if(this.state.userCompleteForm.value !== ''){
-            console.log(this.state.userCompleteForm.value);
+        if(this.state.userCompleteForm.value === "1"){
             let data = this.sendFormData();
-            console.log(orderRequest);
-            window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(data, (order)=>{console.log(JSON.stringify(order, null, '\t'));console.log('success')}, ()=>{console.log('error')});
+            window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(data, (order)=>{
+                this.order = order;
+                console.log(JSON.stringify(order, null, '\t'));
+                console.log('success')},
+                ()=>{console.log('error')
+            });
+        }
+        console.log(this.state.userCompleteForm.value);
+
+
 
     }
 
@@ -301,6 +307,63 @@ class App extends Component {
         }
     }
 
+    createPaymentService() {
+        var Payments = window.Payments;
+        console.log(Payments);
+        var paymentService = new Payments.PaymentService({
+            proxyOptions: {
+                hostUrl: "https://devsecurepay.realrussia.devserver"
+            }
+        });
+
+        console.log(paymentService);
+
+        //build a payment reqeust
+        var paymentRequest = {
+            orderId: "SSSD-15311-BBDEF877-TT",
+            source: "visas",
+            amount: this.order.Price.Total,
+            currency: this.order.Currency.toUpperCase(),
+            description: "test order"
+        };
+
+        var data = {
+            paymentRequest: {
+                orderId: this.order.ReferenceNumber,
+                source: "visas",
+                amount: this.order.Price.Total,
+                currency: this.order.Currency.toUpperCase(),
+                description: "test order"
+            },
+            card: {
+                number: this.state.userCardNumber.value,
+                cardholderName: this.state.userFirstName.value,
+                expirationDate: this.state.userExpiryDate.value,
+                cvv: this.state.userCCV.value,
+                postCode: this.state.userPostcode.value,
+                streetAddress: this.state.userHouseNumber.value
+            }
+        };
+
+        //invoke method
+        paymentService.getPaymentMethodMetadata(paymentRequest, function onSuccess(metadata) {
+            alert("Success");
+            console.log(metadata);
+        }, function onError() {
+            alert("Error");
+        });
+
+        paymentService.pay({
+            data: data,
+            onResult: function (payment) {
+                alert("Success payment " + payment.Id);
+                console.log(payment);
+            },
+            onError: function (errorMessage, modelState) {
+                alert("Error has occured: " + errorMessage);
+            }
+        });
+    }
 
     getRestrictForDate(datePickerName) {
         let state = this.state;
@@ -407,6 +470,14 @@ class App extends Component {
 
     customValidation(path, value) {
      let state = this.state;
+
+     if(path.indexOf("userExpiryDate") !== -1 && path.indexOf("visited") === -1) {
+         let customExpiryDate = Moment(state.userExpiryDate.value).format("MM/YY");
+         console.log(customExpiryDate);
+         state.userExpiryDate.value = customExpiryDate;
+         this.setState(state);
+     }
+
 
      if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
        window.Visas.Russian.HotelsServiceProxy.Current.getHotels(value.value, data => {
@@ -1382,7 +1453,7 @@ class App extends Component {
                         }
                         replaceStr="< not specified >"
                     />
-                <RadioGroup hintText="This is the help text for field 'userCompleteForm'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
+                <RadioGroup createOrder={this.createOrder} hintText="This is the help text for field 'userCompleteForm'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
                             {
                                 value: "1",
                                 text: "Yes"
@@ -1403,8 +1474,8 @@ class App extends Component {
                 /********PAYMENT**********/
 
                 <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
-                    <Input hintText="This is the help text for field 'First name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="First name" error={this.state.userFirstName.error}/>
-                    <Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>
+                    <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="Cardholder name" error={this.state.userFirstName.error}/>
+                    {/*<Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>*/}
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
@@ -1415,7 +1486,7 @@ class App extends Component {
                             <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" error={this.state.userPostcode.error}/>
                         </div>
                     </div>
-                    <Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>
+                    {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
                     <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number"  error={this.state.userCardNumber.error}/>
                     <div className="row" style={{
                             maxWidth: "655px"
@@ -1444,7 +1515,6 @@ class App extends Component {
         }
 
     render() {
-
         return (
             <div className="App text-center text-md-left mb-5">
 
@@ -1532,7 +1602,7 @@ class App extends Component {
                                   (this.state.userCompleteForm.value !== "1" ? "disabled" : "")
                               }
                               label="Make payment"
-                              handleClick={this.createOrder}
+                              handleClick={this.createPaymentService}
                           />
                       </div>
 
