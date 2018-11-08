@@ -336,12 +336,12 @@ class App extends Component {
                 description: "test order"
             },
             card: {
-                number: this.state.userCardNumber.value,
-                cardholderName: this.state.userFirstName.value,
-                expirationDate: this.state.userExpiryDate.value,
-                cvv: this.state.userCCV.value,
-                postCode: this.state.userPostcode.value,
-                streetAddress: this.state.userHouseNumber.value
+                number: this.state.cardNumber.value,
+                cardholderName: this.state.cardholderName.value,
+                expirationDate: this.state.cardExpirationDate.value,
+                cvv: this.state.cardCVV.value,
+                postCode: this.state.cardpostCode.value,
+                streetAddress: this.state.cardstreetAddress.value
             }
         };
 
@@ -392,7 +392,7 @@ class App extends Component {
                 //должна быть позже сегодня
                 return current.isBefore(today);
             };
-        } else if (datePickerName === "userExpiryDate") {
+        } else if (datePickerName === "cardExpirationDate") {
             return function(current) {
                 return current.isAfter(today);
             }
@@ -471,10 +471,10 @@ class App extends Component {
     customValidation(path, value) {
      let state = this.state;
 
-     if(path.indexOf("userExpiryDate") !== -1 && path.indexOf("visited") === -1) {
-         let customExpiryDate = Moment(state.userExpiryDate.value).format("MM/YY");
+     if(path.indexOf("cardExpirationDate") !== -1 && path.indexOf("visited") === -1) {
+         let customExpiryDate = Moment(state.cardExpirationDate.value).format("MM/YY");
          console.log(customExpiryDate);
-         state.userExpiryDate.value = customExpiryDate;
+         state.cardExpirationDate.value = customExpiryDate;
          this.setState(state);
      }
 
@@ -533,6 +533,22 @@ class App extends Component {
          state["userCompleteForm"].value = value;
          this.setState(state);
        }
+     }
+
+     console.log(path, value);
+
+     if (path.indexOf("makePayment") !== -1 && value === 4) {
+         console.log(path, value);
+         this.makeFieldsVisited(4);
+         this.validate();
+         state["steps"][4].correct = this.checkIsStepCorrect(4);
+         if (!state["steps"][4].correct) {
+             alert("You have errors!");
+             this.setState(state);
+         }
+         else {
+             this.createPaymentService();
+         }
      }
 
      if (path.indexOf("countryApplyIn") !== -1 && path.indexOf("visited") === -1) {
@@ -809,6 +825,12 @@ class App extends Component {
         }
         if (stepIndex === 4) {
           state.userCompleteForm.visited = true;
+          state.cardNumber.visited = true;
+          state.cardholderName.visited = true;
+          state.cardExpirationDate.visited = true;
+          state.cardCVV.visited = true;
+          state.cardpostCode.visited = true;
+          state.cardstreetAddress.visited = true;
         }
 
         this.setState(state);
@@ -948,6 +970,37 @@ class App extends Component {
             }
 
         }
+        if (stepIndex === 4) {
+          state.errors = state.errors.filter(item => item.step !== 4);
+          // if (state.userCompleteForm.value !== 1){
+          //   correct = false;
+          //   state.errors.push({name:"userCompleteForm" ,text: "userCompleteForm", step: 4})
+          // }
+          if (state.cardNumber.error !== ""){
+            correct = false;
+            state.errors.push({name:"cardNumber" ,text: "Card number", step: 4})
+          }
+          if (state.cardholderName.error !== ""){
+            correct = false;
+            state.errors.push({name:"cardholderName" ,text: "Cardholder name", step: 4})
+          }
+          if (state.cardExpirationDate.error !== ""){
+            correct = false;
+            state.errors.push({name:"cardExpirationDate" ,text: "Expiry date", step: 4})
+          }
+          if (state.cardCVV.error !== ""){
+            correct = false;
+            state.errors.push({name:"cardCVV" ,text: "CCV", step: 4})
+          }
+          if (state.cardpostCode.error !== ""){
+            correct = false;
+            state.errors.push({name:"cardpostCode" ,text: "Postcode", step: 4})
+          }
+          if (state.cardstreetAddress.error !== ""){
+            correct = false;
+            state.errors.push({name:"cardstreetAddress" ,text: "House number/name", step: 4})
+          }
+      }
 
 
         //remove duplicates
@@ -1031,7 +1084,13 @@ class App extends Component {
             autoType: state.autoType.value,
             autoModel: state.autoModel.value,
             autoColor: state.autoColor.value,
-            autoNumber: state.autoNumber.value
+            autoNumber: state.autoNumber.value,
+            cardNumber: state.cardNumber.value,
+            cardholderName: state.cardholderName.value,
+            cardExpirationDate: state.cardExpirationDate.value,
+            cardCVV: state.cardCVV.value,
+            cardpostCode: state.cardpostCode.value,
+            cardstreetAddress: state.cardstreetAddress.value
 
         };
 
@@ -1070,7 +1129,13 @@ class App extends Component {
             autoType: "required",
             autoModel: "required",
             autoColor: "required",
-            autoNumber: "required"
+            autoNumber: "required",
+            cardNumber:  "required",
+            cardholderName:  "required",
+            cardExpirationDate:  "required|date",
+            cardCVV:  "required"
+            // cardpostCode:  "required",
+            // cardstreetAddress:  "required"
         };
 
         //add rules for visitors
@@ -1474,30 +1539,32 @@ class App extends Component {
                 /********PAYMENT**********/
 
                 <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
-                    <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userFirstName" value={this.state.userFirstName.value} visited={this.state.userFirstName.visited} label="Cardholder name" error={this.state.userFirstName.error}/>
+                    <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
+                    <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
                     {/*<Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>*/}
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userHouseNumber" value={this.state.userHouseNumber.value} visited={this.state.userHouseNumber.visited} label="House number/name" error={this.state.userHouseNumber.error}/>
+                            <Input hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userPostcode" value={this.state.userPostcode.value} visited={this.state.userPostcode.visited} label="Postcode" error={this.state.userPostcode.error}/>
+                            <Input hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
                         </div>
                     </div>
-                    {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
-                    <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCardNumber" value={this.state.userCardNumber.value} visited={this.state.userCardNumber.visited} label="Card number"  error={this.state.userCardNumber.error}/>
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("userExpiryDate")} updateField={this.updateField} fieldName="userExpiryDate" value={this.state.userExpiryDate.value} visited={this.state.userExpiryDate.visited} label="Expiry date" error={this.state.userExpiryDate.error}/>
+                            <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardstreetAddress" value={this.state.cardstreetAddress.value} visited={this.state.cardstreetAddress.visited} label="House number/name" error={this.state.cardstreetAddress.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userCCV" value={this.state.userCCV.value} visited={this.state.userCCV.visited} label="CCV"  error={this.state.userCCV.error}/>
+                            <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
                         </div>
                     </div>
+                    {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
+
+
                     <div className="Step__note mt-4 mt-lg-0">
                         <b className="Step__color-red">SECURE PAYMENT PROCESSING</b>
                         <div className="Step__step-note my-3">"Text about how secure payment is Text about how secure payment is Text about how secure payment is"</div>
@@ -1602,7 +1669,12 @@ class App extends Component {
                                   (this.state.userCompleteForm.value !== "1" ? "disabled" : "")
                               }
                               label="Make payment"
-                              handleClick={this.createPaymentService}
+                              handleClick={()=>{
+                                  console.log(this.state.currentStep);
+                                  this.updateField("makePayment", this.state.currentStep);
+                                  // this.createPaymentService
+                                  }
+                              }
                           />
                       </div>
 
