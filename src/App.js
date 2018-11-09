@@ -77,6 +77,7 @@ class App extends Component {
         this.createOrder = this.createOrder.bind(this);
         this.registration7Days = this.registration7Days.bind(this);
         this.createPaymentService = this.createPaymentService.bind(this);
+        this.paymentValidation = this.paymentValidation.bind(this);
     }
 
     registration7Days(date, days){
@@ -107,18 +108,44 @@ class App extends Component {
 
     createOrder(){
         if(this.state.userCompleteForm.value === "1"){
-            let data = this.sendFormData();
-            window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(data, (order)=>{
-                this.order = order;
-                console.log(JSON.stringify(order, null, '\t'));
-                console.log('success')},
-                ()=>{console.log('error')
+            var Payments = window.Payments;
+            var paymentService = new Payments.PaymentService({
+                proxyOptions: {
+                    hostUrl: "https://devsecurepay.realrussia.devserver"
+                }
             });
+
+            let data = this.sendFormData();
+
+            var TouristVSDWebService = new Promise((resolve, reject) => {
+                window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(data, (order)=>{
+                    this.order = order;
+                    console.log(JSON.stringify(order, null, '\t'));
+                    console.log('success');
+                    // return order;
+                    resolve(order);
+                })
+
+            });
+
+            TouristVSDWebService.then(order => {
+                var paymentRequest = {
+                    orderId: "SSSD-15311-BBDEF877-TT",
+                    source: "visas",
+                    amount: order.Price.Total,
+                    currency: order.Currency.toUpperCase(),
+                    description: "test order"
+                };
+                paymentService.getPaymentMethodMetadata(paymentRequest, (metadata) => {
+                    alert("Success");
+                    this.valdationData = metadata;
+                    console.log(this.valdationData);
+                },
+                ()=> {
+                    alert("Error");
+                })
+            })
         }
-        console.log(this.state.userCompleteForm.value);
-
-
-
     }
 
     sendFormData(){
@@ -201,7 +228,7 @@ class App extends Component {
             formData["Application"]["Contacts"] = newContacts;
 
 
-        console.log(formData);
+        // console.log(formData);
         return formData;
         // axios({
         //     method: 'post',
@@ -230,13 +257,13 @@ class App extends Component {
             retrievedState.visitors[i].passportExpired.value !== '' ? retrievedState.visitors[i].passportExpired.value = Moment(retrievedState.visitors[i].passportExpired.value).format("DD MMM YYYY") : '';
         }
         this.setState(retrievedState);
-        console.log(retrievedState);
+        // console.log(retrievedState);
     }
 
     saveApplication() {
         let state = JSON.stringify(this.state);
         localStorage.setItem('state', state);
-        console.log(this.state);
+        // console.log(this.state);
     }
 
 
@@ -309,23 +336,15 @@ class App extends Component {
 
     createPaymentService() {
         var Payments = window.Payments;
-        console.log(Payments);
+        // console.log(Payments);
         var paymentService = new Payments.PaymentService({
             proxyOptions: {
                 hostUrl: "https://devsecurepay.realrussia.devserver"
             }
         });
 
-        console.log(paymentService);
+        // console.log(paymentService);
 
-        //build a payment reqeust
-        var paymentRequest = {
-            orderId: "SSSD-15311-BBDEF877-TT",
-            source: "visas",
-            amount: this.order.Price.Total,
-            currency: this.order.Currency.toUpperCase(),
-            description: "test order"
-        };
 
         var data = {
             paymentRequest: {
@@ -345,24 +364,29 @@ class App extends Component {
             }
         };
 
-        //invoke method
-        paymentService.getPaymentMethodMetadata(paymentRequest, function onSuccess(metadata) {
-            alert("Success");
-            console.log(metadata);
-        }, function onError() {
-            alert("Error");
-        });
+        // validation rule for Card number: this.valdationData.Properties.Number.ValidationRules.brainTreeNumber.ValidationType
+        // validation method for Card number: window.cardValidator.number
 
         paymentService.pay({
             data: data,
             onResult: function (payment) {
                 alert("Success payment " + payment.Id);
-                console.log(payment);
+                // console.log(payment);
             },
             onError: function (errorMessage, modelState) {
                 alert("Error has occured: " + errorMessage);
             }
         });
+    }
+
+    paymentValidation(fieldName, value){
+        // console.log(fieldName, value);
+        // if(fieldName === "cardNumber") {
+        //     if(!window.cardValidator.number(value).isValid){
+        //         console.log('not valid');
+        //         this.updateError(fieldName, this.valdationData.Properties.Number.ValidationRules.brainTreeNumber.ErrorMessage);
+        //     }
+        // }
     }
 
     getRestrictForDate(datePickerName) {
@@ -471,11 +495,43 @@ class App extends Component {
     customValidation(path, value) {
      let state = this.state;
 
+     // validation for payment fields
+     if(path.indexOf("cardNumber") !== -1 && path.indexOf("visited") === -1) {
+         if(!window.cardValidator.number(value).isValid){
+             console.log('cardNumber not valid');
+             state.cardNumber.error = this.valdationData.Properties.Number.ValidationRules.brainTreeNumber.ErrorMessage;
+             this.updateError(value, state.cardNumber.error);
+             this.setState(state);
+         }
+     }
+     if(path.indexOf("cardCVV") !== -1 && path.indexOf("visited") === -1) {
+         if(!window.cardValidator.cvv(value).isValid){
+             console.log('cardCVV not valid');
+             state.cardCVV.error = this.valdationData.Properties.Cvv.ValidationRules.brainTreeCVV.ErrorMessage;
+             this.updateError(value, state.cardCVV.error);
+             this.setState(state);
+         }
+     }
      if(path.indexOf("cardExpirationDate") !== -1 && path.indexOf("visited") === -1) {
-         let customExpiryDate = Moment(state.cardExpirationDate.value).format("MM/YY");
-         console.log(customExpiryDate);
-         state.cardExpirationDate.value = customExpiryDate;
+         let customExpiryDate = Moment(this.state.cardExpirationDate.value).format("MM/YY");
+         this.state.cardExpirationDate.value = customExpiryDate;
          this.setState(state);
+         console.log(customExpiryDate);
+
+         if(!window.cardValidator.expirationDate(customExpiryDate).isValid){
+             console.log('cardExpirationDate not valid');
+             state.cardExpirationDate.error = this.valdationData.Properties.ExpirationDate.ValidationRules.brainTreeExpirationDate.ErrorMessage;
+             this.updateError(value, state.cardExpirationDate.error);
+             this.setState(state);
+         }
+     }
+     if(path.indexOf("cardpostCode") !== -1 && path.indexOf("visited") === -1) {
+         if(!window.cardValidator.postalCode(value).isValid){
+             console.log('cardpostCode not valid');
+             state.cardpostCode.error = this.valdationData.Properties.PostalCode.ValidationRules.brainTreePostalCode.ErrorMessage;
+             this.updateError(value, state.cardpostCode.error);
+             this.setState(state);
+         }
      }
 
 
@@ -535,10 +591,10 @@ class App extends Component {
        }
      }
 
-     console.log(path, value);
+     // console.log(path, value);
 
      if (path.indexOf("makePayment") !== -1 && value === 4) {
-         console.log(path, value);
+         // console.log(path, value);
          this.makeFieldsVisited(4);
          this.validate();
          state["steps"][4].correct = this.checkIsStepCorrect(4);
@@ -585,7 +641,7 @@ class App extends Component {
             let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.visitors[visitorIndex].citizenship.value);
             // let citizenship = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(state.countryApplyIn.value);
             // let citizenshipText = window.Visas.Russian.RussianConsulateSettignsRepository.Current.GetTouristNoteByCountry(citizenship);
-            console.log("citizenship: ", citizenship);
+            // console.log("citizenship: ", citizenship);
             if(citizenship === null){
                 state.visitors[visitorIndex].citizenship.error = "You can not apply for a visa"
             }
@@ -595,7 +651,7 @@ class App extends Component {
 
             window.Visas.Russian.TVSD.TouristVSDWebService.Current.GetCitizenshipSpecificMessage(citizenship, (message) => {
                 // console.log(message);
-                console.log("citizenship: ", citizenship);
+                // console.log("citizenship: ", citizenship);
                 state.visitors[visitorIndex].citizenshipCountryText = message;
                 // console.log(state.visitors[visitorIndex].citizenshipCountryText);
                  this.setState(state);
@@ -824,7 +880,7 @@ class App extends Component {
             }
         }
         if (stepIndex === 4) {
-          state.userCompleteForm.visited = true;
+          // state.userCompleteForm.visited = true;
           state.cardNumber.visited = true;
           state.cardholderName.visited = true;
           state.cardExpirationDate.visited = true;
@@ -1130,10 +1186,10 @@ class App extends Component {
             autoModel: "required",
             autoColor: "required",
             autoNumber: "required",
-            cardNumber:  "required",
-            cardholderName:  "required",
-            cardExpirationDate:  "required|date",
-            cardCVV:  "required"
+            // cardNumber:  "required",
+            cardholderName:  "regex:/^[a-z\\-\\s]+$/ig",
+            // cardExpirationDate:  "required|date",
+            // cardCVV:  "required"
             // cardpostCode:  "required",
             // cardstreetAddress:  "required"
         };
@@ -1197,8 +1253,6 @@ class App extends Component {
             this.updateError("locations.0.city", "You must choose at least two unique locations!");
         else if (typeof this.state.locations[0].city.value.value !== "undefined")
             this.updateError("locations.0.city", "");
-
-
     }
 
     renderVisitors() {
@@ -1539,17 +1593,17 @@ class App extends Component {
                 /********PAYMENT**********/
 
                 <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
-                    <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
+                    <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
                     <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
                     {/*<Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>*/}
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
+                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
+                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
                         </div>
                     </div>
                     <div className="row" style={{
@@ -1559,7 +1613,7 @@ class App extends Component {
                             <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardstreetAddress" value={this.state.cardstreetAddress.value} visited={this.state.cardstreetAddress.visited} label="House number/name" error={this.state.cardstreetAddress.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
+                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
                         </div>
                     </div>
                     {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
@@ -1670,7 +1724,7 @@ class App extends Component {
                               }
                               label="Make payment"
                               handleClick={()=>{
-                                  console.log(this.state.currentStep);
+                                  // console.log(this.state.currentStep);
                                   this.updateField("makePayment", this.state.currentStep);
                                   // this.createPaymentService
                                   }

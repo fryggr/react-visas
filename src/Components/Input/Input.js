@@ -55,7 +55,10 @@ export class Input extends React.Component {
                 updateField(fieldName + ".visited", true);
                 updateField(fieldName + ".value", e.target.value);
               }}
-              onChange={e => updateField(fieldName + ".value", e.target.value)}
+              onChange={e => {
+                  updateField(fieldName + ".value", e.target.value);
+                  }
+              }
               className="Input__field"
               type={type}
               value={value}
