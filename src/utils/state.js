@@ -241,6 +241,7 @@ export default {
         error: '',
         visited: false
     },
+    completePayment: 0,
 
     /****ERRORS****/
     errors: [],

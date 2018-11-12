@@ -29,7 +29,7 @@ export class Input extends React.Component {
   }
 
   render() {
-    let { type, label, fieldName, placeholder, visited, value, dateValidator, error, updateField, options, updateCurrentHint, currentHint, viewDate } = {
+    let { type, label, fieldName, placeholder, visited, value, dateValidator, error, updateField, options, updateCurrentHint, currentHint, viewDate, formatDate } = {
       ...this.props
     };
 
@@ -134,7 +134,7 @@ export class Input extends React.Component {
               input={true}
               closeOnSelect={true}
               timeFormat={false}
-              dateFormat="DD MMM YYYY"
+              dateFormat={formatDate !== undefined ? "MM/YY" : "DD MMM YYYY"}
               viewMode="years"
               className="Datepicker"
               value={value}

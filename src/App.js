@@ -496,42 +496,47 @@ class App extends Component {
      let state = this.state;
 
      // validation for payment fields
-     if(path.indexOf("cardNumber") !== -1 && path.indexOf("visited") === -1) {
-         if(!window.cardValidator.number(value).isValid){
+      if (path.indexOf("cardExpirationDate") !== -1 && path.indexOf("visited") === -1) {
+          state.cardExpirationDate.value !== '' ? state.cardExpirationDate.value = Moment(state.cardExpirationDate.value).format("MM/YY") : '';
+      }
+
+     // console.log(state.cardExpirationDate.value);
+     // this.setState(state, () => {console.log(state.cardExpirationDate.value);});
+
+     if(path.indexOf("visited") === -1) {
+         if(state.cardNumber.value !== "" && !window.cardValidator.number(state.cardNumber.value).isValid){
              console.log('cardNumber not valid');
              state.cardNumber.error = this.valdationData.Properties.Number.ValidationRules.brainTreeNumber.ErrorMessage;
-             this.updateError(value, state.cardNumber.error);
-             this.setState(state);
+             this.updateError(state.cardNumber.value, state.cardNumber.error);
+
          }
-     }
-     if(path.indexOf("cardCVV") !== -1 && path.indexOf("visited") === -1) {
-         if(!window.cardValidator.cvv(value).isValid){
+         if(state.cardCVV.value !== "" && !window.cardValidator.cvv(state.cardCVV.value).isValid){
              console.log('cardCVV not valid');
              state.cardCVV.error = this.valdationData.Properties.Cvv.ValidationRules.brainTreeCVV.ErrorMessage;
-             this.updateError(value, state.cardCVV.error);
-             this.setState(state);
-         }
-     }
-     if(path.indexOf("cardExpirationDate") !== -1 && path.indexOf("visited") === -1) {
-         let customExpiryDate = Moment(this.state.cardExpirationDate.value).format("MM/YY");
-         this.state.cardExpirationDate.value = customExpiryDate;
-         this.setState(state);
-         console.log(customExpiryDate);
+             this.updateError(state.cardCVV.value, state.cardCVV.error);
 
-         if(!window.cardValidator.expirationDate(customExpiryDate).isValid){
-             console.log('cardExpirationDate not valid');
-             state.cardExpirationDate.error = this.valdationData.Properties.ExpirationDate.ValidationRules.brainTreeExpirationDate.ErrorMessage;
-             this.updateError(value, state.cardExpirationDate.error);
-             this.setState(state);
          }
-     }
-     if(path.indexOf("cardpostCode") !== -1 && path.indexOf("visited") === -1) {
-         if(!window.cardValidator.postalCode(value).isValid){
+
+         // if(state.cardExpirationDate.value !== ""){
+         //     var customExpiryDate = Moment(state.cardExpirationDate.value).format("MM/YY");
+         //     state.cardExpirationDate.value = customExpiryDate;
+         //     console.log(customExpiryDate);
+             if(state.cardExpirationDate.value !== "" && !window.cardValidator.expirationDate(state.cardExpirationDate.value).isValid){
+                 console.log(state.cardExpirationDate.value);
+                 console.log('cardExpirationDate not valid');
+                 state.cardExpirationDate.error = this.valdationData.Properties.ExpirationDate.ValidationRules.brainTreeExpirationDate.ErrorMessage;
+                 this.updateError(state.cardExpirationDate.value, state.cardExpirationDate.error);
+
+             }
+         // }
+
+         if(state.cardpostCode.value !== "" && !window.cardValidator.postalCode(state.cardpostCode.value).isValid){
              console.log('cardpostCode not valid');
              state.cardpostCode.error = this.valdationData.Properties.PostalCode.ValidationRules.brainTreePostalCode.ErrorMessage;
-             this.updateError(value, state.cardpostCode.error);
-             this.setState(state);
+             this.updateError(state.cardpostCode.value, state.cardpostCode.error);
+
          }
+         this.setState(state);
      }
 
 
@@ -574,12 +579,12 @@ class App extends Component {
        this.makeFieldsVisited(1);
        this.makeFieldsVisited(2);
        this.makeFieldsVisited(3);
-       this.makeFieldsVisited(4);
+       // this.makeFieldsVisited(4);
        this.validate();
        state["steps"][1].correct = this.checkIsStepCorrect(1);
        state["steps"][2].correct = this.checkIsStepCorrect(2);
        state["steps"][3].correct = this.checkIsStepCorrect(3);
-       state["steps"][4].correct = this.checkIsStepCorrect(4);
+       // state["steps"][4].correct = this.checkIsStepCorrect(4);
        if (!state["steps"][1].correct || !state["steps"][2].correct || !state["steps"][3].correct) {
          alert("You have errors!");
          state["userCompleteForm"].value = "2";
@@ -1186,12 +1191,10 @@ class App extends Component {
             autoModel: "required",
             autoColor: "required",
             autoNumber: "required",
-            // cardNumber:  "required",
-            cardholderName:  "regex:/^[a-z\\-\\s]+$/ig",
-            // cardExpirationDate:  "required|date",
-            // cardCVV:  "required"
-            // cardpostCode:  "required",
-            // cardstreetAddress:  "required"
+            cardNumber:  "required",
+            cardholderName:  "required|regex:/^[a-z\\-\\s]+$/ig",
+            cardExpirationDate:  "required",
+            cardCVV:  "required"
         };
 
         //add rules for visitors
@@ -1600,7 +1603,7 @@ class App extends Component {
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
+                            <Input formatDate="expiry date" paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
                         </div>
                         <div className="col-md-6">
                             <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
