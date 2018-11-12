@@ -52,6 +52,8 @@ export default {
         error: '',
         visited: false
     },
+    paymentId: '',
+    referenceNumber: '',
 
 
     /********THIS DATA FOR STEPSNAVIGATION COMPONENT**********/

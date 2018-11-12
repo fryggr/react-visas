@@ -120,6 +120,7 @@ class App extends Component {
             var TouristVSDWebService = new Promise((resolve, reject) => {
                 window.Visas.Russian.TVSD.TouristVSDWebService.Current.createOrder(data, (order)=>{
                     this.order = order;
+                    this.state.referenceNumber = this.order.ReferenceNumber;
                     console.log(JSON.stringify(order, null, '\t'));
                     console.log('success');
                     // return order;
@@ -335,6 +336,7 @@ class App extends Component {
     }
 
     createPaymentService() {
+        let state = this.state;
         var Payments = window.Payments;
         // console.log(Payments);
         var paymentService = new Payments.PaymentService({
@@ -371,7 +373,8 @@ class App extends Component {
             data: data,
             onResult: function (payment) {
                 alert("Success payment " + payment.Id);
-                // console.log(payment);
+                console.log(state.paymentId);
+                // state.paymentId = payment.Id;
             },
             onError: function (errorMessage, modelState) {
                 alert("Error has occured: " + errorMessage);
@@ -609,6 +612,7 @@ class App extends Component {
          }
          else {
              this.createPaymentService();
+             state.completePayment = 1;
          }
      }
 
@@ -1194,7 +1198,9 @@ class App extends Component {
             cardNumber:  "required",
             cardholderName:  "required|regex:/^[a-z\\-\\s]+$/ig",
             cardExpirationDate:  "required",
-            cardCVV:  "required"
+            cardCVV:  "required",
+            cardpostCode:  "required",
+            cardstreetAddress:  "required"
         };
 
         //add rules for visitors
@@ -1596,32 +1602,34 @@ class App extends Component {
                 /********PAYMENT**********/
 
                 <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
-                    <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
-                    <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
+                    <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
+                    <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
                     {/*<Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>*/}
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input formatDate="expiry date" paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
+                            <Input formatDate="expiry date" paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
+                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
                         </div>
                     </div>
                     <div className="row" style={{
                             maxWidth: "655px"
                         }}>
                         <div className="col-md-6">
-                            <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardstreetAddress" value={this.state.cardstreetAddress.value} visited={this.state.cardstreetAddress.visited} label="House number/name" error={this.state.cardstreetAddress.error}/>
+                            <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardstreetAddress" value={this.state.cardstreetAddress.value} visited={this.state.cardstreetAddress.visited} label="House number/name" error={this.state.cardstreetAddress.error}/>
                         </div>
                         <div className="col-md-6">
-                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
+                            <Input paymentValidation={this.paymentValidation} hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
                         </div>
                     </div>
                     {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
 
-
+                    <div className="Step__text mt-4" hidden={this.state.paymentId === ''}>
+                        {`Thank you for your order. Order reference number is ${this.state.referenceNumber}. You payment ID is ${this.state.paymentId}. We have sent the invitation letter with instuctions to your email.`}
+                    </div>
                     <div className="Step__note mt-4 mt-lg-0">
                         <b className="Step__color-red">SECURE PAYMENT PROCESSING</b>
                         <div className="Step__step-note my-3">"Text about how secure payment is Text about how secure payment is Text about how secure payment is"</div>
@@ -1696,15 +1704,18 @@ class App extends Component {
                           maxWidth: "710px"
                       }}>
                       <div className="col-sm-6" hidden={this.state.currentStep === 0}>
-                          <Button className="align-self-md-start align-self-center" label="Save progress" handleClick={() => this.saveApplication()}/>
+                          <Button
+                              className={"align-self-md-start align-self-center " + (this.state.completePayment !== 0 ? "disabled" : "")}
+                              label="Save progress"
+                              handleClick={() => this.saveApplication()}/>
                       </div>
 
                       <div className={
-                              ((this.state.currentStep !== 0 && this.state.userCompleteForm.value !== "1" ) ? "col-sm-3 d-block"  : "d-none")
+                              ((this.state.currentStep !== 0 && this.state.userCompleteForm.value !== "1" && this.state.completePayment !== 1 ) ? "col-sm-3 d-block"  : "d-none")
                           }>
                           <Button
                               handleClick={() => this.updateField("currentStep", this.state.currentStep - 1)}
-                              className={"Button_red-border align-self-md-end align-self-center"}
+                              className={"Button_red-border align-self-md-end align-self-center " + (this.state.completePayment !== 0 ? "disabled" : "")}
                               label="Previous step"
                           />
                       </div>
@@ -1718,12 +1729,12 @@ class App extends Component {
                           />
                       </div>
                       <div className={
-                              ((this.state.currentStep === 4 && this.state.userCompleteForm.value !== "1") ? "col-sm-3 d-block" : (this.state.currentStep === 4 && this.state.userCompleteForm.value == "1") ? "col-sm-6 d-block" : "d-none")
+                              ((this.state.currentStep === 4 && this.state.userCompleteForm.value !== "1") ? "col-sm-3 d-block" : (this.state.currentStep === 4 && this.state.userCompleteForm.value === "1") ? "col-sm-6 d-block" : "d-none")
                           }>
                           <Button
                               className={
                                   "Button_red align-self-md-end align-self-center " +
-                                  (this.state.userCompleteForm.value !== "1" ? "disabled" : "")
+                                  (this.state.userCompleteForm.value !== "1" || this.state.completePayment !== 0 ? "disabled" : "")
                               }
                               label="Make payment"
                               handleClick={()=>{
