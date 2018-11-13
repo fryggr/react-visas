@@ -40,6 +40,11 @@
     line-height: 1.3rem;
 }
 
+.Step__text_success{
+    max-width: none;
+    display: block;
+}
+
 .Step__payment-info{
     border-bottom: 1px solid #cfcccc;
     border-top: 1px solid #cfcccc;
@@ -102,6 +107,25 @@
 
 .Step__intro-text{
     font-size: 0.8rem;
+}
+
+.Step__success-icon{
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.Step__success-icon img{
+    max-width: 100%;
+}
+
+.Step__success-title{
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3bb54a;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .Step__intro-img{
