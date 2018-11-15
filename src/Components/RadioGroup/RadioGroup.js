@@ -41,7 +41,7 @@ export class RadioGroup extends React.Component {
                                             this.props.fieldName + '.value',
                                             e.target.value
                                         );
-                                        this.props.createOrder(e.target.value);
+                                        typeof this.props.createOrder !== "undefined" ? this.props.createOrder(e.target.value) : "";
                                     }}
                                 />
                                 <label className="RadioGroup__item-label" htmlFor={this.id[index]}>

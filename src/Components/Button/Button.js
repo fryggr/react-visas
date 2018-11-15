@@ -5,7 +5,9 @@ export const Button = (props) => {
     let className = typeof props.className !== "undefined" ? props.className : "";
     let type = typeof props.type !== "undefined" ? props.type : "button";
     return (
-        <div className="Button-wrapper">
+        <div className={
+                (typeof props.removeLocation !== "undefined") ? "Button-wrapper Button-wrapper_mw-625" : "Button-wrapper"
+            }>
             <button type={props.type} className={"Button " + className} onClick={props.handleClick}>{props.label}</button>
             <div className={
                 "Button__text " + (

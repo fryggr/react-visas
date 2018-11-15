@@ -78,6 +78,13 @@ class App extends Component {
         this.createOrder = this.createOrder.bind(this);
         this.registration7Days = this.registration7Days.bind(this);
         this.createPaymentService = this.createPaymentService.bind(this);
+        this.scrollPage = this.scrollPage.bind(this);
+        this.showSavePopup = this.showSavePopup.bind(this);
+        this.closeSavePopup = this.closeSavePopup.bind(this);
+    }
+
+    scrollPage(){
+        window.scrollTo(0,0);
     }
 
     registration7Days(date, days){
@@ -139,8 +146,9 @@ class App extends Component {
                 };
                 paymentService.getPaymentMethodMetadata(paymentRequest, (metadata) => {
                     alert("Success");
-                    this.valdationData = metadata;
-                    console.log(this.valdationData);
+                    this.state.valdationData = metadata;
+                    console.log(this.state.valdationData);
+                    this.setState(this.state);
                 },
                 ()=> {
                     alert("Error");
@@ -264,9 +272,16 @@ class App extends Component {
     saveApplication() {
         let state = JSON.stringify(this.state);
         localStorage.setItem('state', state);
-        // console.log(this.state);
     }
 
+    showSavePopup(){
+        document.body.style.overflow = "hidden";
+    }
+
+    closeSavePopup(){
+        document.body.style.overflow = "auto";
+        this.setState({showPopup: 0});
+    }
 
     updateCurrentHint(fieldName){
         this.setState({currentHint: fieldName})
@@ -498,13 +513,13 @@ class App extends Component {
      if(path.indexOf("visited") === -1) {
          if(state.cardNumber.value !== "" && !window.cardValidator.number(state.cardNumber.value).isValid){
              console.log('cardNumber not valid');
-             state.cardNumber.error = this.valdationData.Properties.Number.ValidationRules.brainTreeNumber.ErrorMessage;
+             state.cardNumber.error = this.state.valdationData.Properties.Number.ValidationRules.brainTreeNumber.ErrorMessage;
              this.updateError(state.cardNumber.value, state.cardNumber.error);
 
          }
          if(state.cardCVV.value !== "" && !window.cardValidator.cvv(state.cardCVV.value).isValid){
              console.log('cardCVV not valid');
-             state.cardCVV.error = this.valdationData.Properties.Cvv.ValidationRules.brainTreeCVV.ErrorMessage;
+             state.cardCVV.error = this.state.valdationData.Properties.Cvv.ValidationRules.brainTreeCVV.ErrorMessage;
              this.updateError(state.cardCVV.value, state.cardCVV.error);
 
          }
@@ -516,7 +531,7 @@ class App extends Component {
              if(state.cardExpirationDate.value !== "" && !window.cardValidator.expirationDate(state.cardExpirationDate.value).isValid){
                  console.log(state.cardExpirationDate.value);
                  console.log('cardExpirationDate not valid');
-                 state.cardExpirationDate.error = this.valdationData.Properties.ExpirationDate.ValidationRules.brainTreeExpirationDate.ErrorMessage;
+                 state.cardExpirationDate.error = this.state.valdationData.Properties.ExpirationDate.ValidationRules.brainTreeExpirationDate.ErrorMessage;
                  this.updateError(state.cardExpirationDate.value, state.cardExpirationDate.error);
 
              }
@@ -524,7 +539,7 @@ class App extends Component {
 
          if(state.cardpostCode.value !== "" && !window.cardValidator.postalCode(state.cardpostCode.value).isValid){
              console.log('cardpostCode not valid');
-             state.cardpostCode.error = this.valdationData.Properties.PostalCode.ValidationRules.brainTreePostalCode.ErrorMessage;
+             state.cardpostCode.error = this.state.valdationData.Properties.PostalCode.ValidationRules.brainTreePostalCode.ErrorMessage;
              this.updateError(state.cardpostCode.value, state.cardpostCode.error);
 
          }
@@ -1407,7 +1422,7 @@ class App extends Component {
                     </ToggleTab>,
                     <div>
                     {state.locations.length > 1 ?
-                        <Button className="Button_red-label ml-auto mr-5 mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)}/> : ""
+                        <Button removeLocation="true" className="Button_red-border ml-auto mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)}/> : ""
                     }
                     </div>
                 ];
@@ -1590,27 +1605,27 @@ class App extends Component {
 
                 <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
                     <div hidden={this.state.paymentId !== ''}>
-                        <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
-                        <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
+                        <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
+                        <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
                         {/*<Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>*/}
                         <div className="row" style={{
                                 maxWidth: "655px"
                             }}>
                             <div className="col-md-6">
-                                <Input formatDate="expiry date" hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
+                                <Input formatDate="expiry date" hintText="This is the help text for field 'Expiry date'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 Input_half "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="date" dateValidator={this.getRestrictForDate("cardExpirationDate")} updateField={this.updateField} fieldName="cardExpirationDate" value={this.state.cardExpirationDate.value} visited={this.state.cardExpirationDate.visited} label="Expiry date" error={this.state.cardExpirationDate.error}/>
                             </div>
                             <div className="col-md-6">
-                                <Input hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
+                                <Input hintText="This is the help text for field 'CCV'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardCVV" value={this.state.cardCVV.value} visited={this.state.cardCVV.visited} label="CCV"  error={this.state.cardCVV.error}/>
                             </div>
                         </div>
                         <div className="row" style={{
                                 maxWidth: "655px"
                             }}>
                             <div className="col-md-6">
-                                <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardstreetAddress" value={this.state.cardstreetAddress.value} visited={this.state.cardstreetAddress.visited} label="House number/name" error={this.state.cardstreetAddress.error}/>
+                                <Input hintText="This is the help text for field 'House number/name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 mr-2 Input_half "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardstreetAddress" value={this.state.cardstreetAddress.value} visited={this.state.cardstreetAddress.visited} label="House number/name" error={this.state.cardstreetAddress.error}/>
                             </div>
                             <div className="col-md-6">
-                                <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
+                                <Input hintText="This is the help text for field 'Postcode'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardpostCode" value={this.state.cardpostCode.value} visited={this.state.cardpostCode.visited} label="Postcode" error={this.state.cardpostCode.error}/>
                             </div>
                         </div>
                         {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
@@ -1643,7 +1658,26 @@ class App extends Component {
     render() {
         return (
             <div className="App text-center text-md-left mb-5">
+                {this.state.showPopup !== 0 ?
+                    <div className="modal-wrap">
+                        <div className="modal modal_save">
+                          <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content">
 
+                              <div className="modal-body ">
+                                  <button type="button" className="close" onClick={this.closeSavePopup}>
+                                    <span>×</span>
+                                  </button>
+                                  <div className="Step__success-icon mt-0 mt-5">
+                                      <img src={successIcon} alt="success icon" />
+                                  </div>
+                                <div className="Step__need-title mt-4 text-dark text-center mb-5">Your data has been saved!</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    : ""}
 
                 <Header
                 updateField={this.updateField}
@@ -1653,6 +1687,7 @@ class App extends Component {
                 currency={this.state.currency}
                 price={this.state.totalPrice}
                 userCompleteForm ={this.state.userCompleteForm.value}
+                scrollPage={this.scrollPage}
                 />
 
 
@@ -1682,7 +1717,12 @@ class App extends Component {
                               <Button
                                   label="save progress"
                                   text="SAVE your current progress"
-                                  handleClick={() => this.saveApplication()}
+                                  handleClick={() => {
+                                          this.saveApplication();
+                                          this.setState({showPopup: 1});
+                                          this.showSavePopup();
+                                      }
+                                  }
                               />
                           </div>
                           <div className="ml-auto col-md-4">
@@ -1701,14 +1741,19 @@ class App extends Component {
                           <Button
                               className={"align-self-md-start align-self-center " + (this.state.completePayment !== 0 ? "disabled" : "")}
                               label="Save progress"
-                              handleClick={() => this.saveApplication()}/>
+                              handleClick={() => {
+                                      this.saveApplication();
+                                      this.setState({showPopup: 1})
+                                      this.showSavePopup();
+                                  }
+                                }/>
                       </div>
 
                       <div className={
                               ((this.state.currentStep !== 0 && this.state.userCompleteForm.value !== "1" && this.state.completePayment !== 1 ) ? "col-sm-3 d-block"  : "d-none")
                           }>
                           <Button
-                              handleClick={() => this.updateField("currentStep", this.state.currentStep - 1)}
+                              handleClick={() => {this.updateField("currentStep", this.state.currentStep - 1); this.scrollPage();}}
                               className={"Button_red-border align-self-md-end align-self-center " + (this.state.completePayment !== 0 ? "disabled" : "")}
                               label="Previous step"
                           />
@@ -1717,7 +1762,7 @@ class App extends Component {
                               ((this.state.currentStep === 1) ? "col-sm-3 d-block" : (this.state.currentStep !== 4 && this.state.currentStep !== 0) ? "col-sm-3 d-block"  : "d-none")
                           }>
                           <Button
-                              handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
+                              handleClick={() => {this.updateField("currentStep", this.state.currentStep + 1); this.scrollPage();}}
                               className="Button_red align-self-md-end align-self-center"
                               label="Next step >"
                           />

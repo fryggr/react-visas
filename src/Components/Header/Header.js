@@ -19,6 +19,7 @@ export const Header = props => {
                             updateField={props.updateField}
                             steps={props.steps}
                             currentStep={props.currentStep}
+                            scrollPage={props.scrollPage}
                         />
                     )}
                 </div>

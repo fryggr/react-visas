@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+.Button-wrapper_mw-625{
+    max-width: 625px;
+}
+
 .Button{
     cursor: pointer;
     white-space: nowrap;

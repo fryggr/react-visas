@@ -1,4 +1,5 @@
 export default {
+    showPopup: 0,
     currentHint: '',
     currentStep: 0,
     priceInPounds: 15.4,
@@ -21,6 +22,8 @@ export default {
             label: '€ - EUR'
         }
     ],
+
+    valdationData: "",
 
     cardNumber: {
         value: '',
