@@ -41,7 +41,11 @@ export const Sticky = props => {
                 </div>
                 <div className="d-flex col-md-6 flex-column flex-md-row justify-content-end align-items-center">
                     <Button label="retrieve saved application" className="mr-3" text="" handleClick={props.retrieveApp}/>
-                    <Button label="save progress" text="" handleClick={props.saveApp}/>
+                    <Button label="save progress" text="" handleClick={() => {
+                            props.saveApp();
+                            props.showSavePopup();
+                        }}
+                    />
                 </div>
             </div>
         );

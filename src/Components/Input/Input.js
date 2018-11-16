@@ -9,6 +9,8 @@ import ReactFlagsSelect from "react-flags-select";
 import "react-phone-number-input/style.css";
 import ReactPhoneInput from "react-phone-input-2";
 import IntlTelInput from 'react-intl-tel-input';
+import $ from "jquery";
+import Inputmask from "inputmask";
 /*******IMPORT STYLES********/
 import "./Input.css";
 import "react-flags-select/css/react-flags-select.css";
@@ -70,7 +72,28 @@ export class Input extends React.Component {
           </div>
         </div>
       );
-    } else if (type === "select") {
+  }
+  else if (type === "number") {
+      return (
+        <div className="Input-wrapper">
+          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
+          <div className={"Input " + className}>
+            <label className="Input__label">{label}</label>
+            <input
+              disabled={disabled}
+              className="Input__field"
+              type={type}
+              value={value}
+              placeholder={placeholder}
+            />
+
+            <div className="Input__error">{visited ? error : ""}</div>
+            {currentHint === fieldName ? <Hint hintText={this.props.hintText} /> : ""}
+          </div>
+        </div>
+      );
+  }
+    else if (type === "select") {
       // CUSTOM STYLES FOR Select
       const indicatorSeparator = () => ({
         color: "red"

@@ -21,6 +21,10 @@ import Moment from "moment";
 import _ from 'lodash';
 import visitorTemplate from './utils/visitorTemplate';
 import state from './utils/state';
+// import Inputmask from "inputmask";
+import InputMask from 'react-input-mask';
+// import $ from "jquery";
+
 /**********HELPERS FUNCTIONS**************/
 import daysBetween from './utils/daysBetweenDates';
 
@@ -48,9 +52,7 @@ class App extends Component {
             if(!e.target.closest('.Input') && !e.target.closest('.hint') && !e.target.closest('.RadioGroup')){
                 this.updateCurrentHint("");
             }
-
         }
-
 
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
@@ -275,6 +277,7 @@ class App extends Component {
     }
 
     showSavePopup(){
+        this.setState({showPopup: 1});
         document.body.style.overflow = "hidden";
     }
 
@@ -1605,7 +1608,30 @@ class App extends Component {
 
                 <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
                     <div hidden={this.state.paymentId !== ''}>
-                        <Input hintText="This is the help text for field 'Card number'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardNumber" value={this.state.cardNumber.value} visited={this.state.cardNumber.visited} label="Card number"  error={this.state.cardNumber.error}/>
+                        <InputMask mask="99/99/9999" value={this.state.cardNumber.value}>
+                            {(inputProps) => <Input {...inputProps} type="tel" disableUnderline hintText="This is the help text for field 'Card number'"
+                            updateCurrentHint={this.updateCurrentHint}
+                            currentHint={this.state.currentHint}
+                            className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}
+                            type="cardNumber"
+                            updateField={this.updateField}
+                            fieldName="cardNumber"
+                            visited={this.state.cardNumber.visited}
+                            label="Card number"
+                            error={this.state.cardNumber.error} />}
+                          </InputMask>
+                        {/*<Input
+                            hintText="This is the help text for field 'Card number'"
+                            updateCurrentHint={this.updateCurrentHint}
+                            currentHint={this.state.currentHint}
+                            className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}
+                            type="cardNumber"
+                            updateField={this.updateField}
+                            fieldName="cardNumber"
+                            visited={this.state.cardNumber.visited}
+                            label="Card number"
+                            error={this.state.cardNumber.error}
+                        />*/}
                         <Input hintText="This is the help text for field 'Cardholder name'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="cardholderName" value={this.state.cardholderName.value} visited={this.state.cardholderName.visited} label="Cardholder name" error={this.state.cardholderName.error}/>
                         {/*<Input hintText="This is the help text for field 'Surname'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")}  type="text" updateField={this.updateField} fieldName="userSurname" value={this.state.userSurname.value} visited={this.state.userSurname.visited} label="Surname"  error={this.state.userSurname.error}/>*/}
                         <div className="row" style={{
@@ -1703,6 +1729,7 @@ class App extends Component {
                     price={this.state.totalPrice}
                     retrieveApp={() => this.retrieveApplication()}
                     saveApp={() => this.saveApplication()}
+                    showSavePopup={() => this.showSavePopup()}
                 />
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
                   <div className="container px-0 mr-auto ml-0">
@@ -1719,7 +1746,6 @@ class App extends Component {
                                   text="SAVE your current progress"
                                   handleClick={() => {
                                           this.saveApplication();
-                                          this.setState({showPopup: 1});
                                           this.showSavePopup();
                                       }
                                   }
@@ -1743,7 +1769,6 @@ class App extends Component {
                               label="Save progress"
                               handleClick={() => {
                                       this.saveApplication();
-                                      this.setState({showPopup: 1})
                                       this.showSavePopup();
                                   }
                                 }/>
