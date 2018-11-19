@@ -23,14 +23,20 @@ export class Input extends React.Component {
   constructor(props) {
     super(props);
 
+    $(document).ready(function(){
+        Inputmask({"mask": "9999 9999 9999 9999", "showMaskOnHover": false, "showMaskOnFocus": false}).mask($('.Input__field_mask'));
+    });
+
   }
 
   componentWillUpdate(){
-      if (typeof this.refs.country !== 'undefined')
-        this.refs.country.updateSelected(this.props.value)
+      if (typeof this.refs.country !== 'undefined'){
+          this.refs.country.updateSelected(this.props.value);
+      }
   }
 
   render() {
+
     let { type, label, fieldName, placeholder, visited, value, dateValidator, error, updateField, options, updateCurrentHint, currentHint, viewDate, formatDate } = {
       ...this.props
     };
@@ -44,7 +50,7 @@ export class Input extends React.Component {
       className += error !== "" ? " incorrect" : " correct";
     }
 
-    if (type !== "select" && type !== "date" && type !== "country" && type !== "phone") {
+    if (type !== "select" && type !== "date" && type !== "country" && type !== "phone" && type !== "cardNumber") {
       return (
         <div className="Input-wrapper">
           {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
@@ -73,24 +79,33 @@ export class Input extends React.Component {
         </div>
       );
   }
-  else if (type === "number") {
+  else if (type === "cardNumber") {
       return (
-        <div className="Input-wrapper">
-          {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
-          <div className={"Input " + className}>
-            <label className="Input__label">{label}</label>
-            <input
-              disabled={disabled}
-              className="Input__field"
-              type={type}
-              value={value}
-              placeholder={placeholder}
-            />
+          <div className="Input-wrapper">
+            {currentHint === fieldName ? <div className="Input-wrapper__inFocus" /> : ""}
+            <div className={"Input " + className}>
+              <label className="Input__label">{label}</label>
+              <input
+                disabled={disabled}
+                onFocus={() => updateCurrentHint(fieldName)}
+                onBlur={e => {
+                  updateField(fieldName + ".visited", true);
+                  updateField(fieldName + ".value", e.target.value);
+                }}
+                onChange={e => {
+                    updateField(fieldName + ".value", e.target.value);
+                    }
+                }
+                className="Input__field Input__field_mask"
+                type={type}
+                value={value}
+                placeholder={placeholder}
+              />
 
-            <div className="Input__error">{visited ? error : ""}</div>
-            {currentHint === fieldName ? <Hint hintText={this.props.hintText} /> : ""}
+              <div className="Input__error">{visited ? error : ""}</div>
+              {currentHint === fieldName ? <Hint hintText={this.props.hintText} /> : ""}
+            </div>
           </div>
-        </div>
       );
   }
     else if (type === "select") {
