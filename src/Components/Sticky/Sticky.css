@@ -85,6 +85,10 @@
     left: 0;
 }
 
+.modal-wrap_loader{
+    z-index: 10000;
+}
+
 .modal.modal_save{
     display: block;
 }

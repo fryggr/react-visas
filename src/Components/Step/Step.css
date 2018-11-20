@@ -116,6 +116,12 @@
     margin-top: 50px;
 }
 
+.Step__success-icon_loader{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
 .Step__success-icon img{
     max-width: 100%;
 }

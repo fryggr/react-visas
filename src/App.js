@@ -35,6 +35,7 @@ import visaDebit from "./Components/Step/img/visa-debit.png";
 import visa from "./Components/Step/img/visa.png";
 import clocksImg from "./Components/Step/img/clocks.png";
 import successIcon from "./Components/Step/img/success-icon.png";
+import loadIcon from "./Components/Step/img/progressbar2.gif";
 
 /************FOR VALIDATION***********/
 let Validator = require("validatorjs");
@@ -53,6 +54,19 @@ class App extends Component {
                 this.updateCurrentHint("");
             }
         }
+
+        let submitPay = $("[name='UsernamePasswordEntry']");
+        let payIframe = document.querySelector("#authWindow");
+
+        // payIframe.load(function(){console.log("let's show loader!");});
+
+        if(typeof submitPay !== "undefined"){
+            submitPay.click(() => {
+                console.log("let's show loader!");
+            })
+        }
+
+
 
 
         /******BINDING*****/
@@ -150,7 +164,6 @@ class App extends Component {
                 paymentService.getPaymentMethodMetadata(paymentRequest, (metadata) => {
                     alert("Success");
                     this.state.valdationData = metadata;
-                    console.log(this.state.valdationData);
                     this.setState(this.state);
                 },
                 ()=> {
@@ -280,11 +293,25 @@ class App extends Component {
     showSavePopup(){
         this.setState({showPopup: 1});
         document.body.style.overflow = "hidden";
+        document.querySelector(".App").style.position = "relative";
     }
 
     closeSavePopup(){
         document.body.style.overflow = "auto";
         this.setState({showPopup: 0});
+        document.querySelector(".App").style.position = "static";
+    }
+
+    showLoader(){
+        this.setState({showLoader: 1});
+        document.body.style.overflow = "hidden";
+        document.querySelector(".App").style.position = "relative";
+    }
+
+    hideLoader(){
+        document.body.style.overflow = "auto";
+        this.setState({showLoader: 0});
+        document.querySelector(".App").style.position = "static";
     }
 
     updateCurrentHint(fieldName){
@@ -358,15 +385,12 @@ class App extends Component {
         let state = this.state;
         let paymentId = '';
         var Payments = window.Payments;
-        // console.log(Payments);
+
         var paymentService = new Payments.PaymentService({
             proxyOptions: {
                 hostUrl: "https://devsecurepay.realrussia.devserver"
             }
         });
-
-        // console.log(paymentService);
-
 
         var data = {
             paymentRequest: {
@@ -391,8 +415,8 @@ class App extends Component {
             onResult: (payment) => {
                 alert("Success payment " + payment.Id);
                 state.paymentId = payment.Id;
-                console.log(state.paymentId);
                 this.setState({paymentId: payment.Id});
+                this.hideLoader();
             },
             onError: (errorMessage, modelState) => {
                 alert("Error has occured: " + errorMessage);
@@ -1717,6 +1741,17 @@ class App extends Component {
                         </div>
                     </div>
                     : ""}
+                    {this.state.showLoader !== 0 ?
+                        <div className="modal-wrap modal-wrap_loader">
+                            <div className="modal modal_save">
+                              <div className="modal-dialog modal-dialog-centered">
+                                  <div className="Step__success-icon Step__success-icon_loader">
+                                    <img src={loadIcon} alt="load icon" />
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        : ""}
 
                 <Header
                 updateField={this.updateField}
@@ -1817,6 +1852,7 @@ class App extends Component {
                               handleClick={()=>{
                                   // console.log(this.state.currentStep);
                                   this.updateField("makePayment", this.state.currentStep);
+                                  this.showLoader();
                                   // this.createPaymentService
                                   }
                               }

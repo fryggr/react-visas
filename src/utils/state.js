@@ -1,5 +1,6 @@
 export default {
     showPopup: 0,
+    showLoader: 0,
     currentHint: '',
     currentStep: 0,
     priceInPounds: 15.4,
@@ -85,7 +86,7 @@ export default {
 
     /*************USER'S INPUT STEP 1************/
     groupSize: {
-        value: '1',
+        value: '',
         error: '',
         visited: false
     },
@@ -256,6 +257,10 @@ export default {
         {
             value: '1',
             label: '1'
+        },
+        {
+            value: '2',
+            label: '2'
         }
     ],
     OptionsNumberOfEntries: [
