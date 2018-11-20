@@ -119,7 +119,7 @@ class App extends Component {
     }
 
     componentWillMount(){
-      this.getDataFromServer();
+      // this.getDataFromServer();
       axios.get('https://ipinfo.io')
            .then(response =>{
                this.setState({usersCountry: response.data.country});
@@ -623,7 +623,7 @@ class App extends Component {
        if (!state["steps"][1].correct || !state["steps"][2].correct || !state["steps"][3].correct) {
          alert("You have errors!");
          state["userCompleteForm"].value = "2";
-         state["userCompleteForm"].error = "This field must be accepted.";
+         state["userCompleteForm"].error = "You must accept the terms and conditions to complete your order.";
          this.setState(state);
        } else {
          state["userCompleteForm"].value = value;
@@ -716,7 +716,7 @@ class App extends Component {
      }
 
      if (path.indexOf("groupSize") !== -1 || path.indexOf("registration") !== -1 || path.indexOf("numberOfEntries") !== -1 || path.indexOf("currency") !== -1)
-       this.priceCalculate();
+       // this.priceCalculate();
 
      if ((path.indexOf("registration") !== -1 || path.indexOf("arrivalDate") !== -1 || path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1) {
        //если регистрация выбрана
@@ -733,14 +733,14 @@ class App extends Component {
                  if ((this.state.departureDate1.value.toDate() <= arrivalDate1.toDate()) || (this.state.departureDate2.value.toDate() <= arrivalDate2.toDate())) {
                    //вывести alert о том, что регистрация необязательна
 
-                   alert("Your tourney less than 7 days, registration is not required");
+                   alert("According to Russian law, you do not need to register your visa if you are staying in any one city for less than 7 working days during each visit.");
                  }
              }
              else {
                  if ((this.state.departureDate1.value.toDate() <= arrivalDate1.toDate())) {
                    //вывести alert о том, что регистрация необязательна
 
-                   alert("Your tourney less than 7 days, registration is not required");
+                   alert("According to Russian law, you do not need to register your visa if you are staying in any one city for less than 7 working days during each visit.");
                  }
              }
              // if ((daysBetween(this.state.arrivalDate1.value.toDate(), this.state.departureDate1.value.toDate()) < 7) || (daysBetween(this.state.arrivalDate2.value.toDate(), this.state.departureDate2.value.toDate()) < 7)) {
@@ -763,7 +763,7 @@ class App extends Component {
 
      if (path.indexOf("city") !== -1 && path.indexOf("visited") === -1) {
        if (value.value === "Makhachkala" || value.value === "Pyatigorsk" || value.value === "Vladikavkaz" || value.value === "Magas") {
-         alert("Visa processing for Caucasus cities is 10 days");
+         alert(`Please note that if you are travelling to ${value.value}, it might take longer than usual to process your visa. Please check with your local Russian consulate before applying.`);
        }
      }
 
@@ -771,7 +771,7 @@ class App extends Component {
        let country = window.Visas.Russian.CountryRepository.Current.getNameByIsoAlpha2Code(this.state.countryApplyIn.value);
        if (this.state.registration.value != "NO") {
          if (country === "Malaysia" || country === "Singapore") {
-           alert(country + " can't register in Saint Petersburg");
+           // alert(country + " can't register in Saint Petersburg");
          }
        }
      }
@@ -1305,13 +1305,59 @@ class App extends Component {
                     visitorIndex === 0
                     ? " (Main Applicant)"
                     : "")}>
-                <Input hintText="This is the help text for field 'First name'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".firstName"} value={this.state.visitors[visitorIndex].firstName.value} visited={this.state.visitors[visitorIndex].firstName.visited} label="First name" placeholder="Please enter First name" error={this.state.visitors[visitorIndex].firstName.error}/>
-                <Input hintText="This is the help text for field 'Middle name'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".middleName"} value={this.state.visitors[visitorIndex].middleName.value} visited={this.state.visitors[visitorIndex].middleName.visited} label="Middle name" placeholder="Please enter Middle name" error={this.state.visitors[visitorIndex].middleName.error}/>
-                <Input hintText="This is the help text for field 'Surname'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".surName"} value={this.state.visitors[visitorIndex].surName.value} visited={this.state.visitors[visitorIndex].surName.visited} label="Surname" placeholder="Please enter Surname" error={this.state.visitors[visitorIndex].surName.error}/>
+                <Input
+                    hintText="This is the help text for field 'First name'"
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="text"
+                    updateField={this.updateField}
+                    fieldName={"visitors." + visitorIndex + ".firstName"}
+                    value={this.state.visitors[visitorIndex].firstName.value}
+                    visited={this.state.visitors[visitorIndex].firstName.visited}
+                    label="First name"
+                    placeholder="Please enter your first name as it appears in your passport"
+                    error={this.state.visitors[visitorIndex].firstName.error}/>
+                <Input
+                    hintText="This is the help text for field 'Middle name'"
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="text"
+                    updateField={this.updateField}
+                    fieldName={"visitors." + visitorIndex + ".middleName"}
+                    value={this.state.visitors[visitorIndex].middleName.value}
+                    visited={this.state.visitors[visitorIndex].middleName.visited}
+                    label="Middle name"
+                    placeholder="Please enter your middle name as it appears in your passport (if applicable)"
+                    error={this.state.visitors[visitorIndex].middleName.error}/>
+                <Input
+                    hintText="This is the help text for field 'Surname'"
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="text"
+                    updateField={this.updateField}
+                    fieldName={"visitors." + visitorIndex + ".surName"}
+                    value={this.state.visitors[visitorIndex].surName.value}
+                    visited={this.state.visitors[visitorIndex].surName.visited}
+                    label="Surname"
+                    placeholder="Please enter your surname as it appears in your passport"
+                    error={this.state.visitors[visitorIndex].surName.error}/>
 
                 <div className="row align-items-center" style={{"maxWidth": "655px", "marginTop": "10px"}}>
                     <div className="col-md-6">
-                        <RadioGroup hintText="This is the help text for field 'Gender'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} className="mb-3 Input_half" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".sex"} error={this.state.visitors[visitorIndex].sex.error} value={this.state.visitors[visitorIndex].sex.value} title="Gender" options={[
+                        <RadioGroup
+                            hintText="This is the help text for field 'Gender'"
+                            updateCurrentHint={this.updateCurrentHint}
+                            currentHint={this.state.currentHint}
+                            className="mb-3 Input_half"
+                            updateField={this.updateField}
+                            fieldName={"visitors." + visitorIndex + ".sex"}
+                            error={this.state.visitors[visitorIndex].sex.error}
+                            value={this.state.visitors[visitorIndex].sex.value}
+                            title="Gender"
+                            options={[
                                 {
                                     value: "Male",
                                     text: "Male"
@@ -1322,7 +1368,20 @@ class App extends Component {
                             ]} name={"visitors." + visitorIndex + ".sex"} />
                     </div>
                     <div className="col-md-6">
-                        <Input hintText="This is the help text for field 'Date of birth'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" dateValidator={this.getRestrictForDate("birthDate")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".birthDate"} value={this.state.visitors[visitorIndex].birthDate.value} viewDate={new Date().setFullYear(new Date().getFullYear() - 40)} visited={this.state.visitors[visitorIndex].birthDate.visited} label="Date of birth" placeholder="" error={this.state.visitors[visitorIndex].birthDate.error}/>
+                        <Input
+                            hintText="This is the help text for field 'Date of birth'"
+                            currentHint={this.state.currentHint}
+                            updateCurrentHint={this.updateCurrentHint}
+                            type="date"
+                            dateValidator={this.getRestrictForDate("birthDate")}
+                            updateField={this.updateField}
+                            fieldName={"visitors." + visitorIndex + ".birthDate"}
+                            value={this.state.visitors[visitorIndex].birthDate.value}
+                            viewDate={new Date().setFullYear(new Date().getFullYear() - 40)}
+                            visited={this.state.visitors[visitorIndex].birthDate.visited}
+                            label="Date of birth"
+                            placeholder=""
+                            error={this.state.visitors[visitorIndex].birthDate.error}/>
                     </div>
 
                 </div>
@@ -1332,11 +1391,35 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-md-6">
-                        <Input hintText="This is the help text for field 'Citizenship'" currentHint={this.state.currentHint} usersCountry={this.state.usersCountry} updateCurrentHint={this.updateCurrentHint} className="mt-4 mr-2 Input_half" type="country" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".citizenship"} value={this.state.visitors[visitorIndex].citizenship.value} visited={this.state.visitors[visitorIndex].citizenship.visited} label="Citizenship" error={this.state.visitors[visitorIndex].citizenship.error}/>
+                        <Input
+                            hintText="This is the help text for field 'Citizenship'"
+                            currentHint={this.state.currentHint}
+                            usersCountry={this.state.usersCountry}
+                            updateCurrentHint={this.updateCurrentHint}
+                            className="mt-4 mr-2 Input_half"
+                            type="country"
+                            updateField={this.updateField}
+                            fieldName={"visitors." + visitorIndex + ".citizenship"}
+                            value={this.state.visitors[visitorIndex].citizenship.value}
+                            visited={this.state.visitors[visitorIndex].citizenship.visited}
+                            label="Citizenship"
+                            error={this.state.visitors[visitorIndex].citizenship.error}/>
 
                     </div>
                     <div className="col-md-6">
-                        <Input hintText="This is the help text for field 'Passport number'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="text" updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportNumber"} value={this.state.visitors[visitorIndex].passportNumber.value} visited={this.state.visitors[visitorIndex].passportNumber.visited} label="Passport number" placeholder="Please enter passport number" error={this.state.visitors[visitorIndex].passportNumber.error}/>
+                        <Input
+                            hintText="This is the help text for field 'Passport number'"
+                            currentHint={this.state.currentHint}
+                            updateCurrentHint={this.updateCurrentHint}
+                            className="mt-4"
+                            type="text"
+                            updateField={this.updateField}
+                            fieldName={"visitors." + visitorIndex + ".passportNumber"}
+                            value={this.state.visitors[visitorIndex].passportNumber.value}
+                            visited={this.state.visitors[visitorIndex].passportNumber.visited}
+                            label="Passport number"
+                            placeholder="Please enter your passport number"
+                            error={this.state.visitors[visitorIndex].passportNumber.error}/>
                     </div>
                 </div>
 
@@ -1353,20 +1436,70 @@ class App extends Component {
                         maxWidth: "655px"
                     }}>
                     <div className="col-md-6">
-                        <Input hintText="This is the help text for field 'Date passport issued'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" className="mt-4 mr-2 Input_half" dateValidator={this.getRestrictForDate("passportIssued")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportIssued"} value={this.state.visitors[visitorIndex].passportIssued.value} visited={this.state.visitors[visitorIndex].passportIssued.visited} label="Date passport issued" placeholder="" error={this.state.visitors[visitorIndex].passportIssued.error}/>
+                        <Input
+                            hintText="This is the help text for field 'Date passport issued'"
+                            currentHint={this.state.currentHint}
+                            updateCurrentHint={this.updateCurrentHint}
+                            type="date"
+                            className="mt-4 mr-2 Input_half"
+                            dateValidator={this.getRestrictForDate("passportIssued")}
+                            updateField={this.updateField}
+                            fieldName={"visitors." + visitorIndex + ".passportIssued"}
+                            value={this.state.visitors[visitorIndex].passportIssued.value}
+                            visited={this.state.visitors[visitorIndex].passportIssued.visited}
+                            label="Date passport issued"
+                            placeholder=""
+                            error={this.state.visitors[visitorIndex].passportIssued.error}/>
                     </div>
 
                     <div className="col-md-6">
-                        <Input hintText="This is the help text for field 'Date passport expired'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="date" className="mt-4" dateValidator={this.getRestrictForDate("passportExpired")} updateField={this.updateField} fieldName={"visitors." + visitorIndex + ".passportExpired"} value={this.state.visitors[visitorIndex].passportExpired.value} visited={this.state.visitors[visitorIndex].passportExpired.visited} label="Date passport expired" placeholder="" error={this.state.visitors[visitorIndex].passportExpired.error}/>
+                        <Input
+                            hintText="This is the help text for field 'Date passport expired'"
+                            currentHint={this.state.currentHint}
+                            updateCurrentHint={this.updateCurrentHint}
+                            type="date"
+                            className="mt-4"
+                            dateValidator={this.getRestrictForDate("passportExpired")}
+                            updateField={this.updateField}
+                            fieldName={"visitors." + visitorIndex + ".passportExpired"}
+                            value={this.state.visitors[visitorIndex].passportExpired.value}
+                            visited={this.state.visitors[visitorIndex].passportExpired.visited}
+                            label="Date passport expired"
+                            placeholder=""
+                            error={this.state.visitors[visitorIndex].passportExpired.error}/>
                     </div>
                 </div>
 
                 {
                     visitorIndex === 0
                         ? [
-                            <Input hintText="This is the help text for field 'Email'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="email" className="mt-4" updateField={this.updateField} fieldName="email" value={this.state.email.value} visited={this.state.email.visited} label="Email" placeholder="example@mail.com" error={this.state.email.error}/>,
+                            <Input
+                                hintText="This is the help text for field 'Email'"
+                                currentHint={this.state.currentHint}
+                                updateCurrentHint={this.updateCurrentHint}
+                                type="email"
+                                className="mt-4"
+                                updateField={this.updateField}
+                                fieldName="email"
+                                value={this.state.email.value}
+                                visited={this.state.email.visited}
+                                label="Email"
+                                placeholder="example@mail.com"
+                                error={this.state.email.error}/>,
 
-                            <Input hintText="This is the help text for field 'Telephone'" usersCountry={this.state.usersCountry} currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="phone" className="mt-4" updateField={this.updateField} fieldName="phone" value={this.state.phone.value} visited={this.state.phone.visited} label="Telephone" error={this.state.phone.error}/>
+                            <Input
+                                hintText="This is the help text for field 'Telephone'"
+                                usersCountry={this.state.usersCountry}
+                                currentHint={this.state.currentHint}
+                                updateCurrentHint={this.updateCurrentHint}
+                                type="phone"
+                                className="mt-4"
+                                updateField={this.updateField}
+                                fieldName="phone"
+                                value={this.state.phone.value}
+                                visited={this.state.phone.visited}
+                                label="Telephone"
+                                error={this.state.phone.error}/>
                         ]
                         : []
                 }
@@ -1386,9 +1519,46 @@ class App extends Component {
                     }
             ]}/>,
 
-        <Input hintText="This is the help text for field 'Vehicle make'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={this.state.autoModel.value} fieldName="autoModel" visited={this.state.autoModel.visited} label="Vehicle make" error={this.state.autoModel.error} options={this.state.OptionsAutoModels}/>,
-        <Input hintText="This is the help text for field 'Vehicle color'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={this.state.autoColor.value} fieldName="autoColor" visited={this.state.autoColor.visited} label="Vehicle color" error={this.state.autoColor.error} options={this.state.OptionsAutoColors}/>,
-        <Input hintText="This is the help text for field 'Licence Plate number'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="text" className="mt-4" updateField={this.updateField} value={this.state.autoNumber.value} fieldName="autoNumber" visited={this.state.autoNumber.visited} label="Licence Plate number" error={this.state.autoNumber.error}/>
+        <Input
+            hintText="This is the help text for field 'Vehicle make'"
+            currentHint={this.state.currentHint}
+            updateCurrentHint={this.updateCurrentHint}
+            type="select"
+            className="mt-4"
+            updateField={this.updateField}
+            value={this.state.autoModel.value}
+            fieldName="autoModel"
+            visited={this.state.autoModel.visited}
+            label="Vehicle make"
+            placeholder="Please select the make of the vehicle you will bring to Russia"
+            error={this.state.autoModel.error}
+            options={this.state.OptionsAutoModels}/>,
+        <Input
+            hintText="This is the help text for field 'Vehicle color'"
+            currentHint={this.state.currentHint}
+            updateCurrentHint={this.updateCurrentHint}
+            type="select"
+            className="mt-4"
+            updateField={this.updateField}
+            value={this.state.autoColor.value}
+            fieldName="autoColor"
+            visited={this.state.autoColor.visited}
+            label="Vehicle color"
+            placeholder="Please select the colour of the vehicle you will bring to Russia"
+            error={this.state.autoColor.error}
+            options={this.state.OptionsAutoColors}/>,
+        <Input
+            hintText="This is the help text for field 'Licence Plate number'"
+            currentHint={this.state.currentHint}
+            updateCurrentHint={this.updateCurrentHint}
+            type="text"
+            className="mt-4"
+            updateField={this.updateField}
+            value={this.state.autoNumber.value}
+            fieldName="autoNumber"
+            visited={this.state.autoNumber.visited}
+            label="Licence Plate number"
+            error={this.state.autoNumber.error}/>
         ]
     }
 
@@ -1402,21 +1572,47 @@ class App extends Component {
                     maxWidth: "655px"
                 }}>
                 <div className="col-md-6">
-                    <Input hintText="This is the help text for field 'Arrival date'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} dateValidator={this.getRestrictForDate("arrivalDate" + (
-                        inputIndex + 1))} type="date" className="mt-4 mr-2 Input_half"  updateField={this.updateField} fieldName={"arrivalDate" + (
-                        inputIndex + 1)} value={this.state["arrivalDate" + (
-                            inputIndex + 1)].value} visited={this.state["arrivalDate" + (
-                            inputIndex + 1)].visited} label={"Entry " + (
-                        inputIndex + 1) + " - Arrival date"} placeholder="" error={this.state["arrivalDate" + (
+                    <Input
+                        hintText="This is the help text for field 'Arrival date'"
+                        currentHint={this.state.currentHint}
+                        updateCurrentHint={this.updateCurrentHint}
+                        dateValidator={this.getRestrictForDate("arrivalDate" + (
+                        inputIndex + 1))}
+                        type="date"
+                        className="mt-4 mr-2 Input_half"
+                        updateField={this.updateField}
+                        fieldName={"arrivalDate" + (
+                        inputIndex + 1)}
+                        value={this.state["arrivalDate" + (
+                            inputIndex + 1)].value}
+                        visited={this.state["arrivalDate" + (
+                            inputIndex + 1)].visited}
+                        label={"Entry " + (
+                        inputIndex + 1) + " - Arrival date in Russia"}
+                        placeholder=""
+                        error={this.state["arrivalDate" + (
                             inputIndex + 1)].error}/>
                 </div>
                 <div className="col-md-6">
-                    <Input hintText="This is the help text for field 'Departure date'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} dateValidator={this.getRestrictForDate("departureDate" + (
-                        inputIndex + 1))} type="date" className="mt-4" updateField={this.updateField} fieldName={"departureDate" + (
-                        inputIndex + 1)} value={this.state["departureDate" + (
-                            inputIndex + 1)].value} visited={this.state["departureDate" + (
-                            inputIndex + 1)].visited} label={"Entry " + (
-                        inputIndex + 1) + " - Departure date"} placeholder="" error={this.state["departureDate" + (
+                    <Input
+                        hintText="This is the help text for field 'Departure date'"
+                        currentHint={this.state.currentHint}
+                        updateCurrentHint={this.updateCurrentHint}
+                        dateValidator={this.getRestrictForDate("departureDate" + (
+                        inputIndex + 1))}
+                        type="date"
+                        className="mt-4"
+                        updateField={this.updateField}
+                        fieldName={"departureDate" + (
+                        inputIndex + 1)}
+                        value={this.state["departureDate" + (
+                            inputIndex + 1)].value}
+                        visited={this.state["departureDate" + (
+                            inputIndex + 1)].visited}
+                        label={"Entry " + (
+                        inputIndex + 1) + " - Departure date from Russia"}
+                        placeholder=""
+                        error={this.state["departureDate" + (
                             inputIndex + 1)].error}/>
                 </div>
             </div>);
@@ -1432,7 +1628,20 @@ class App extends Component {
                 return [
                     <ToggleTab className="mt-4" label={"Location " + (
                         locationIndex + 1)}>
-                        <Input hintText="This is the help text for field 'City'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" className="mt-4" updateField={this.updateField} value={state.locations[locationIndex].city.value} fieldName={"locations." + locationIndex + ".city"} visited={state.locations[locationIndex].city.visited} label="City" error={state.locations[locationIndex].city.error} options={state.OptionsCities}/>
+                        <Input
+                            hintText="This is the help text for field 'City'"
+                            currentHint={this.state.currentHint}
+                            updateCurrentHint={this.updateCurrentHint}
+                            type="select"
+                            className="mt-4"
+                            updateField={this.updateField}
+                            value={state.locations[locationIndex].city.value}
+                            fieldName={"locations." + locationIndex + ".city"}
+                            visited={state.locations[locationIndex].city.visited}
+                            label="City"
+                            placeholder="Please select a city"
+                            error={state.locations[locationIndex].city.error}
+                            options={state.OptionsCities}/>
                         <Input
                             hintText="This is the help text for field 'Hotel'"
                             currentHint={this.state.currentHint}
@@ -1444,6 +1653,7 @@ class App extends Component {
                             fieldName={"locations." + locationIndex + ".hotel"}
                             visited={state.locations[locationIndex].hotel.visited}
                             label="Hotel"
+                            placeholder="Please select a hotel or hostel"
                             error={state.locations[locationIndex].hotel.error}
                             options={state.locations[locationIndex].OptionsHotels}
                         />
@@ -1467,25 +1677,18 @@ class App extends Component {
                 <div className="Step-intro pt-4">
                     <div className="Step Step_intro">
                         <div className="Step__need">
-                            <h4 className="Step__need-title my-3">You will need to hand:</h4>
+                            <h4 className="Step__need-title my-3">To complete this application, you will need:</h4>
                             <div className="Step__need-body row">
-                                <div className="Step__need-list col-md-3">
+                                <div className="Step__need-list col-md-7">
                                     <ul>
-                                        <li>Passports</li>
-                                        <li>Your group’s personal details</li>
-                                        <li>Your proposed travel dates</li>
-                                    </ul>
-                                </div>
-                                <div className="Step__need-list col-md-4">
-                                    <ul>
-                                        <li>Passports</li>
-                                        <li>Your group’s personal details</li>
-                                        <li>Your proposed travel dates</li>
+                                        <li>Passport(s) of everybody in your group</li>
+                                        <li>Personal details of everybody in your group</li>
+                                        <li>Your travel dates (preferably confirmed)</li>
                                     </ul>
                                 </div>
                                 <div className="Step__description col-md-4">
                                     <img className="mr-4" src={clocksImg} alt="" />
-                                    <div className="Step__text"><b>You will need approximately</b> <span className="Step__text_red">20 minutes</span> to complete this application</div>
+                                    <div className="Step__text"><b>You will need approximately</b> <span className="Step__text_red">40 minutes</span> to complete this application</div>
                                 </div>
                             </div>
 
@@ -1497,18 +1700,18 @@ class App extends Component {
                             <Button
                                 label="retrieve saved application"
                                 className="mr-3"
-                                text="LOAD a previously saved existing application."
+                                text="Load a previously saved existing application."
                                 handleClick={() => this.retrieveApplication()}
                             />
                             <Button
                                 handleClick={() => this.updateField("currentStep", this.state.currentStep + 1)}
                                 className="Button_red"
                                 label="NEXT STEP >"
-                                text="START a new application."
+                                text="Start a new application."
                             />
                         </div>
                         <div className="Step__intro-text ml-auto col-md-5">
-                            <b>With our simple step by step process</b>, you can see exactly how far through you are - along with if you have successfully completed a section, or are still missing some information.
+                            Our simple, step-by-step form will show you exactly how far along you are in the ordering process and whether any information is missing in any of the sections. It also allows you to save your progress so you can return later if needed.
                         </div>
                     </div>
 
@@ -1522,13 +1725,105 @@ class App extends Component {
 
         if (this.state.currentStep === 1) {
             return (<Step number={1} hidden={this.state.currentStep !== 1}>
-                <Input hintText="This is the help text for field 'Group Size'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} type="select" updateField={this.updateField} fieldName="groupSize" value={this.state.groupSize.value} visited={this.state.groupSize.visited} label="Group Size" error={this.state.groupSize.error} options={this.state.OptionsGroupSize}/>
-                <Input hintText="This is the help text for field 'Number of entries'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="numberOfEntries" value={this.state.numberOfEntries.value} visited={this.state.numberOfEntries.visited} label="Number of entries" error={this.state.numberOfEntries.error} options={this.state.OptionsNumberOfEntries}/>
-                <Input hintText="This is the help text for field 'Purpose of visit'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="purpose" value={this.state.purpose.value} visited={this.state.purpose.visited} label="Purpose of visit" error={this.state.purpose.error} options={this.state.OptionsPurpose}/>
-                <Input hintText="This is the help text for field 'Registration'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="registration" value={this.state.registration.value} visited={this.state.registration.visited} label="Registration" error={this.state.registration.error} options={this.state.OptionsRegistration}/>
-                <Input hintText="This is the help text for field 'Country appling in'" usersCountry={this.state.usersCountry} currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="country" updateField={this.updateField} fieldName="countryApplyIn" value={this.state.countryApplyIn.value} visited={this.state.countryApplyIn.visited} label="Country appling in" error={this.state.countryApplyIn.error}/>
+                <Input
+                    hintText="If you are travelling with at least one other person who has the same travel plans as you, you may include everybody on one visa support document rather than applying for individual ones."
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    type="select"
+                    updateField={this.updateField}
+                    fieldName="groupSize"
+                    value={this.state.groupSize.value}
+                    visited={this.state.groupSize.visited}
+                    label="Group size - how many people are in your group?"
+                    error={this.state.groupSize.error}
+                    options={this.state.OptionsGroupSize}/>
+                <Input
+                    hintText={`
+                        A single-entry visa allows the visa holder one entry and one exit from Russia and a double-entry visa allows for two entries and two exits within the validity period of the visa.</br>&nbsp;</br>
+                        If you have a group where some individuals require a single-entry visa and others require a double-entry visa, then you should apply for the appropriate visa support documents for these individuals separately to avoid higher consular fees.
+                        `}
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="select"
+                    updateField={this.updateField}
+                    fieldName="numberOfEntries"
+                    value={this.state.numberOfEntries.value}
+                    visited={this.state.numberOfEntries.visited}
+                    label="Number of entries"
+                    error={this.state.numberOfEntries.error}
+                    options={this.state.OptionsNumberOfEntries}/>
+                <Input
+                    hintText={`
+                        The "Purpose of Visit" of a visa is effectively a sub-category of your visa which provides more information about the specific reason of your visit to Russia. </br>&nbsp;</br>
+                        AUTO TOURIST - This is for general tourist purposes where you will be taking your own private vehicle into Russia. You should provide a cover letter with your application pack indicating the route of your journey and vehicle details such as make, registration and colour, in addition to a copy of the vehicle registration document and your driving licence. Please note that, in addition to the auto-tourist visa, there will be other requirements to take your vehicle into and out of Russia which you will be responsible for. Please contact our visa team if you have further questions on these requirements.</br>&nbsp;</br>
+                        AIM TOURISM - This is for people travelling to Russia to participate in short negotiations, exhibitions and auctions, or to establish business links or investigate the economic climate for future business opportunities. Once these business links are in place, you should travel on a full business visa. To use a visa with the "AIM TOURISM" purpose of visit, you should be staying in a hotel and know the exact dates you are going to visit Russia. The Russian consulate where you apply for the visa decides how long the visa will be valid for and, in the case of a visa with the "AIM TOURISM" purpose of visit, this will be no more than 30 days.</br>&nbsp;</br>
+                        TOURIST - This is for general tourism purposes. Most tourist visas will have this purpose of visit.
+                        `}
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="select"
+                    updateField={this.updateField}
+                    fieldName="purpose"
+                    value={this.state.purpose.value}
+                    visited={this.state.purpose.visited}
+                    label="Purpose of visit"
+                    error={this.state.purpose.error}
+                    options={this.state.OptionsPurpose}/>
+                <Input
+                    hintText={`
+                        <b>What is registration?</b> - Registration is a legally required form of migration control in Russia, whereby foreign citizens staying in any Russian city for 7 working days or more have to register with the local migration authorities. This may sound daunting, but hotels and many hostels in Russia will automatically register you upon arrival. Moreover, Real Russia can register your visa for you in certain cities if needed, as described below.</br>&nbsp;</br>
+                        <b>No registration service needed</b> - Select this option if you are staying in a hotel or other accommodation where your visa will be registered for you, or if you staying in each Russian city you will be visiting for fewer than seven working days. In case of the latter, you should keep your tickets proving travel between the cities you visit in Russia until you leave the country.</br>&nbsp;</br>
+                        <b>Registration in Moscow for up to 30 days</b> - Select this option if you are staying in Moscow for more than 7 working days and up to 30 days and wish to pre-pay for our registration service. Please note that the registration cost is per person and applied to the total number of people applying. If you wish you may select "No registration service needed" and pay our office in Moscow directly for your registration. The price of the registration service is subject to change depending on fluctuations in the exchange rate of the Russian Ruble.</br>&nbsp;</br>
+                        <b>Registration in Moscow for longer than 1 month and up to 1 year</b> - Select this option if you are staying in Moscow for longer than 1 month and wish to pre-pay for our registration service. Please note that the registration cost is per person and applied to the total number of people applying. If you wish you may select "No registration service needed" and pay our office in Moscow directly for your registration. The price of the registration service is subject to change depending on fluctuations in the exchange rate of the Russian Ruble.</br>&nbsp;</br>
+                        <b>Registration in St. Petersburg</b> - Select this option if you are staying in St. Petersburg but not staying in a hotel and wish to pre-pay for a registration service with our partners. Please note that the registration cost is per person and applied to the total number of people applying.</br>&nbsp;</br>
+                        We have created a handy online guide about registration, which can be found <a target="_blank" href="https://realrussia.co.uk/visas/russian/registration">here</a>.
+                        `}
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="select"
+                    updateField={this.updateField}
+                    fieldName="registration"
+                    value={this.state.registration.value}
+                    visited={this.state.registration.visited}
+                    label="Registration - do you need our registration in Russia service?"
+                    error={this.state.registration.error}
+                    options={this.state.OptionsRegistration}/>
+                <Input
+                    hintText={`
+                        Please let us know in which country you will apply for your Russian visa, so that we can advise you if the Russian consulates in the country where you will apply have any special conditions that we are aware of.
+                        `}
+                    usersCountry={this.state.usersCountry}
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="country"
+                    updateField={this.updateField}
+                    fieldName="countryApplyIn"
+                    value={this.state.countryApplyIn.value}
+                    visited={this.state.countryApplyIn.visited}
+                    label="In which country will you apply for your Russian visa?"
+                    error={this.state.countryApplyIn.error}/>
                 {this.state.countryApplyInNotesText !== "" ? <Info text={this.state.countryApplyInNotesText} data={[this.state.countryApplyInFullName]} replaceStr="{Country}"/> : ""}
-                <Input hintText="This is the help text for field 'Delivery option'" currentHint={this.state.currentHint} updateCurrentHint={this.updateCurrentHint} className="mt-4" type="select" updateField={this.updateField} fieldName="delivery" value={this.state.delivery.value} visited={this.state.delivery.visited} label="Delivery option" error={this.state.delivery.error} options={this.state.OptionsDelivery}/>
+                <Input
+                    hintText={`
+                        Your invitation (visa support) will be sent to you by email once you submit this online form and make the payment.</br>&nbsp;</br>
+                        Most consulates will accept a clear faxed or emailed copy of the visa support when you apply for a visa. However, some consulates may require the original document. It is your responsibility to check whether the consulate where you intend to apply for your visa has any special requirements, e.g. original visa support documents only rather than copies.</br>&nbsp;</br>
+                        If you need the original paper visa support documents then you can select 'Other courier - contact our visa support team for price' as the delivery option. The paper invitation will be sent to your requested address by DHL or similar courier directly from our Moscow office. The cost and delivery time will depend upon country of destination. Please contact us for more details.
+                        `}
+                    currentHint={this.state.currentHint}
+                    updateCurrentHint={this.updateCurrentHint}
+                    className="mt-4"
+                    type="select"
+                    updateField={this.updateField}
+                    fieldName="delivery"
+                    value={this.state.delivery.value}
+                    visited={this.state.delivery.visited}
+                    label="Delivery option"
+                    error={this.state.delivery.error}
+                    options={this.state.OptionsDelivery}/>
             </Step>);
         } else if (this.state.currentStep === 2)
             return (<Step number={2} hidden={this.state.currentStep !== 2}>
@@ -1543,7 +1838,16 @@ class App extends Component {
                 <div hidden={this.state.purpose.value.value !== "Auto Tourist"}>
                     {this.renderAuto()}
                 </div>
-                <RadioGroup hintText="This is the help text for field 'userNeedsNewsletter'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} updateField={this.updateField} fieldName="userNeedsNewsletter" error={this.state.userNeedsNewsletter.error} value={this.state.userNeedsNewsletter.value} title="Would you like to join our monthly newsletter list" options={[
+                <RadioGroup
+                    hintText="This is the help text for field 'userNeedsNewsletter'"
+                    updateCurrentHint={this.updateCurrentHint}
+                    currentHint={this.state.currentHint}
+                    updateField={this.updateField}
+                    fieldName="userNeedsNewsletter"
+                    error={this.state.userNeedsNewsletter.error}
+                    value={this.state.userNeedsNewsletter.value}
+                    title="Would you like to receive our monthly newsletter?"
+                    options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -1552,7 +1856,16 @@ class App extends Component {
                             text: "No"
                         }
                     ]} name="userNeedsNewsletter"/>
-                <RadioGroup hintText="This is the help text for field 'userNeedsJoinMailingList'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} updateField={this.updateField} fieldName="userNeedsJoinMailingList" error={this.state.userNeedsJoinMailingList.error} value={this.state.userNeedsJoinMailingList.value} title="Would you like to join our mailing list for special offers, news and information" options={[
+                <RadioGroup
+                    hintText="This is the help text for field 'userNeedsJoinMailingList'"
+                    updateCurrentHint={this.updateCurrentHint}
+                    currentHint={this.state.currentHint}
+                    updateField={this.updateField}
+                    fieldName="userNeedsJoinMailingList"
+                    error={this.state.userNeedsJoinMailingList.error}
+                    value={this.state.userNeedsJoinMailingList.value}
+                    title="Would you like to join our mailing list for special offers, news and other travel inspiration?"
+                    options={[
                         {
                             value: "1",
                             text: "Yes"
@@ -1611,7 +1924,17 @@ class App extends Component {
                         }
                         replaceStr="< not specified >"
                     />
-                <RadioGroup createOrder={this.createOrder} hintText="This is the help text for field 'userCompleteForm'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} visited={this.state.userCompleteForm.visited} updateField={this.updateField} fieldName="userCompleteForm" error={this.state.userCompleteForm.error} value={this.state.userCompleteForm.value} title="Having completed my application, I agree that the above visa application is suitable and have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
+                <RadioGroup
+                    createOrder={this.createOrder}
+                    hintText="This is the help text for field 'userCompleteForm'"
+                    updateCurrentHint={this.updateCurrentHint}
+                    currentHint={this.state.currentHint}
+                    visited={this.state.userCompleteForm.visited}
+                    updateField={this.updateField}
+                    fieldName="userCompleteForm"
+                    error={this.state.userCompleteForm.error}
+                    value={this.state.userCompleteForm.value}
+                    title="Having completed my application, I agree that the above visa support application is suitable for my visit and I have read and understood the <b><a style='color:black;text-decoration:underline' target='_blank' href='http://realrussia.co.uk/Portals/0/files/Visa-Terms.pdf'>terms and conditions</a></b>" options={[
                             {
                                 value: "1",
                                 text: "Yes"
@@ -1631,20 +1954,8 @@ class App extends Component {
                 </Step>,
                 /********PAYMENT**********/
 
-                <Step number={5} price={this.state.totalPrice} currency={this.state.currency}>
+                <Step number={5} price={this.state.totalPrice} currency={this.state.currency} email={this.state.email.value}>
                     <div hidden={this.state.paymentId !== ''}>
-                        {/*<InputMask mask="99/99/9999" value={this.state.cardNumber.value}>
-                            {(inputProps) => <Input {...inputProps} type="tel" disableUnderline hintText="This is the help text for field 'Card number'"
-                            updateCurrentHint={this.updateCurrentHint}
-                            currentHint={this.state.currentHint}
-                            className={"mt-4 "+ (this.state.valdationData === "" || this.state.completePayment !== 0 ? "disabled" : "")}
-                            type="cardNumber"
-                            updateField={this.updateField}
-                            fieldName="cardNumber"
-                            visited={this.state.cardNumber.visited}
-                            label="Card number"
-                            error={this.state.cardNumber.error} />}
-                          </InputMask>*/}
                         <Input
                             hintText="This is the help text for field 'Card number'"
                             updateCurrentHint={this.updateCurrentHint}
@@ -1694,7 +2005,7 @@ class App extends Component {
                         {/*<Input hintText="This is the help text for field 'Card type'" updateCurrentHint={this.updateCurrentHint} currentHint={this.state.currentHint} type="select" className={"mt-4 "+ (this.state.userCompleteForm.value !== '1' ? "disabled" : "")} updateField={this.updateField} value={this.state.userCardType.value} fieldName="userCardType" visited={this.state.userCardType.visited} label="Card type" error={this.state.userCardType.error} options={this.state.OptionsCardType}/>*/}
                         <div className="Step__note mt-4 mt-lg-0">
                             <b className="Step__color-red">SECURE PAYMENT PROCESSING</b>
-                            <div className="Step__step-note my-3">"Text about how secure payment is Text about how secure payment is Text about how secure payment is"</div>
+                            <div className="Step__step-note my-3">We handle thousands of online transactions from all over the world securely and safely every month, so you have the peace of mind to know your data is safe. We use industry standard fraud protection technologies and we may also carry out security checks to confirm that any payments made online are genuine and made with the cardholder's permission, especially where cards used are not registered with payment security services such as those shown below.</div>
                             <div className="d-flex">
                                 <img src={mastercard} alt="Mastercard" className="mr-2"/>
                                 <img src={visa} alt="visa" className="mr-2"/>
@@ -1786,7 +2097,7 @@ class App extends Component {
                               <Button
                                   label="retrieve saved application"
                                   className="mr-3"
-                                  text="CONTINUE a saved existing application"
+                                  text="Load a previously saved existing application."
                                   handleClick={() => this.retrieveApplication()}
                               />
                               <Button
@@ -1800,7 +2111,7 @@ class App extends Component {
                               />
                           </div>
                           <div className="ml-auto col-md-4">
-                              <Button label="I am returning client" className="Button_red-border" text="RECOVER your personal details quickly to pre-fill your application"/>
+                              <Button label="I am returning client" className="Button_red-border" text="Have you ordered a visa or visa support with us before? If so, click here to recover your personal information and pre-fill most of your application."/>
                           </div>
                       </div>
 

@@ -63,7 +63,7 @@ export default {
     /********THIS DATA FOR STEPSNAVIGATION COMPONENT**********/
     steps: [
         {
-            stepName: 'introduction',
+            stepName: 'Before You Begin',
             visited: false
         },
         {

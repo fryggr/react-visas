@@ -33,8 +33,7 @@ export class Hint extends React.Component{
                     </div>
                 </div>
                 <div  style={{display: currentTab !== 1 ? "none" : "block" }} className="hint__body">
-                    <div className="hint__body-text">
-                        {this.props.hintText}
+                    <div className="hint__body-text" dangerouslySetInnerHTML={{ __html: this.props.hintText }}>
                     </div>
                     <div className="hint__action">
                         <div className="hint__action-icon">

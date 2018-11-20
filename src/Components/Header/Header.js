@@ -61,9 +61,7 @@ export const Header = props => {
                                 </span>
                             </div>
                             <div className="Header__price-note">
-                                Prices are shown in different currencies for your convenience,
-                                however payment will be made in British Pounds at the prevailing
-                                bank rate.
+                                You can change which currency the price is displayed in by using the "currency" box above. However, payment will be taken in British Pounds Sterling at the prevailing bank rate.
                             </div>
                         </div>
                     </div>

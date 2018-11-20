@@ -133,7 +133,7 @@ export class Input extends React.Component {
               styles={colourStyles}
               className="Input__field"
               value={value}
-              placeholder="Please select"
+              placeholder={ typeof placeholder !== "undefined" ? placeholder : "Please select" }
               onChange={selectedOption => {
                 updateField(fieldName + ".visited", true);
                 updateField(fieldName + ".value", selectedOption);
