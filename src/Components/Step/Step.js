@@ -35,8 +35,8 @@ In addition to the dates you're arriving and departing, please list all the citi
     if (props.number === 5) {
         title = 'Payment';
         text =
-            `<b>Make a secure online payment for your visa support documents.</b><br/>\
-        We have sent an email to <b>${props.email}</b> with details of alternative payment methods should you prefer not to pay by credit/debit card.`;
+            `<b>You can make a secure online card payment for your visa support documents below.</b><br/>\
+        Once we have received online payment by credit/debit card or PayPal, we will send you an e-mail containing your Visa Support Documents and confirming the next steps.`;
         stepImg = paymentImg;
     }
 
