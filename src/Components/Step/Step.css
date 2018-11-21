@@ -72,6 +72,14 @@
     top: 0;
 }
 
+.Step__note-img{
+    width: 100px;
+    object-fit: contain;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
 .Step__step-note{
     font-size: 0.85rem;
 }

@@ -29,10 +29,10 @@ import $ from "jquery";
 import daysBetween from './utils/daysBetweenDates';
 
 /**********IMAGES*******/
-import americanExpress from "./Components/Step/img/american-express.png";
-import mastercard from "./Components/Step/img/mastercard.png";
+import americanExpress from "./Components/Step/img/AE.jpg";
+import mastercard from "./Components/Step/img/mastercard.gif";
 import visaDebit from "./Components/Step/img/visa-debit.png";
-import visa from "./Components/Step/img/visa.png";
+import visa from "./Components/Step/img/Verified-Visa.gif";
 import clocksImg from "./Components/Step/img/clocks.png";
 import successIcon from "./Components/Step/img/success-icon.png";
 import loadIcon from "./Components/Step/img/progressbar2.gif";
@@ -54,20 +54,6 @@ class App extends Component {
                 this.updateCurrentHint("");
             }
         }
-
-        let submitPay = $("[name='UsernamePasswordEntry']");
-        let payIframe = document.querySelector("#authWindow");
-
-        // payIframe.load(function(){console.log("let's show loader!");});
-
-        if(typeof submitPay !== "undefined"){
-            submitPay.click(() => {
-                console.log("let's show loader!");
-            })
-        }
-
-
-
 
         /******BINDING*****/
         this.updateField = this.updateField.bind(this);
@@ -105,8 +91,7 @@ class App extends Component {
     }
 
     registration7Days(date, days){
-        // console.log(date);
-        date = Moment(date); // clone
+        date = Moment(date);
         while (days > 0) {
           date = date.add(1, 'days');
           // decrease "days" only if it's a weekday.
@@ -114,12 +99,11 @@ class App extends Component {
             days -= 1;
           }
         }
-        // console.log(date.toDate());
         return date;
     }
 
     componentWillMount(){
-      // this.getDataFromServer();
+      this.getDataFromServer();
       axios.get('https://ipinfo.io')
            .then(response =>{
                this.setState({usersCountry: response.data.country});
@@ -282,7 +266,6 @@ class App extends Component {
             retrievedState.visitors[i].passportExpired.value !== '' ? retrievedState.visitors[i].passportExpired.value = Moment(retrievedState.visitors[i].passportExpired.value).format("DD MMM YYYY") : '';
         }
         this.setState(retrievedState);
-        // console.log(retrievedState);
     }
 
     saveApplication() {
@@ -424,7 +407,7 @@ class App extends Component {
         });
     }
 
-    getRestrictForDate(datePickerName) {
+    getRestrictForDate(datePickerName, visitorIndex) {
         let state = this.state;
         //prepare data
         let today = Moment();
@@ -446,14 +429,21 @@ class App extends Component {
         else
           sixMonthBeforePassportExpired = new Date().setFullYear(3000);
 
-        if (datePickerName === "birthDate" || datePickerName === "passportIssued") {
-            return function(current) {
-                //должна быть позже сегодня
-                return current.isBefore(today);
-            };
-        } else if (datePickerName === "cardExpirationDate") {
+        if (datePickerName === "cardExpirationDate") {
             return function(current) {
                 return current.isAfter(today);
+            }
+        }
+        else if (datePickerName === "passportIssued") {
+            return function(current) {
+                // дата открытия паспорта должна быть позже даты рождения и раньше сегодняшней даты
+                return current.isBefore(today) && (current.isAfter(Moment(state.visitors[visitorIndex].birthDate.value)) || state.visitors[visitorIndex].birthDate.value === "")
+            }
+        }
+        else if (datePickerName === "birthDate") {
+            return function(current) {
+                // дата рождения должна быть раньше сегодняшней даты и раньше даты открытия паспорта
+                return (current.isBefore(today) && (current.isBefore(Moment(state.visitors[visitorIndex].passportIssued.value)) || state.visitors[visitorIndex].passportIssued.value === ""))
             }
         }
         else if (datePickerName === "passportExpired") {
@@ -716,7 +706,7 @@ class App extends Component {
      }
 
      if (path.indexOf("groupSize") !== -1 || path.indexOf("registration") !== -1 || path.indexOf("numberOfEntries") !== -1 || path.indexOf("currency") !== -1)
-       // this.priceCalculate();
+       this.priceCalculate();
 
      if ((path.indexOf("registration") !== -1 || path.indexOf("arrivalDate") !== -1 || path.indexOf("departureDate") !== -1) && path.indexOf("visited") === -1) {
        //если регистрация выбрана
@@ -968,39 +958,39 @@ class App extends Component {
             for (let i = 0; i < this.state.visitors.length; i++){
                 if (this.state.visitors[i].firstName.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".firstName",text: "Visitor's " + (i + 1) + " First name", step: 2})
+                  state.errors.push({name: "visitors." + i + ".firstName",text: "Visitor " + (i + 1) + "'s First name", step: 2})
                 }
                 if (this.state.visitors[i].middleName.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".middleName",text: "Visitor's " + (i + 1) + " Middle name", step: 2})
+                  state.errors.push({name: "visitors." + i + ".middleName",text: "Visitor " + (i + 1) + "'s Middle name", step: 2})
                 }
                 if (this.state.visitors[i].surName.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".surName",text: "Visitor's " + (i + 1) + " Surname", step: 2})
+                  state.errors.push({name: "visitors." + i + ".surName",text: "Visitor " + (i + 1) + "'s Surname", step: 2})
                 }
                 if (this.state.visitors[i].sex.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".sex",text: "Visitor's " + (i + 1) + " Gender", step: 2})
+                  state.errors.push({name: "visitors." + i + ".sex",text: "Visitor " + (i + 1) + "'s Gender", step: 2})
                 }
                 if (this.state.visitors[i].birthDate.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".birthDate",text: "Visitor's " + (i + 1) + " Birth date", step: 2})
+                  state.errors.push({name: "visitors." + i + ".birthDate",text: "Visitor " + (i + 1) + "'s Birth date", step: 2})
                 }
                 if (this.state.visitors[i].citizenship.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".citizenship",text: "Visitor's " + (i + 1) + " Citizenship", step: 2})
+                  state.errors.push({name: "visitors." + i + ".citizenship",text: "Visitor " + (i + 1) + "'s Citizenship", step: 2})
                 }
                 if (this.state.visitors[i].passportNumber.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".passportNumber",text: "Visitor's " + (i + 1) + " Passport number", step: 2})
+                  state.errors.push({name: "visitors." + i + ".passportNumber",text: "Visitor " + (i + 1) + "'s Passport number", step: 2})
                 }
                 if (this.state.visitors[i].passportIssued.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".passportIssued",text: "Visitor's " + (i + 1) + " Date passport issued", step: 2})
+                  state.errors.push({name: "visitors." + i + ".passportIssued",text: "Visitor " + (i + 1) + "'s Date passport issued", step: 2})
                 }
                 if (this.state.visitors[i].passportExpired.error !== ""){
                   correct = false;
-                  state.errors.push({name: "visitors." + i + ".passportExpired",text: "Visitor's " + (i + 1) + " Date passport expired", step: 2})
+                  state.errors.push({name: "visitors." + i + ".passportExpired",text: "Visitor " + (i + 1) + "'s Date passport expired", step: 2})
                 }            }
               if (this.state.email.error !== ""){
                   correct = false;
@@ -1373,7 +1363,7 @@ class App extends Component {
                             currentHint={this.state.currentHint}
                             updateCurrentHint={this.updateCurrentHint}
                             type="date"
-                            dateValidator={this.getRestrictForDate("birthDate")}
+                            dateValidator={this.getRestrictForDate("birthDate", visitorIndex)}
                             updateField={this.updateField}
                             fieldName={"visitors." + visitorIndex + ".birthDate"}
                             value={this.state.visitors[visitorIndex].birthDate.value}
@@ -1442,7 +1432,7 @@ class App extends Component {
                             updateCurrentHint={this.updateCurrentHint}
                             type="date"
                             className="mt-4 mr-2 Input_half"
-                            dateValidator={this.getRestrictForDate("passportIssued")}
+                            dateValidator={this.getRestrictForDate("passportIssued", visitorIndex)}
                             updateField={this.updateField}
                             fieldName={"visitors." + visitorIndex + ".passportIssued"}
                             value={this.state.visitors[visitorIndex].passportIssued.value}
@@ -1459,7 +1449,7 @@ class App extends Component {
                             updateCurrentHint={this.updateCurrentHint}
                             type="date"
                             className="mt-4"
-                            dateValidator={this.getRestrictForDate("passportExpired")}
+                            dateValidator={this.getRestrictForDate("passportExpired", visitorIndex)}
                             updateField={this.updateField}
                             fieldName={"visitors." + visitorIndex + ".passportExpired"}
                             value={this.state.visitors[visitorIndex].passportExpired.value}
@@ -1660,7 +1650,7 @@ class App extends Component {
                     </ToggleTab>,
                     <div>
                     {state.locations.length > 1 ?
-                        <Button removeLocation="true" className="Button_red-border ml-auto mt-3" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)}/> : ""
+                        <Button removeLocation="true" className="Button_red-border ml-auto mt-4" handleClick={() => this.removeLocation(locationIndex)} label={"remove location " + (locationIndex + 1)}/> : ""
                     }
                     </div>
                 ];
@@ -2007,10 +1997,9 @@ class App extends Component {
                             <b className="Step__color-red">SECURE PAYMENT PROCESSING</b>
                             <div className="Step__step-note my-3">We handle thousands of online transactions from all over the world securely and safely every month, so you have the peace of mind to know your data is safe. We use industry standard fraud protection technologies and we may also carry out security checks to confirm that any payments made online are genuine and made with the cardholder's permission, especially where cards used are not registered with payment security services such as those shown below.</div>
                             <div className="d-flex">
-                                <img src={mastercard} alt="Mastercard" className="mr-2"/>
-                                <img src={visa} alt="visa" className="mr-2"/>
-                                <img src={visaDebit} alt="visa-debit" className="mr-2"/>
-                                <img src={americanExpress} alt="american-express"/>
+                                <img src={visa} alt="visa" className="Step__note-img mr-2"/>
+                                <img src={mastercard} alt="Mastercard" className="Step__note-img mr-2"/>
+                                <img src={americanExpress} alt="american-express" className="Step__note-img "/>
                             </div>
                         </div>
                     </div>
@@ -2102,7 +2091,7 @@ class App extends Component {
                               />
                               <Button
                                   label="save progress"
-                                  text="SAVE your current progress"
+                                  text="Save your progress"
                                   handleClick={() => {
                                           this.saveApplication();
                                           this.showSavePopup();
