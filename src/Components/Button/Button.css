@@ -79,3 +79,10 @@
         margin: 0.25rem auto;
     }
 }
+@media (max-width:1140px),(max-device-width:1140px) {
+    .Button_return{
+        white-space: normal;
+        line-height: 1.4;
+        text-align: center;
+    }
+}

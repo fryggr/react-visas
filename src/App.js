@@ -84,6 +84,7 @@ class App extends Component {
         this.scrollPage = this.scrollPage.bind(this);
         this.showSavePopup = this.showSavePopup.bind(this);
         this.closeSavePopup = this.closeSavePopup.bind(this);
+        this.returningClient = this.returningClient.bind(this);
     }
 
     scrollPage(){
@@ -112,6 +113,37 @@ class App extends Component {
 
            });
 
+    }
+
+    returningClient(returnPassportNumber, returnBirthDate){
+        window.Visas.Russian.TVSD.TouristVSDWebService.Current.getApplicant(returnPassportNumber, returnBirthDate, (applicant) => {
+            alert("success");
+            let returnState = applicant;
+            let client = [];
+            let groupSize = {};
+            let visitorTemplate2 = JSON.parse(JSON.stringify(visitorTemplate));
+            groupSize.value = {};
+            groupSize.value.value = "1";
+            groupSize.value.label = "1";
+            groupSize.error = '';
+            groupSize.visited = '';
+            visitorTemplate2.birthDate.value = Moment(returnState.BirthDate).format("DD MMM YYYY");
+            visitorTemplate2.passportIssued.value = Moment(returnState.Passport.IssueDate).format("DD MMM YYYY");
+            visitorTemplate2.passportExpired.value = Moment(returnState.Passport.ExpireDate).format("DD MMM YYYY");
+            visitorTemplate2.citizenship.value = returnState.Passport.Citizenship;
+            visitorTemplate2.passportNumber.value = returnState.Passport.PassportNumber;
+            visitorTemplate2.firstName.value = returnState.Firstname;
+            visitorTemplate2.middleName.value = returnState.Middlename;
+            visitorTemplate2.surName.value = returnState.Surname;
+            visitorTemplate2.sex.value = returnState.Gender;
+            client.push(visitorTemplate2);
+            this.setState({visitors: client, groupSize: groupSize});
+            console.log(this.state.visitors, this.state.groupSize);
+        },
+        ()=> {
+            alert("Error");
+        });
+        this.setState({showReturnForm: 0});
     }
 
     createOrder(){
@@ -255,6 +287,7 @@ class App extends Component {
 
     retrieveApplication() {
         let retrievedState = JSON.parse(localStorage['state']);
+        console.log(retrievedState);
 
         retrievedState.arrivalDate1.value !== '' ? retrievedState.arrivalDate1.value = Moment(retrievedState.arrivalDate1.value).format("DD MMM YYYY") : '';
         retrievedState.arrivalDate2.value !== '' ? retrievedState.arrivalDate2.value = Moment(retrievedState.arrivalDate2.value).format("DD MMM YYYY") : '';
@@ -432,6 +465,11 @@ class App extends Component {
         if (datePickerName === "cardExpirationDate") {
             return function(current) {
                 return current.isAfter(today);
+            }
+        }
+        else if (datePickerName === "returnBirthDate") {
+            return function(current) {
+                return current.isBefore(today);
             }
         }
         else if (datePickerName === "passportIssued") {
@@ -1177,8 +1215,9 @@ class App extends Component {
             cardExpirationDate: state.cardExpirationDate.value,
             cardCVV: state.cardCVV.value,
             cardpostCode: state.cardpostCode.value,
-            cardstreetAddress: state.cardstreetAddress.value
-
+            cardstreetAddress: state.cardstreetAddress.value,
+            returnPassportNumber: state.returnPassportNumber.value,
+            returnBirthDate: state.returnBirthDate.value
         };
 
         //add inputFields for visitors
@@ -1220,7 +1259,9 @@ class App extends Component {
             cardNumber:  "required",
             cardholderName:  "required|regex:/^[a-z\\-\\s]+$/ig",
             cardExpirationDate:  "required",
-            cardCVV:  "required"
+            cardCVV:  "required",
+            returnPassportNumber: "required",
+            returnBirthDate: "required|date"
         };
 
         //add rules for visitors
@@ -2080,32 +2121,73 @@ class App extends Component {
                     showSavePopup={() => this.showSavePopup()}
                 />
                 <Sticky type="errorSticky" links={this.state.errors} updateField={this.updateField}/>
-                  <div className="container px-0 mr-auto ml-0">
-                      <div className="row py-3" hidden={this.state.currentStep === 0}>
-                          <div className="d-flex col-md-6 flex-column flex-md-row">
-                              <Button
-                                  label="retrieve saved application"
-                                  className="mr-3"
-                                  text="Load a previously saved existing application."
-                                  handleClick={() => this.retrieveApplication()}
-                              />
-                              <Button
-                                  label="save progress"
-                                  text="Save your progress"
-                                  handleClick={() => {
-                                          this.saveApplication();
-                                          this.showSavePopup();
-                                      }
+                <div className="container px-0 mr-auto ml-0">
+                  <div className="row py-3" hidden={this.state.currentStep === 0}>
+                      <div className="d-flex col-md-6 flex-column flex-md-row">
+                          <Button
+                              label="retrieve saved application"
+                              className="mr-3"
+                              text="Load a previously saved existing application."
+                              handleClick={() => this.retrieveApplication()}
+                          />
+                          <Button
+                              label="save progress"
+                              text="Save your progress"
+                              handleClick={() => {
+                                      this.saveApplication();
+                                      this.showSavePopup();
                                   }
-                              />
-                          </div>
-                          <div className="ml-auto col-md-4">
-                              <Button label="I am returning client" className="Button_red-border" text="Have you ordered a visa or visa support with us before? If so, click here to recover your personal information and pre-fill most of your application."/>
-                          </div>
+                              }
+                          />
                       </div>
+                      <div className="ml-auto col-md-4">
+                        {this.state.showReturnForm !== 0 ?
+                                [<Input
+                                    type="text"
+                                    updateField={this.updateField}
+                                    fieldName={"returnPassportNumber"}
+                                    value={this.state.returnPassportNumber.value}
+                                    visited={this.state.returnPassportNumber.visited}
+                                    label="Passport number"
+                                    placeholder="Please enter your passport number"
+                                    error={this.state.returnPassportNumber.error}
+                                />,
+                                <Input
+                                    className="mt-4"
+                                    type="date"
+                                    formatDate="returnBirthDate"
+                                    dateValidator={this.getRestrictForDate("returnBirthDate")}
+                                    updateField={this.updateField}
+                                    fieldName={"returnBirthDate"}
+                                    value={this.state.returnBirthDate.value}
+                                    viewDate={new Date().setFullYear(new Date().getFullYear() - 40)}
+                                    visited={this.state.returnBirthDate.visited}
+                                    label="Birth date year"
+                                    placeholder=""
+                                    error={this.state.returnBirthDate.error}
+                                />,
+                                <Button
+                                    className="align-self-md-start align-self-center mt-4 Button_return"
+                                    label="Load personal information"
+                                    handleClick={() => {
+                                        console.log("returnBirthDate= ", Moment(this.state.returnBirthDate.value).format("YYYY"));
+                                        this.returningClient(this.state.returnPassportNumber.value, Moment(this.state.returnBirthDate.value).format("YYYY"));
 
-                      {this.showCurrentStep()}
+                                    }}
+                                />
+                        ] :
+                        <Button
+                            label="I am returning client"
+                            className="Button_red-border"
+                            handleClick={() => this.setState({showReturnForm: 1})}
+                            text="Have you ordered a visa or visa support with us before? If so, click here to recover your personal information and pre-fill most of your application."
+                          />
+                        }
+                      </div>
                   </div>
+
+                  {this.showCurrentStep()}
+                </div>
               </div>
               <div className="container mt-4">
                   <div className="row" style={{

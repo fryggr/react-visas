@@ -58,13 +58,15 @@ export class Input extends React.Component {
             <label className="Input__label">{label}</label>
             <input
               disabled={disabled}
-              onFocus={() => updateCurrentHint(fieldName)}
+              onFocus={() => typeof updateCurrentHint !== "undefined" ? updateCurrentHint(fieldName) : ""}
               onBlur={e => {
-                updateField(fieldName + ".visited", true);
-                updateField(fieldName + ".value", e.target.value);
+                  (typeof updateField !== "undefined") ? (
+                    updateField(fieldName + ".visited", true),
+                    updateField(fieldName + ".value", e.target.value)
+                ) : ""
               }}
               onChange={e => {
-                  updateField(fieldName + ".value", e.target.value);
+                  typeof updateField !== "undefined" ? updateField(fieldName + ".value", e.target.value) : "";
                   }
               }
               className="Input__field"
@@ -74,7 +76,7 @@ export class Input extends React.Component {
             />
 
             <div className="Input__error">{visited ? error : ""}</div>
-            {currentHint === fieldName ? <Hint hintText={this.props.hintText} /> : ""}
+            {(typeof currentHint !== "undefined" && currentHint === fieldName) ? <Hint hintText={this.props.hintText} /> : ""}
           </div>
         </div>
       );
@@ -159,26 +161,26 @@ export class Input extends React.Component {
               inputProps={{ disabled: disabled, readonly: "readonly" }}
               isValidDate={dateValidator}
               open={currentHint === fieldName}
-              onFocus={() => updateCurrentHint(fieldName)}
+              onFocus={() => typeof updateCurrentHint !== "undefined" ? updateCurrentHint(fieldName) : ""}
               onChange={date => {
-                updateField(fieldName + ".value", date);
-                updateCurrentHint("");
+                  typeof updateField !== "undefined" ? updateField(fieldName + ".value", date) : "";
+                  typeof updateCurrentHint !== "undefined" ? updateCurrentHint("") : "";
               }}
               onBlur={() => {
-                updateField(fieldName + ".visited", true);
-                updateCurrentHint("");
+                typeof updateField !== "undefined" ? updateField(fieldName + ".visited", true) : "";
+                typeof updateCurrentHint !== "undefined" ? updateCurrentHint("") : "";
               }}
               viewDate={viewDate}
               input={true}
               closeOnSelect={true}
               timeFormat={false}
-              dateFormat={formatDate !== undefined ? "MM/YY" : "DD MMM YYYY"}
+              dateFormat={(typeof formatDate === "undefined") ? "DD MMM YYYY" : (formatDate === "expiry date") ? "MM/YY" : (formatDate === "returnBirthDate") ? "YYYY" : "DD MMM YYYY"}
               viewMode="years"
               className="Datepicker"
               value={value}
               disableOnClickOutside={false}
             />
-            {currentHint === fieldName ? <Hint hintText={this.props.hintText}/> : ""}
+            {(typeof currentHint !== "undefined" && currentHint === fieldName) ? <Hint hintText={this.props.hintText}/> : ""}
             <div className="Input__error">{visited ? error : ""}</div>
           </div>
         </div>

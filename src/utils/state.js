@@ -1,4 +1,15 @@
 export default {
+    returnPassportNumber: {
+        value: '',
+        visited: false,
+        error: ''
+    },
+    returnBirthDate: {
+        value: '',
+        visited: false,
+        error: ''
+    },
+    showReturnForm: 0,
     showPopup: 0,
     showLoader: 0,
     currentHint: '',
