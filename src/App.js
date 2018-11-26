@@ -85,6 +85,10 @@ class App extends Component {
         this.showSavePopup = this.showSavePopup.bind(this);
         this.closeSavePopup = this.closeSavePopup.bind(this);
         this.returningClient = this.returningClient.bind(this);
+
+        $(document).ready(() => {
+            this.getDataFromServer()
+        })
     }
 
     scrollPage(){
@@ -104,7 +108,6 @@ class App extends Component {
     }
 
     componentWillMount(){
-      this.getDataFromServer();
       axios.get('https://ipinfo.io')
            .then(response =>{
                this.setState({usersCountry: response.data.country});
@@ -336,16 +339,28 @@ class App extends Component {
 
     getDataFromServer(){
         let state = this.state;
+        console.log(window.UI.ViewBag);
 
-        var groupSize = document.querySelectorAll('.input-group-size option');
-        var visitPurpose = document.querySelectorAll('.input-purpose option');
-        var entriesNumber = document.querySelectorAll('.input-entries option');
-        var registration = document.querySelectorAll('.input-registration option');
-        var optionsDelivery = document.querySelectorAll('.input-delivery option');
-        var optionsCities = document.querySelectorAll('datalist#browsers option');
-        var autoModel = document.querySelectorAll('.input-vehicle-make option');
-        var autoColor = document.querySelectorAll('.input-vehicle-color option');
+        // let dataFromServer = window.UI.ViewBag;
+
+        // var groupSize = document.querySelectorAll('.input-group-size option');
+        var groupSize = window.UI.ViewBag.MaxGroupSize;
+        // var visitPurpose = document.querySelectorAll('.input-purpose option');
+        var visitPurpose = window.UI.ViewBag.PurposesOfVisit;
+        // var entriesNumber = document.querySelectorAll('.input-entries option');
+        var entriesNumber = window.UI.ViewBag.EntryTypes;
+        // var registration = document.querySelectorAll('.input-registration option');
+        var registration = window.UI.ViewBag.Registrations;
+        // var optionsDelivery = document.querySelectorAll('.input-delivery option');
+        var optionsDelivery = window.UI.ViewBag.Deliveries;
+        // var optionsCities = document.querySelectorAll('datalist#browsers option');
+        var optionsCities = window.UI.ViewBag.Cities;
+        // var autoModel = document.querySelectorAll('.input-vehicle-make option');
+        var autoModel = window.UI.ViewBag.CarBrands;
+        // var autoColor = document.querySelectorAll('.input-vehicle-color option');
+        var autoColor = window.UI.ViewBag.VehicleColors;
         var currencyRates = document.querySelectorAll('[name="currency"] option');
+        // var currencyRates = window.UI.ViewBag.VehicleColors;
 
 
         var newGroup = [],
@@ -358,17 +373,19 @@ class App extends Component {
             newAutoColor= [],
             newCurrencyRates = [];
 
-        getData(groupSize, newGroup);
+        // getData(groupSize, newGroup);
         getData(visitPurpose, newVisitPurpose);
         getData(entriesNumber, newEntriesNumber);
-        getDataInsideTag(registration, newRegistration);
-        getDataInsideTag(optionsDelivery, newOptionsDelivery);
+        getDataFromObject(registration, newRegistration);
+        getDataFromObject(optionsDelivery, newOptionsDelivery);
+        // getDataInsideTag(registration, newRegistration);
+        // getDataInsideTag(optionsDelivery, newOptionsDelivery);
         getData(optionsCities, newOptionsCities);
-        getData(autoModel, newAutoModel);
+        getDataAutoModel(autoModel, newAutoModel);
         getData(autoColor, newAutoColor);
-        getData(autoColor, newAutoColor);
-        getData(currencyRates, newCurrencyRates);
-        state.OptionsGroupSize = newGroup.slice();
+        // getData(autoColor, newAutoColor);
+        getDataFromTag(currencyRates, newCurrencyRates);
+
         state.OptionsPurpose = newVisitPurpose.slice();
         state.OptionsNumberOfEntries = newEntriesNumber.slice();
         state.OptionsRegistration = newRegistration.slice();
@@ -378,8 +395,42 @@ class App extends Component {
         state.OptionsAutoColors = newAutoColor.slice();
         state.OptionsCurrenciesRate = newCurrencyRates.slice();
 
+        for (let i = 1; i <= groupSize; i++){
+            let newObj = {};
+            newObj.value = i;
+            newObj.label = i;
+            newGroup.push(newObj);
+        }
+        state.OptionsGroupSize = newGroup.slice();
+
         function getData(obj, array) {
-          obj.forEach(function (domItem) {
+          $(obj).each((index, domItem) => {
+            var newObj = {};
+            newObj.value = domItem;
+            newObj.label = domItem;
+            array.push(newObj);
+          });
+        }
+        function getDataAutoModel(obj, array) {
+          $(obj).each((index, domItem) => {
+            var newObj = {};
+            newObj.value = domItem.Title;
+            newObj.label = domItem.Title;
+            array.push(newObj);
+          });
+        }
+
+        function getDataFromObject(obj, array){
+            for (let key in obj) {
+                var newObj = {};
+                newObj.value = obj[key];
+                newObj.label = obj[key];
+                array.push(newObj);
+            }
+        }
+
+        function getDataFromTag(obj, array) {
+          $(obj).each((index, domItem) => {
             var newObj = {};
             newObj.value = domItem.value;
             newObj.label = domItem.innerHTML;
@@ -387,14 +438,6 @@ class App extends Component {
           });
         }
 
-        function getDataInsideTag(obj, array) {
-          obj.forEach(function (domItem) {
-            var newObj = {};
-            newObj.value = domItem.value;
-            newObj.label = domItem.innerHTML;
-            array.push(newObj);
-          });
-        }
     }
 
     createPaymentService() {
@@ -2060,6 +2103,7 @@ class App extends Component {
         }
 
     render() {
+
         return (
             <div className="App text-center text-md-left mb-5">
                 {this.state.showPopup !== 0 ?
